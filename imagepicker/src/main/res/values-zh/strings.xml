@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">ImagePicker</string>
+
+    <string name="permission_write_external_rationale">請允許存取外部存儲以選擇相片</string>
+
+    <string name="ok">好</string>
+    <string name="done">完成</string>
+    <string name="camera">相機</string>
+    <string name="image_directory">Camera</string>
+
+    <string name="title_folder">Folder</string>
+    <string name="title_select_image">選擇相片</string>
+    <string name="title_permission_denied">沒有權限</string>
+
+    <string name="selected">已選擇 %d</string>
+    <string name="selected_with_limit">已選擇 %1$d/%2$d</string>
+
+    <string name="error_create_image_file">建立相片檔案失敗</string>
+    <string name="error_no_camera">找不到相機</string>
+    <string name="error_null_cursor">噢，發生問題</string>
+
+    <string name="msg_empty_images">找不到相片</string>
+    <string name="msg_no_write_external_permission">請允許存取外部存儲以選擇相片</string>
+    <string name="msg_no_camera_permission">請允許存取相機以拍攝相片</string>
+    <string name="msg_limit_images">已達到最多選擇相片數量</string>
+
+</resources>
