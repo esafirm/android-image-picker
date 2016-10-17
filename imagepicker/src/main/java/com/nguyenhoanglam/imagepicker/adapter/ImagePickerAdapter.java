@@ -14,22 +14,20 @@ import com.nguyenhoanglam.imagepicker.R;
 import com.nguyenhoanglam.imagepicker.listeners.OnImageClickListener;
 import com.nguyenhoanglam.imagepicker.model.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by hoanglam on 7/31/16.
- */
 public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.ImageViewHolder> {
+
+    private List<Image> images = new ArrayList<>();
+    private List<Image> selectedImages;
 
     private Context context;
     private LayoutInflater inflater;
-    private List<Image> images;
-    private List<Image> selectedImages;
     private OnImageClickListener itemClickListener;
 
-    public ImagePickerAdapter(Context context, List<Image> images, List<Image> selectedImages, OnImageClickListener itemClickListener) {
+    public ImagePickerAdapter(Context context, List<Image> selectedImages, OnImageClickListener itemClickListener) {
         this.context = context;
-        this.images = images;
         this.selectedImages = selectedImages;
         this.itemClickListener = itemClickListener;
         inflater = LayoutInflater.from(this.context);
@@ -109,6 +107,13 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         notifyDataSetChanged();
     }
 
+    public Image getItem(int position) {
+        return images.get(position);
+    }
+
+    public List<Image> getSelectedImages(){
+        return selectedImages;
+    }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

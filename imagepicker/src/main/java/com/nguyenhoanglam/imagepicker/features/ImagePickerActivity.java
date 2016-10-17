@@ -1,19 +1,16 @@
-package com.nguyenhoanglam.imagepicker.activity;
+package com.nguyenhoanglam.imagepicker.features;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Parcelable;
-import android.os.Process;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -53,7 +50,8 @@ import java.util.List;
 
 import static com.nguyenhoanglam.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
-public class ImagePickerActivity extends AppCompatActivity implements OnImageClickListener {
+public class ImagePickerActivity extends AppCompatActivity
+        implements ImagePickerView, OnImageClickListener {
 
     private static final String TAG = "ImagePickerActivity";
 
@@ -63,25 +61,22 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     public static final int MODE_SINGLE = 1;
     public static final int MODE_MULTIPLE = 2;
 
-    public static final String INTENT_EXTRA_SELECTED_IMAGES = "selectedImages";
-    public static final String INTENT_EXTRA_LIMIT = "limit";
-    public static final String INTENT_EXTRA_SHOW_CAMERA = "showCamera";
-    public static final String INTENT_EXTRA_MODE = "mode";
-    public static final String INTENT_EXTRA_FOLDER_MODE = "folderMode";
-    public static final String INTENT_EXTRA_FOLDER_TITLE = "folderTitle";
-    public static final String INTENT_EXTRA_IMAGE_TITLE = "imageTitle";
-    public static final String INTENT_EXTRA_IMAGE_DIRECTORY = "imageDirectory";
+    public static final String EXTRA_SELECTED_IMAGES = "selectedImages";
+    public static final String EXTRA_LIMIT = "limit";
+    public static final String EXTRA_SHOW_CAMERA = "showCamera";
+    public static final String EXTRA_MODE = "mode";
+    public static final String EXTRA_FOLDER_MODE = "folderMode";
+    public static final String EXTRA_FOLDER_TITLE = "folderTitle";
+    public static final String EXTRA_IMAGE_TITLE = "imageTitle";
+    public static final String EXTRA_IMAGE_DIRECTORY = "imageDirectory";
 
-    private List<Folder> folders;
-    private ArrayList<Image> images;
     private String currentImagePath;
     private String imageDirectory;
 
-    private ArrayList<Image> selectedImages;
-    private boolean showCamera;
-    private int mode;
-    private boolean folderMode;
     private int limit;
+    private int mode;
+    private boolean showCamera;
+    private boolean folderMode;
     private String folderTitle, imageTitle;
 
     private ActionBar actionBar;
@@ -98,25 +93,18 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     private GridLayoutManager layoutManager;
     private GridSpacingItemDecoration itemOffsetDecoration;
 
-    private int imageColumns;
-    private int folderColumns;
-
+    private ImagePickerPresenter presenter;
     private ImagePickerPreferences preferences;
     private ImagePickerAdapter imageAdapter;
     private FolderPickerAdapter folderAdapter;
 
-    private ContentObserver observer;
     private Handler handler;
-    private Thread thread;
-
-    private final String[] projection = new String[]{
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
-    };
+    private ContentObserver observer;
 
     private Parcelable foldersState;
+
+    private int imageColumns;
+    private int folderColumns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +118,8 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         }
 
         preferences = new ImagePickerPreferences(this);
+        presenter = new ImagePickerPresenter(new ImageLoader(this));
+        presenter.attachView(this);
 
         mainLayout = (RelativeLayout) findViewById(R.id.main);
         progressBar = (ProgressWheel) findViewById(R.id.progress_bar);
@@ -140,50 +130,41 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
 
+        Bundle bundle = intent.getExtras();
+
+        /** Get extras */
+        limit = bundle.getInt(EXTRA_LIMIT, Constants.MAX_LIMIT);
+        mode = bundle.getInt(EXTRA_MODE, MODE_MULTIPLE);
+        folderMode = bundle.getBoolean(EXTRA_FOLDER_MODE, false);
+
+        folderTitle = bundle.getString(EXTRA_FOLDER_TITLE, getString(R.string.title_folder));
+        imageTitle = bundle.getString(EXTRA_IMAGE_TITLE, getString(R.string.title_select_image));
+        imageTitle = bundle.getString(EXTRA_IMAGE_TITLE, getString(R.string.title_select_image));
+
+        imageDirectory = bundle.getString(EXTRA_IMAGE_DIRECTORY);
+        if (imageDirectory == null || TextUtils.isEmpty(imageDirectory)) {
+            imageDirectory = getString(R.string.image_directory);
+        }
+
+        showCamera = bundle.getBoolean(EXTRA_SHOW_CAMERA, true);
+
+        ArrayList<Image> selectedImages = null;
+        if (mode == MODE_MULTIPLE && intent.hasExtra(EXTRA_SELECTED_IMAGES)) {
+            selectedImages = intent.getParcelableArrayListExtra(EXTRA_SELECTED_IMAGES);
+        }
+        if (selectedImages == null)
+            selectedImages = new ArrayList<>();
+
+        /** Set activity title */
         if (actionBar != null) {
+            actionBar.setTitle(folderMode ? folderTitle : imageTitle);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        /** Get extras */
-        limit = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, Constants.MAX_LIMIT);
-        mode = intent.getIntExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-        folderMode = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, false);
-
-        if (intent.hasExtra(INTENT_EXTRA_FOLDER_TITLE)) {
-            folderTitle = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE);
-        } else {
-            folderTitle = getString(R.string.title_folder);
-        }
-
-        if (intent.hasExtra(INTENT_EXTRA_IMAGE_TITLE)) {
-            imageTitle = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE);
-        } else {
-            imageTitle = getString(R.string.title_select_image);
-        }
-
-        imageDirectory = intent.getStringExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY);
-        if (imageDirectory == null || TextUtils.isEmpty(imageDirectory)) {
-            imageDirectory = getString(R.string.image_directory);
-        }
-
-        showCamera = intent.getBooleanExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
-        if (mode == ImagePickerActivity.MODE_MULTIPLE && intent.hasExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES)) {
-            selectedImages = intent.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
-        }
-        if (selectedImages == null)
-            selectedImages = new ArrayList<>();
-        images = new ArrayList<>();
-
-
-        /** Set activity title */
-        if (actionBar != null) {
-            actionBar.setTitle(folderMode ? folderTitle : imageTitle);
-        }
-
         /** Init folder and image adapter */
-        imageAdapter = new ImagePickerAdapter(this, images, selectedImages, this);
+        imageAdapter = new ImagePickerAdapter(this, selectedImages, this);
         folderAdapter = new FolderPickerAdapter(this, new OnFolderClickListener() {
             @Override
             public void onFolderClick(Folder bucket) {
@@ -193,7 +174,6 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         });
 
         orientationBasedUI(getResources().getConfiguration().orientation);
-
     }
 
     @Override
@@ -208,7 +188,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
      * 2. Update item decoration
      * 3. Update title
      */
-    private void setImageAdapter(ArrayList<Image> images) {
+    private void setImageAdapter(List<Image> images) {
         imageAdapter.setData(images);
         setItemDecoration(imageColumns);
         recyclerView.setAdapter(imageAdapter);
@@ -221,8 +201,10 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
      * 2. Update item decoration
      * 3. Update title
      */
-    private void setFolderAdapter() {
-        folderAdapter.setData(folders);
+    private void setFolderAdapter(List<Folder> folders) {
+        if (folders != null) {
+            folderAdapter.setData(folders);
+        }
         setItemDecoration(folderColumns);
         recyclerView.setAdapter(folderAdapter);
 
@@ -269,6 +251,7 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         }
 
         if (id == menuDoneId) {
+            List<Image> selectedImages = imageAdapter.getSelectedImages();
             if (selectedImages != null && selectedImages.size() > 0) {
 
                 /** Scan selected images which not existed */
@@ -282,7 +265,8 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
                 }
 
                 Intent data = new Intent();
-                data.putParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
+                data.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES,
+                        (ArrayList<? extends Parcelable>) selectedImages);
                 setResult(RESULT_OK, data);
                 finish();
             }
@@ -336,21 +320,16 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
      */
     private void getDataWithPermission() {
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (rc == PackageManager.PERMISSION_GRANTED)
+        if (rc == PackageManager.PERMISSION_GRANTED) {
             getData();
-        else
+        } else {
             requestWriteExternalPermission();
+        }
     }
 
-    /**
-     * Get data
-     */
     private void getData() {
-        abortLoading();
-
-        ImageLoaderRunnable runnable = new ImageLoaderRunnable();
-        thread = new Thread(runnable);
-        thread.start();
+        presenter.abortLoad();
+        presenter.loadImages(folderMode);
     }
 
     /**
@@ -467,11 +446,12 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
      * Handle image selection event: add or remove selected image, change title
      */
     private void clickImage(int position) {
-        int selectedItemPosition = selectedImagePosition(images.get(position));
+        Image image = imageAdapter.getItem(position);
+        int selectedItemPosition = selectedImagePosition(image);
         if (mode == ImagePickerActivity.MODE_MULTIPLE) {
             if (selectedItemPosition == -1) {
-                if (selectedImages.size() < limit) {
-                    imageAdapter.addSelected(images.get(position));
+                if (imageAdapter.getSelectedImages().size() < limit) {
+                    imageAdapter.addSelected(image);
                 } else {
                     Toast.makeText(this, R.string.msg_limit_images, Toast.LENGTH_SHORT).show();
                 }
@@ -482,16 +462,17 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
             if (selectedItemPosition != -1)
                 imageAdapter.removeSelectedPosition(selectedItemPosition, position);
             else {
-                if (selectedImages.size() > 0) {
+                if (imageAdapter.getSelectedImages().size() > 0) {
                     imageAdapter.removeAllSelectedSingleClick();
                 }
-                imageAdapter.addSelected(images.get(position));
+                imageAdapter.addSelected(image);
             }
         }
         updateTitle();
     }
 
     private int selectedImagePosition(Image image) {
+        List<Image> selectedImages = imageAdapter.getSelectedImages();
         for (int i = 0; i < selectedImages.size(); i++) {
             if (selectedImages.get(i).getPath().equals(image.getPath())) {
                 return i;
@@ -564,83 +545,20 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     }
 
 
-    /**
-     * Init handler to handle loading data results
-     */
     @Override
     protected void onStart() {
         super.onStart();
 
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case Constants.FETCH_STARTED: {
-                        showLoading();
-                        break;
-                    }
-                    case Constants.FETCH_COMPLETED: {
-                        ArrayList<Image> temps = new ArrayList<>();
-                        temps.addAll(selectedImages);
-
-                        ArrayList<Image> newImages = new ArrayList<>();
-                        newImages.addAll(images);
-
-
-                        if (folderMode) {
-                            setFolderAdapter();
-                            if (folders.size() != 0)
-                                hideLoading();
-                            else
-                                showEmpty();
-
-                        } else {
-                            setImageAdapter(newImages);
-                            if (images.size() != 0)
-                                hideLoading();
-                            else
-                                showEmpty();
-                        }
-
-                        break;
-                    }
-                    default: {
-                        super.handleMessage(msg);
-                    }
-                }
-            }
-        };
-        observer = new ContentObserver(handler) {
+        if (handler == null) {
+            handler = new Handler();
+        }
+        observer = new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange) {
                 getData();
             }
         };
         getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
-    }
-
-    /**
-     * Stop loading data task
-     */
-    private void abortLoading() {
-        if (thread == null)
-            return;
-        if (thread.isAlive()) {
-            thread.interrupt();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Check if displaying folders view
-     */
-    private boolean isDisplayingFolderView() {
-        return (folderMode &&
-                (recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter));
     }
 
     /**
@@ -654,16 +572,16 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
                 actionBar.setTitle(folderTitle);
                 menuDone.setVisible(false);
             } else {
-                if (selectedImages.size() == 0) {
+                if (imageAdapter.getSelectedImages().size() == 0) {
                     actionBar.setTitle(imageTitle);
                     if (menuDone != null)
                         menuDone.setVisible(false);
                 } else {
                     if (mode == ImagePickerActivity.MODE_MULTIPLE) {
                         if (limit == Constants.MAX_LIMIT)
-                            actionBar.setTitle(String.format(getString(R.string.selected), selectedImages.size()));
+                            actionBar.setTitle(String.format(getString(R.string.selected), imageAdapter.getSelectedImages().size()));
                         else
-                            actionBar.setTitle(String.format(getString(R.string.selected_with_limit), selectedImages.size(), limit));
+                            actionBar.setTitle(String.format(getString(R.string.selected_with_limit), imageAdapter.getSelectedImages().size(), limit));
                     }
                     if (menuDone != null)
                         menuDone.setVisible(true);
@@ -672,42 +590,14 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
         }
     }
 
-    /**
-     * Show progessbar when loading data
-     */
-    private void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-        emptyTextView.setVisibility(View.GONE);
-    }
-
-    /**
-     * Hide progressbar when data loaded
-     */
-    private void hideLoading() {
-        progressBar.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
-        emptyTextView.setVisibility(View.GONE);
-    }
-
-    /**
-     * Show empty data
-     */
-    private void showEmpty() {
-        progressBar.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
-        emptyTextView.setVisibility(View.VISIBLE);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        abortLoading();
+        presenter.abortLoad();
+        presenter.detachView();
 
         getContentResolver().unregisterContentObserver(observer);
-
         observer = null;
-
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;
@@ -715,101 +605,11 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     }
 
     /**
-     * Loading data task
+     * Check if displaying folders view
      */
-    private class ImageLoaderRunnable implements Runnable {
-
-        @Override
-        public void run() {
-            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-
-            Message message;
-            if (recyclerView.getAdapter() == null) {
-                /*
-                If the adapter is null, this is first time this activity's view is
-                being shown, hence send FETCH_STARTED message to show progress bar
-                while images are loaded from phone
-                 */
-                message = handler.obtainMessage();
-                message.what = Constants.FETCH_STARTED;
-                message.sendToTarget();
-            }
-
-            if (Thread.interrupted()) {
-                return;
-            }
-
-            Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-                    null, null, MediaStore.Images.Media.DATE_ADDED);
-
-            if (cursor == null) {
-                message = handler.obtainMessage();
-                message.what = Constants.ERROR;
-                message.sendToTarget();
-                return;
-            }
-
-            ArrayList<Image> temp = new ArrayList<>(cursor.getCount());
-            File file;
-            folders = new ArrayList<>();
-
-            if (cursor.moveToLast()) {
-                do {
-                    if (Thread.interrupted()) {
-                        return;
-                    }
-
-                    long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
-                    String name = cursor.getString(cursor.getColumnIndex(projection[1]));
-                    String path = cursor.getString(cursor.getColumnIndex(projection[2]));
-                    String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
-
-                    file = new File(path);
-                    if (file.exists()) {
-                        Image image = new Image(id, name, path, false);
-                        temp.add(image);
-
-                        if (folderMode) {
-                            Folder folder = getFolder(bucket);
-                            if (folder == null) {
-                                folder = new Folder(bucket);
-                                folders.add(folder);
-                            }
-
-                            folder.getImages().add(image);
-                        }
-                    }
-
-                } while (cursor.moveToPrevious());
-            }
-            cursor.close();
-            if (images == null) {
-                images = new ArrayList<>();
-            }
-            images.clear();
-            images.addAll(temp);
-
-            if (handler != null) {
-                message = handler.obtainMessage();
-                message.what = Constants.FETCH_COMPLETED;
-                message.sendToTarget();
-            }
-
-            Thread.interrupted();
-
-        }
-    }
-
-    /**
-     * Return folder base on folder name
-     */
-    public Folder getFolder(String name) {
-        for (Folder folder : folders) {
-            if (folder.getFolderName().equals(name)) {
-                return folder;
-            }
-        }
-        return null;
+    private boolean isDisplayingFolderView() {
+        return (folderMode &&
+                (recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter));
     }
 
     /**
@@ -818,11 +618,47 @@ public class ImagePickerActivity extends AppCompatActivity implements OnImageCli
     @Override
     public void onBackPressed() {
         if (folderMode && !isDisplayingFolderView()) {
-            setFolderAdapter();
+            setFolderAdapter(null);
             return;
         }
-
         setResult(RESULT_CANCELED);
         super.onBackPressed();
     }
+
+    /* --------------------------------------------------- */
+    /* > View Methods */
+    /* --------------------------------------------------- */
+
+    @Override
+    public void showFetchCompleted(List<Image> images, List<Folder> folders) {
+        if (folderMode) {
+            setFolderAdapter(folders);
+        } else {
+            setImageAdapter(images);
+        }
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+        String message = "Unkown Error";
+        if (throwable != null && throwable instanceof NullPointerException) {
+            message = "Images not exist";
+        }
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLoading(boolean isLoading) {
+        progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+        emptyTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showEmpty() {
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        emptyTextView.setVisibility(View.VISIBLE);
+    }
+
 }

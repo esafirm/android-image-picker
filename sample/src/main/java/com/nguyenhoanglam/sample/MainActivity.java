@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.nguyenhoanglam.imagepicker.activity.ImagePicker;
-import com.nguyenhoanglam.imagepicker.activity.ImagePickerActivity;
+import com.nguyenhoanglam.imagepicker.features.ImagePicker;
+import com.nguyenhoanglam.imagepicker.features.ImagePickerActivity;
 import com.nguyenhoanglam.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -66,21 +66,21 @@ public class MainActivity extends AppCompatActivity {
     public void startWithIntent() {
         Intent intent = new Intent(this, ImagePickerActivity.class);
 
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, true);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE, "Album");
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE, "Tap to select images");
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, "Camera");
+        intent.putExtra(ImagePickerActivity.EXTRA_FOLDER_MODE, true);
+        intent.putExtra(ImagePickerActivity.EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+        intent.putExtra(ImagePickerActivity.EXTRA_LIMIT, 10);
+        intent.putExtra(ImagePickerActivity.EXTRA_SHOW_CAMERA, true);
+        intent.putExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES, images);
+        intent.putExtra(ImagePickerActivity.EXTRA_FOLDER_TITLE, "Album");
+        intent.putExtra(ImagePickerActivity.EXTRA_IMAGE_TITLE, "Tap to select images");
+        intent.putExtra(ImagePickerActivity.EXTRA_IMAGE_DIRECTORY, "Camera");
         startActivityForResult(intent, REQUEST_CODE_PICKER);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
-            images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
+            images = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES);
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0, l = images.size(); i < l; i++) {
                 stringBuffer.append(images.get(i).getPath() + "\n");

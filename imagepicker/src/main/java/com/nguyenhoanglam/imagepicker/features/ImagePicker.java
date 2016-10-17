@@ -3,7 +3,7 @@
  * Date: ${DATE}
  */
 
-package com.nguyenhoanglam.imagepicker.activity;
+package com.nguyenhoanglam.imagepicker.features;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -132,14 +132,14 @@ public abstract class ImagePicker {
 
     public Intent getIntent(Activity activity) {
         Intent intent = new Intent(activity, ImagePickerActivity.class);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, mode);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, limit);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, showCamera);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE, folderTitle);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE, imageTitle);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, folderMode);
-        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, imageDirectory);
+        intent.putExtra(ImagePickerActivity.EXTRA_MODE, mode);
+        intent.putExtra(ImagePickerActivity.EXTRA_LIMIT, limit);
+        intent.putExtra(ImagePickerActivity.EXTRA_SHOW_CAMERA, showCamera);
+        intent.putExtra(ImagePickerActivity.EXTRA_FOLDER_TITLE, folderTitle);
+        intent.putExtra(ImagePickerActivity.EXTRA_IMAGE_TITLE, imageTitle);
+        intent.putExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES, selectedImages);
+        intent.putExtra(ImagePickerActivity.EXTRA_FOLDER_MODE, folderMode);
+        intent.putExtra(ImagePickerActivity.EXTRA_IMAGE_DIRECTORY, imageDirectory);
         return intent;
     }
 
