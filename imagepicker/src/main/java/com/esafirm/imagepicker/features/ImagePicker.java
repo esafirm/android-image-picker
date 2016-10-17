@@ -1,8 +1,3 @@
-/*
- * Created by Nguyen Hoang Lam
- * Date: ${DATE}
- */
-
 package com.esafirm.imagepicker.features;
 
 import android.app.Activity;
@@ -15,9 +10,6 @@ import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
 
-/**
- * Created by hoanglam on 8/4/16.
- */
 public abstract class ImagePicker {
 
     private int mode;
