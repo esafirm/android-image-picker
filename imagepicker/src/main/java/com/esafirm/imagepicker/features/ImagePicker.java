@@ -1,6 +1,7 @@
 package com.esafirm.imagepicker.features;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
@@ -9,6 +10,7 @@ import com.esafirm.imagepicker.helper.Constants;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ImagePicker {
 
@@ -56,15 +58,15 @@ public abstract class ImagePicker {
     }
 
 
-    public void init(Activity activity) {
+    public void init(Context context) {
         this.mode = ImagePickerActivity.MODE_MULTIPLE;
         this.limit = Constants.MAX_LIMIT;
         this.showCamera = true;
-        this.folderTitle = activity.getString(R.string.title_folder);
-        this.imageTitle = activity.getString(R.string.title_select_image);
+        this.folderTitle = context.getString(R.string.title_folder);
+        this.imageTitle = context.getString(R.string.title_select_image);
         this.selectedImages = new ArrayList<>();
         this.folderMode = false;
-        this.imageDirectory = activity.getString(R.string.image_directory);
+        this.imageDirectory = context.getString(R.string.image_directory);
     }
 
 
@@ -122,8 +124,8 @@ public abstract class ImagePicker {
         return this;
     }
 
-    public Intent getIntent(Activity activity) {
-        Intent intent = new Intent(activity, ImagePickerActivity.class);
+    public Intent getIntent(Context context) {
+        Intent intent = new Intent(context, ImagePickerActivity.class);
         intent.putExtra(ImagePickerActivity.EXTRA_MODE, mode);
         intent.putExtra(ImagePickerActivity.EXTRA_LIMIT, limit);
         intent.putExtra(ImagePickerActivity.EXTRA_SHOW_CAMERA, showCamera);
@@ -135,5 +137,10 @@ public abstract class ImagePicker {
         return intent;
     }
 
-
+    public static List<Image> getImages(Intent intent) {
+        if (intent == null) {
+            return null;
+        }
+        return intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES);
+    }
 }
