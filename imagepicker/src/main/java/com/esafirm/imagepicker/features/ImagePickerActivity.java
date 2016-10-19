@@ -47,6 +47,7 @@ import com.esafirm.imagepicker.view.ProgressWheel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
@@ -532,7 +533,8 @@ public class ImagePickerActivity extends AppCompatActivity
         if (intent.resolveActivity(getPackageManager()) != null) {
             File imageFile = ImageUtils.createImageFile(imageDirectory);
             if (imageFile != null) {
-                Uri uri = FileProvider.getUriForFile(this, getString(R.string.shared_file_provider), imageFile);
+                String providerName = String.format(Locale.ENGLISH, "%s%s", getPackageName(), ".imagepicker.provider");
+                Uri uri = FileProvider.getUriForFile(this, providerName, imageFile);
                 currentImagePath = "file:" + imageFile.getAbsolutePath();
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(intent, Constants.REQUEST_CODE_CAPTURE);

@@ -24,6 +24,4 @@
     <string name="msg_no_camera_permission">Please grant camera permission to capture image</string>
     <string name="msg_limit_images">Image selection limit</string>
 
-    <string name="shared_file_provider">com.nguyenhoanglam.imagepicker.provider</string>
-
 </resources>
