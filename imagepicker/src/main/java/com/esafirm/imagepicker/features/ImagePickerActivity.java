@@ -82,10 +82,6 @@ public class ImagePickerActivity extends AppCompatActivity
 
     private ActionBar actionBar;
 
-    private MenuItem menuDone, menuCamera;
-    private final int menuDoneId = 100;
-    private final int menuCameraId = 101;
-
     private RelativeLayout mainLayout;
     private ProgressWheel progressBar;
     private TextView emptyTextView;
@@ -122,6 +118,13 @@ public class ImagePickerActivity extends AppCompatActivity
         presenter = new ImagePickerPresenter(new ImageLoader(this));
         presenter.attachView(this);
 
+        setupExtras();
+        setupView();
+
+        orientationBasedUI(getResources().getConfiguration().orientation);
+    }
+
+    private void setupView() {
         mainLayout = (RelativeLayout) findViewById(R.id.main);
         progressBar = (ProgressWheel) findViewById(R.id.progress_bar);
         emptyTextView = (TextView) findViewById(R.id.tv_empty_images);
@@ -130,16 +133,17 @@ public class ImagePickerActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
+    }
 
+    private void setupExtras() {
+        Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        /** Get extras */
         limit = bundle.getInt(EXTRA_LIMIT, Constants.MAX_LIMIT);
         mode = bundle.getInt(EXTRA_MODE, MODE_MULTIPLE);
         folderMode = bundle.getBoolean(EXTRA_FOLDER_MODE, false);
 
         folderTitle = bundle.getString(EXTRA_FOLDER_TITLE, getString(R.string.title_folder));
-        imageTitle = bundle.getString(EXTRA_IMAGE_TITLE, getString(R.string.title_select_image));
         imageTitle = bundle.getString(EXTRA_IMAGE_TITLE, getString(R.string.title_select_image));
 
         imageDirectory = bundle.getString(EXTRA_IMAGE_DIRECTORY);
@@ -173,8 +177,6 @@ public class ImagePickerActivity extends AppCompatActivity
                 setImageAdapter(bucket.getImages());
             }
         });
-
-        orientationBasedUI(getResources().getConfiguration().orientation);
     }
 
     @Override
@@ -221,22 +223,22 @@ public class ImagePickerActivity extends AppCompatActivity
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-        if (menu.findItem(menuCameraId) == null) {
-            menuCamera = menu.add(Menu.NONE, menuCameraId, 1, getString(R.string.camera));
-            menuCamera.setIcon(R.drawable.ic_camera_white);
-            menuCamera.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuCamera = menu.findItem(R.id.menu_camera);
+        if (menuCamera != null) {
             menuCamera.setVisible(showCamera);
         }
 
-        if (menu.findItem(menuDoneId) == null) {
-            menuDone = menu.add(Menu.NONE, menuDoneId, 2, getString(R.string.done));
-            menuDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        MenuItem menuDone = menu.findItem(R.id.menu_done);
+        if (menuDone != null) {
+            menuDone.setVisible(!isDisplayingFolderView() && !imageAdapter.getSelectedImages().isEmpty());
         }
-
-        updateTitle();
-
-        return true;
+        return super.onPrepareOptionsMenu(menu);
     }
 
     /**
@@ -251,7 +253,7 @@ public class ImagePickerActivity extends AppCompatActivity
             return true;
         }
 
-        if (id == menuDoneId) {
+        if (id == R.id.menu_done) {
             List<Image> selectedImages = imageAdapter.getSelectedImages();
             if (selectedImages != null && selectedImages.size() > 0) {
 
@@ -273,8 +275,7 @@ public class ImagePickerActivity extends AppCompatActivity
             }
             return true;
         }
-        if (id == menuCameraId) {
-            //captureImage();
+        if (id == R.id.menu_camera) {
             captureImageWithPermission();
             return true;
         }
@@ -569,26 +570,20 @@ public class ImagePickerActivity extends AppCompatActivity
      * If we're displaying images, show number of selected images
      */
     private void updateTitle() {
-        if (menuDone != null && menuCamera != null) {
-            if (isDisplayingFolderView()) {
-                actionBar.setTitle(folderTitle);
-                menuDone.setVisible(false);
-            } else {
-                if (imageAdapter.getSelectedImages().size() == 0) {
-                    actionBar.setTitle(imageTitle);
-                    if (menuDone != null)
-                        menuDone.setVisible(false);
-                } else {
-                    if (mode == ImagePickerActivity.MODE_MULTIPLE) {
-                        if (limit == Constants.MAX_LIMIT)
-                            actionBar.setTitle(String.format(getString(R.string.selected), imageAdapter.getSelectedImages().size()));
-                        else
-                            actionBar.setTitle(String.format(getString(R.string.selected_with_limit), imageAdapter.getSelectedImages().size(), limit));
-                    }
-                    if (menuDone != null)
-                        menuDone.setVisible(true);
-                }
-            }
+        supportInvalidateOptionsMenu();
+
+        if (isDisplayingFolderView()) {
+            actionBar.setTitle(folderTitle);
+            return;
+        }
+
+        if (imageAdapter.getSelectedImages().isEmpty()) {
+            actionBar.setTitle(imageTitle);
+        } else if (mode == ImagePickerActivity.MODE_MULTIPLE) {
+            int imageSize = imageAdapter.getSelectedImages().size();
+            actionBar.setTitle(limit == Constants.MAX_LIMIT
+                    ? String.format(getString(R.string.selected), imageSize)
+                    : String.format(getString(R.string.selected_with_limit), imageSize, limit));
         }
     }
 
@@ -647,7 +642,7 @@ public class ImagePickerActivity extends AppCompatActivity
 
     @Override
     public void showError(Throwable throwable) {
-        String message = "Unkown Error";
+        String message = "Unknown Error";
         if (throwable != null && throwable instanceof NullPointerException) {
             message = "Images not exist";
         }

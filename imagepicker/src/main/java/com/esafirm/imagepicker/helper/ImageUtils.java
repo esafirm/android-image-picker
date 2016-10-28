@@ -7,10 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
-/**
- * Created by hoanglam on 7/31/16.
- */
 public class ImageUtils {
 
     private static final String TAG = "ImageUtils";
@@ -29,7 +27,7 @@ public class ImageUtils {
         }
 
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "IMG_" + timeStamp;
 
         File imageFile = null;
