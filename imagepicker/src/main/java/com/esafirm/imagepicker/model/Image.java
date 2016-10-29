@@ -3,9 +3,6 @@ package com.esafirm.imagepicker.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by hoanglam on 7/31/16.
- */
 public class Image implements Parcelable {
 
     private long id;

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
-import com.esafirm.imagepicker.R;
-import com.esafirm.imagepicker.helper.Constants;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -14,14 +12,19 @@ import java.util.List;
 
 public abstract class ImagePicker {
 
-    private int mode;
-    private int limit;
-    private boolean showCamera;
-    private String folderTitle;
-    private String imageTitle;
-    private ArrayList<Image> selectedImages;
-    private boolean folderMode;
-    private String imageDirectory;
+    public static final String EXTRA_SELECTED_IMAGES = "selectedImages";
+    public static final String EXTRA_LIMIT = "limit";
+    public static final String EXTRA_SHOW_CAMERA = "showCamera";
+    public static final String EXTRA_MODE = "mode";
+    public static final String EXTRA_FOLDER_MODE = "folderMode";
+    public static final String EXTRA_FOLDER_TITLE = "folderTitle";
+    public static final String EXTRA_IMAGE_TITLE = "imageTitle";
+    public static final String EXTRA_IMAGE_DIRECTORY = "imageDirectory";
+
+    public static final int MODE_SINGLE = 1;
+    public static final int MODE_MULTIPLE = 2;
+
+    private ImagePickerConfig config;
 
     public abstract void start(int requestCode);
 
@@ -59,14 +62,7 @@ public abstract class ImagePicker {
 
 
     public void init(Context context) {
-        this.mode = ImagePickerActivity.MODE_MULTIPLE;
-        this.limit = Constants.MAX_LIMIT;
-        this.showCamera = true;
-        this.folderTitle = context.getString(R.string.title_folder);
-        this.imageTitle = context.getString(R.string.title_select_image);
-        this.selectedImages = new ArrayList<>();
-        this.folderMode = false;
-        this.imageDirectory = context.getString(R.string.image_directory);
+        config = new ImagePickerConfig(context);
     }
 
 
@@ -79,68 +75,65 @@ public abstract class ImagePicker {
     }
 
     public ImagePicker single() {
-        mode = ImagePickerActivity.MODE_SINGLE;
+        config.setMode(ImagePicker.MODE_SINGLE);
         return this;
     }
 
     public ImagePicker multi() {
-        mode = ImagePickerActivity.MODE_MULTIPLE;
+        config.setMode(ImagePicker.MODE_MULTIPLE);
         return this;
     }
 
 
     public ImagePicker limit(int count) {
-        limit = count;
+        config.setLimit(count);
         return this;
     }
 
     public ImagePicker showCamera(boolean show) {
-        showCamera = show;
+        config.setShowCamera(show);
         return this;
     }
 
     public ImagePicker folderTitle(String title) {
-        this.folderTitle = title;
+        config.setFolderTitle(title);
         return this;
     }
 
     public ImagePicker imageTitle(String title) {
-        this.imageTitle = title;
+        config.setImageTitle(title);
         return this;
     }
 
     public ImagePicker origin(ArrayList<Image> images) {
-        selectedImages = images;
+        config.setSelectedImages(images);
         return this;
     }
 
     public ImagePicker folderMode(boolean folderMode) {
-        this.folderMode = folderMode;
+        config.setFolderMode(folderMode);
         return this;
     }
 
     public ImagePicker imageDirectory(String directory) {
-        this.imageDirectory = directory;
+        config.setImageDirectory(directory);
         return this;
     }
 
     public Intent getIntent(Context context) {
         Intent intent = new Intent(context, ImagePickerActivity.class);
-        intent.putExtra(ImagePickerActivity.EXTRA_MODE, mode);
-        intent.putExtra(ImagePickerActivity.EXTRA_LIMIT, limit);
-        intent.putExtra(ImagePickerActivity.EXTRA_SHOW_CAMERA, showCamera);
-        intent.putExtra(ImagePickerActivity.EXTRA_FOLDER_TITLE, folderTitle);
-        intent.putExtra(ImagePickerActivity.EXTRA_IMAGE_TITLE, imageTitle);
-        intent.putExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES, selectedImages);
-        intent.putExtra(ImagePickerActivity.EXTRA_FOLDER_MODE, folderMode);
-        intent.putExtra(ImagePickerActivity.EXTRA_IMAGE_DIRECTORY, imageDirectory);
+        intent.putExtra(ImagePickerConfig.class.getSimpleName(), config);
         return intent;
     }
+
+    /* --------------------------------------------------- */
+    /* > Helper */
+    /* --------------------------------------------------- */
 
     public static List<Image> getImages(Intent intent) {
         if (intent == null) {
             return null;
         }
-        return intent.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES);
+        return intent.getParcelableArrayListExtra(ImagePicker.EXTRA_SELECTED_IMAGES);
     }
 }

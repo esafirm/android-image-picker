@@ -76,15 +76,14 @@ public class MainActivity extends AppCompatActivity {
     // Traditional intent
     public void startWithIntent() {
         Intent intent = new Intent(this, ImagePickerActivity.class);
-
-        intent.putExtra(ImagePickerActivity.EXTRA_FOLDER_MODE, true);
-        intent.putExtra(ImagePickerActivity.EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-        intent.putExtra(ImagePickerActivity.EXTRA_LIMIT, 10);
-        intent.putExtra(ImagePickerActivity.EXTRA_SHOW_CAMERA, true);
-        intent.putExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePickerActivity.EXTRA_FOLDER_TITLE, "Album");
-        intent.putExtra(ImagePickerActivity.EXTRA_IMAGE_TITLE, "Tap to select images");
-        intent.putExtra(ImagePickerActivity.EXTRA_IMAGE_DIRECTORY, "Camera");
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
+        intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
+        intent.putExtra(ImagePicker.EXTRA_LIMIT, 10);
+        intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, true);
+        intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
+        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
+        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
         startActivityForResult(intent, REQUEST_CODE_PICKER);
     }
 

@@ -37,6 +37,7 @@ import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
 import com.esafirm.imagepicker.helper.Constants;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.ImageUtils;
+import com.esafirm.imagepicker.helper.IntentHelper;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.listeners.OnImageClickListener;
 import com.esafirm.imagepicker.model.Folder;
@@ -49,6 +50,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.esafirm.imagepicker.features.ImagePicker.EXTRA_IMAGE_DIRECTORY;
+import static com.esafirm.imagepicker.features.ImagePicker.EXTRA_SELECTED_IMAGES;
+import static com.esafirm.imagepicker.features.ImagePicker.MODE_MULTIPLE;
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
 public class ImagePickerActivity extends AppCompatActivity
@@ -59,26 +63,10 @@ public class ImagePickerActivity extends AppCompatActivity
     public static final int RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
     public static final int RC_PERMISSION_REQUEST_CAMERA = 24;
 
-    public static final int MODE_SINGLE = 1;
-    public static final int MODE_MULTIPLE = 2;
-
-    public static final String EXTRA_SELECTED_IMAGES = "selectedImages";
-    public static final String EXTRA_LIMIT = "limit";
-    public static final String EXTRA_SHOW_CAMERA = "showCamera";
-    public static final String EXTRA_MODE = "mode";
-    public static final String EXTRA_FOLDER_MODE = "folderMode";
-    public static final String EXTRA_FOLDER_TITLE = "folderTitle";
-    public static final String EXTRA_IMAGE_TITLE = "imageTitle";
-    public static final String EXTRA_IMAGE_DIRECTORY = "imageDirectory";
-
     private String currentImagePath;
     private String imageDirectory;
 
-    private int limit;
-    private int mode;
-    private boolean showCamera;
-    private boolean folderMode;
-    private String folderTitle, imageTitle;
+    private ImagePickerConfig config;
 
     private ActionBar actionBar;
 
@@ -139,33 +127,29 @@ public class ImagePickerActivity extends AppCompatActivity
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
-        limit = bundle.getInt(EXTRA_LIMIT, Constants.MAX_LIMIT);
-        mode = bundle.getInt(EXTRA_MODE, MODE_MULTIPLE);
-        folderMode = bundle.getBoolean(EXTRA_FOLDER_MODE, false);
-
-        folderTitle = bundle.getString(EXTRA_FOLDER_TITLE, getString(R.string.title_folder));
-        imageTitle = bundle.getString(EXTRA_IMAGE_TITLE, getString(R.string.title_select_image));
+        config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
+        if (config == null) {
+            config = IntentHelper.makeConfigFromIntent(this, intent);
+        }
 
         imageDirectory = bundle.getString(EXTRA_IMAGE_DIRECTORY);
         if (imageDirectory == null || TextUtils.isEmpty(imageDirectory)) {
             imageDirectory = getString(R.string.image_directory);
         }
 
-        showCamera = bundle.getBoolean(EXTRA_SHOW_CAMERA, true);
-
-        ArrayList<Image> selectedImages = null;
-        if (mode == MODE_MULTIPLE && intent.hasExtra(EXTRA_SELECTED_IMAGES)) {
-            selectedImages = intent.getParcelableArrayListExtra(EXTRA_SELECTED_IMAGES);
-        }
-        if (selectedImages == null)
-            selectedImages = new ArrayList<>();
-
-        /** Set activity title */
         if (actionBar != null) {
-            actionBar.setTitle(folderMode ? folderTitle : imageTitle);
+            actionBar.setTitle(config.isFolderMode() ? config.getFolderTitle() : config.getImageTitle());
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             actionBar.setDisplayShowTitleEnabled(true);
+        }
+
+        ArrayList<Image> selectedImages = null;
+        if (config.getMode() == MODE_MULTIPLE && !config.getSelectedImages().isEmpty()) {
+            selectedImages = config.getSelectedImages();
+        }
+        if (selectedImages == null) {
+            selectedImages = new ArrayList<>();
         }
 
         /** Init folder and image adapter */
@@ -231,7 +215,7 @@ public class ImagePickerActivity extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem menuCamera = menu.findItem(R.id.menu_camera);
         if (menuCamera != null) {
-            menuCamera.setVisible(showCamera);
+            menuCamera.setVisible(config.isShowCamera());
         }
 
         MenuItem menuDone = menu.findItem(R.id.menu_done);
@@ -268,7 +252,7 @@ public class ImagePickerActivity extends AppCompatActivity
                 }
 
                 Intent data = new Intent();
-                data.putParcelableArrayListExtra(ImagePickerActivity.EXTRA_SELECTED_IMAGES,
+                data.putParcelableArrayListExtra(EXTRA_SELECTED_IMAGES,
                         (ArrayList<? extends Parcelable>) selectedImages);
                 setResult(RESULT_OK, data);
                 finish();
@@ -331,7 +315,7 @@ public class ImagePickerActivity extends AppCompatActivity
 
     private void getData() {
         presenter.abortLoad();
-        presenter.loadImages(folderMode);
+        presenter.loadImages(config.isFolderMode());
     }
 
     /**
@@ -450,9 +434,9 @@ public class ImagePickerActivity extends AppCompatActivity
     private void clickImage(int position) {
         Image image = imageAdapter.getItem(position);
         int selectedItemPosition = selectedImagePosition(image);
-        if (mode == ImagePickerActivity.MODE_MULTIPLE) {
+        if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
             if (selectedItemPosition == -1) {
-                if (imageAdapter.getSelectedImages().size() < limit) {
+                if (imageAdapter.getSelectedImages().size() < config.getLimit()) {
                     imageAdapter.addSelected(image);
                 } else {
                     Toast.makeText(this, R.string.msg_limit_images, Toast.LENGTH_SHORT).show();
@@ -573,17 +557,17 @@ public class ImagePickerActivity extends AppCompatActivity
         supportInvalidateOptionsMenu();
 
         if (isDisplayingFolderView()) {
-            actionBar.setTitle(folderTitle);
+            actionBar.setTitle(config.getFolderTitle());
             return;
         }
 
         if (imageAdapter.getSelectedImages().isEmpty()) {
-            actionBar.setTitle(imageTitle);
-        } else if (mode == ImagePickerActivity.MODE_MULTIPLE) {
+            actionBar.setTitle(config.getImageTitle());
+        } else if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
             int imageSize = imageAdapter.getSelectedImages().size();
-            actionBar.setTitle(limit == Constants.MAX_LIMIT
+            actionBar.setTitle(config.getLimit() == Constants.MAX_LIMIT
                     ? String.format(getString(R.string.selected), imageSize)
-                    : String.format(getString(R.string.selected_with_limit), imageSize, limit));
+                    : String.format(getString(R.string.selected_with_limit), imageSize, config.getLimit()));
         }
     }
 
@@ -610,7 +594,7 @@ public class ImagePickerActivity extends AppCompatActivity
      * Check if displaying folders view
      */
     private boolean isDisplayingFolderView() {
-        return (folderMode &&
+        return (config.isFolderMode() &&
                 (recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter));
     }
 
@@ -619,7 +603,7 @@ public class ImagePickerActivity extends AppCompatActivity
      */
     @Override
     public void onBackPressed() {
-        if (folderMode && !isDisplayingFolderView()) {
+        if (config.isFolderMode() && !isDisplayingFolderView()) {
             setFolderAdapter(null);
             return;
         }
@@ -633,7 +617,7 @@ public class ImagePickerActivity extends AppCompatActivity
 
     @Override
     public void showFetchCompleted(List<Image> images, List<Folder> folders) {
-        if (folderMode) {
+        if (config.isFolderMode()) {
             setFolderAdapter(folders);
         } else {
             setImageAdapter(images);
