@@ -10,35 +10,53 @@ A simple library to select images from the gallery and camera.
 ## How to use
 ### Start image picker activity
 - Quick call
+
+```java
+ImagePicker.create(this) // Activity or Fragment
+	    .start(REQUEST_CODE_PICKER);
+``` 
+- Complete options
+
 ```java
 ImagePicker.create(this)
-            .folderMode(true) // folder mode (false by default)
-            .folderTitle("Folder") // folder selection title
-            .imageTitle("Tap to select") // image selection title
-            .single() // single mode
-            .multi() // multi mode (default mode)
-            .limit(10) // max images can be selected (99 by default)
-            .showCamera(true) // show camera or not (true by default)
-            .imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
-            .origin(images) // original selected images, used in multi mode
-            .start(REQUEST_CODE_PICKER); // start image picker activity with request code
+	.returnAfterCapture(true) // set whether camera action should return immediate result or not
+	.folderMode(true) // folder mode (false by default)
+	.folderTitle("Folder") // folder selection title
+	.imageTitle("Tap to select") // image selection title
+	.single() // single mode
+	.multi() // multi mode (default mode)
+	.limit(10) // max images can be selected (99 by default)
+	.showCamera(true) // show camera or not (true by default)
+	.imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
+	.origin(images) // original selected images, used in multi mode
+	.start(REQUEST_CODE_PICKER); // start image picker activity with request code
 ```                
 - Or use traditional Intent
 ```java
 Intent intent = new Intent(this, ImagePickerActivity.class);
 
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, true);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, images);
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE, "Album");
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE, "Tap to select images");
-intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, "Camera");
+intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
+intent.putExtra(ImagePicker.EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+intent.putExtra(ImagePicker.EXTRA_LIMIT, 10);
+intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, true);
+intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
+intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
+intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
+intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
 
 startActivityForResult(intent, REQUEST_CODE_PICKER);
 ```        
 ### Receive result
+
+- Using helper 
+
+```java
+@Override
+if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
+    ArrayList<Image> images = (ArrayList<Image>) ImagePicker.getImages(data);
+}
+```
+- via Intent
 
 ```java
 @Override
