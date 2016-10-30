@@ -9,12 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class ImageUtils {
+public class ImagePickerUtils {
 
     private static final String TAG = "ImageUtils";
 
     public static File createImageFile(String directory) {
-
         // External sdcard location
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), directory);
 
@@ -37,5 +36,12 @@ public class ImageUtils {
             Log.d(TAG, "Oops! Failed create " + imageFileName + " file");
         }
         return imageFile;
+    }
+
+    public static String getNameFromFilePath(String path) {
+        if (path.contains(File.separator)) {
+            return path.substring(path.lastIndexOf(File.separator) + 1);
+        }
+        return path;
     }
 }

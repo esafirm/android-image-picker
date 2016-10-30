@@ -5,31 +5,43 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.esafirm.imagepicker.R;
-import com.esafirm.imagepicker.helper.Constants;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
 
 public class ImagePickerConfig implements Parcelable {
 
-    private int mode;
-    private int limit;
-    private boolean showCamera;
+    private ArrayList<Image> selectedImages;
+
     private String folderTitle;
     private String imageTitle;
-    private ArrayList<Image> selectedImages;
-    private boolean folderMode;
     private String imageDirectory;
+
+    private int mode;
+    private int limit;
+
+    private boolean folderMode;
+    private boolean showCamera;
+    private boolean returnAfterCapture;
 
     public ImagePickerConfig(Context context) {
         this.mode = ImagePicker.MODE_MULTIPLE;
-        this.limit = Constants.MAX_LIMIT;
+        this.limit = ImagePicker.MAX_LIMIT;
         this.showCamera = true;
         this.folderTitle = context.getString(R.string.title_folder);
         this.imageTitle = context.getString(R.string.title_select_image);
         this.selectedImages = new ArrayList<>();
         this.folderMode = false;
         this.imageDirectory = context.getString(R.string.image_directory);
+        this.returnAfterCapture = true;
+    }
+
+    public boolean isReturnAfterCapture() {
+        return returnAfterCapture;
+    }
+
+    public void setReturnAfterCapture(boolean returnAfterCapture) {
+        this.returnAfterCapture = returnAfterCapture;
     }
 
     public int getMode() {
@@ -107,28 +119,30 @@ public class ImagePickerConfig implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.mode);
-        dest.writeInt(this.limit);
-        dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(this.selectedImages);
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
-        dest.writeTypedList(this.selectedImages);
-        dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
         dest.writeString(this.imageDirectory);
+        dest.writeInt(this.mode);
+        dest.writeInt(this.limit);
+        dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.returnAfterCapture ? (byte) 1 : (byte) 0);
     }
 
     protected ImagePickerConfig(Parcel in) {
-        this.mode = in.readInt();
-        this.limit = in.readInt();
-        this.showCamera = in.readByte() != 0;
+        this.selectedImages = in.createTypedArrayList(Image.CREATOR);
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
-        this.selectedImages = in.createTypedArrayList(Image.CREATOR);
-        this.folderMode = in.readByte() != 0;
         this.imageDirectory = in.readString();
+        this.mode = in.readInt();
+        this.limit = in.readInt();
+        this.folderMode = in.readByte() != 0;
+        this.showCamera = in.readByte() != 0;
+        this.returnAfterCapture = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<ImagePickerConfig> CREATOR = new Parcelable.Creator<ImagePickerConfig>() {
+    public static final Creator<ImagePickerConfig> CREATOR = new Creator<ImagePickerConfig>() {
         @Override
         public ImagePickerConfig createFromParcel(Parcel source) {
             return new ImagePickerConfig(source);

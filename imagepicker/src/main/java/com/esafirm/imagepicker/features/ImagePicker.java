@@ -21,6 +21,8 @@ public abstract class ImagePicker {
     public static final String EXTRA_IMAGE_TITLE = "imageTitle";
     public static final String EXTRA_IMAGE_DIRECTORY = "imageDirectory";
 
+    public static final int MAX_LIMIT = 99;
+
     public static final int MODE_SINGLE = 1;
     public static final int MODE_MULTIPLE = 2;
 
@@ -84,6 +86,10 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker returnAfterCapture(boolean returnAfterCapture){
+        config.setReturnAfterCapture(returnAfterCapture);
+        return this;
+    }
 
     public ImagePicker limit(int count) {
         config.setLimit(count);

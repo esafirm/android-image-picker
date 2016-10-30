@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,9 +33,8 @@ import android.widget.Toast;
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
-import com.esafirm.imagepicker.helper.Constants;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
-import com.esafirm.imagepicker.helper.ImageUtils;
+import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.helper.IntentHelper;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.listeners.OnImageClickListener;
@@ -57,6 +55,8 @@ import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_E
 
 public class ImagePickerActivity extends AppCompatActivity
         implements ImagePickerView, OnImageClickListener {
+
+    private static final int REQUEST_CODE_CAPTURE = 2000;
 
     private static final String TAG = "ImagePickerActivity";
 
@@ -236,27 +236,9 @@ public class ImagePickerActivity extends AppCompatActivity
             onBackPressed();
             return true;
         }
-
         if (id == R.id.menu_done) {
             List<Image> selectedImages = imageAdapter.getSelectedImages();
-            if (selectedImages != null && selectedImages.size() > 0) {
-
-                /** Scan selected images which not existed */
-                for (int i = 0; i < selectedImages.size(); i++) {
-                    Image image = selectedImages.get(i);
-                    File file = new File(image.getPath());
-                    if (!file.exists()) {
-                        selectedImages.remove(i);
-                        i--;
-                    }
-                }
-
-                Intent data = new Intent();
-                data.putParcelableArrayListExtra(EXTRA_SELECTED_IMAGES,
-                        (ArrayList<? extends Parcelable>) selectedImages);
-                setResult(RESULT_OK, data);
-                finish();
-            }
+            presenter.onDoneSelectImages(selectedImages);
             return true;
         }
         if (id == R.id.menu_camera) {
@@ -474,21 +456,8 @@ public class ImagePickerActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE_CAPTURE) {
-            if (resultCode == RESULT_OK) {
-                Uri imageUri = Uri.parse(currentImagePath);
-                if (imageUri != null) {
-                    MediaScannerConnection.scanFile(this,
-                            new String[]{imageUri.getPath()}, null,
-                            new MediaScannerConnection.OnScanCompletedListener() {
-                                @Override
-                                public void onScanCompleted(String path, Uri uri) {
-                                    Log.v(TAG, "File " + path + " was scanned successfully: " + uri);
-                                    getDataWithPermission();
-                                }
-                            });
-                }
-            }
+        if (requestCode == REQUEST_CODE_CAPTURE && resultCode == RESULT_OK) {
+            presenter.finishCaptureImage(this, currentImagePath, config);
         }
     }
 
@@ -516,13 +485,13 @@ public class ImagePickerActivity extends AppCompatActivity
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
-            File imageFile = ImageUtils.createImageFile(imageDirectory);
+            File imageFile = ImagePickerUtils.createImageFile(imageDirectory);
             if (imageFile != null) {
                 String providerName = String.format(Locale.ENGLISH, "%s%s", getPackageName(), ".imagepicker.provider");
                 Uri uri = FileProvider.getUriForFile(this, providerName, imageFile);
                 currentImagePath = "file:" + imageFile.getAbsolutePath();
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(intent, Constants.REQUEST_CODE_CAPTURE);
+                startActivityForResult(intent, REQUEST_CODE_CAPTURE);
             } else {
                 Toast.makeText(this, getString(R.string.error_create_image_file), Toast.LENGTH_LONG).show();
             }
@@ -565,7 +534,7 @@ public class ImagePickerActivity extends AppCompatActivity
             actionBar.setTitle(config.getImageTitle());
         } else if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
             int imageSize = imageAdapter.getSelectedImages().size();
-            actionBar.setTitle(config.getLimit() == Constants.MAX_LIMIT
+            actionBar.setTitle(config.getLimit() == ImagePicker.MAX_LIMIT
                     ? String.format(getString(R.string.selected), imageSize)
                     : String.format(getString(R.string.selected_with_limit), imageSize, config.getLimit()));
         }
@@ -614,6 +583,20 @@ public class ImagePickerActivity extends AppCompatActivity
     /* --------------------------------------------------- */
     /* > View Methods */
     /* --------------------------------------------------- */
+
+    @Override
+    public void finishPickImages(List<Image> images) {
+        Intent data = new Intent();
+        data.putParcelableArrayListExtra(EXTRA_SELECTED_IMAGES,
+                (ArrayList<? extends Parcelable>) images);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    @Override
+    public void showCapturedImage() {
+        getDataWithPermission();
+    }
 
     @Override
     public void showFetchCompleted(List<Image> images, List<Folder> folders) {
