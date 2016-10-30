@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.esafirm.imagepicker.features.ImagePicker;
@@ -58,9 +59,12 @@ public class MainActivity extends AppCompatActivity {
                 .start(this, ImagePicker.create(this));
     }
 
-    // Recomended builder
+    // Recommended builder
     public void start() {
+        boolean returnAfterCapture = ((Switch) findViewById(R.id.switch_return_after_capture)).isChecked();
+
         ImagePicker.create(this)
+                .returnAfterCapture(returnAfterCapture) // set whether camera action should return immediate result or not
                 .folderMode(true) // set folder mode (false by default)
                 .folderTitle("Folder") // folder selection title
                 .imageTitle("Tap to select") // image selection title
