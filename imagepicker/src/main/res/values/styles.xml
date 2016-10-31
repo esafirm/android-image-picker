@@ -9,14 +9,9 @@
     </style>
 
     <style name="ImagePickerTheme" parent="AppTheme">
-        <item name="actionModeStyle">@style/CustomActionModeStyle</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="CustomActionModeStyle" parent="Base.Widget.AppCompat.ActionMode">
-        <item name="background">@color/colorPrimary</item>
     </style>
 
     <style name="CustomToolbarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">

@@ -121,6 +121,13 @@ public class ImagePickerActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle(config.isFolderMode() ? config.getFolderTitle() : config.getImageTitle());
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
     }
 
     private void setupExtras() {
@@ -135,13 +142,6 @@ public class ImagePickerActivity extends AppCompatActivity
         imageDirectory = bundle.getString(EXTRA_IMAGE_DIRECTORY);
         if (imageDirectory == null || TextUtils.isEmpty(imageDirectory)) {
             imageDirectory = getString(R.string.image_directory);
-        }
-
-        if (actionBar != null) {
-            actionBar.setTitle(config.isFolderMode() ? config.getFolderTitle() : config.getImageTitle());
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
-            actionBar.setDisplayShowTitleEnabled(true);
         }
 
         ArrayList<Image> selectedImages = null;
