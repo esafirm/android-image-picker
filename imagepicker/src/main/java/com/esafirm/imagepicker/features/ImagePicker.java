@@ -62,11 +62,13 @@ public abstract class ImagePicker {
         }
     }
 
+    /* --------------------------------------------------- */
+    /* > Stater */
+    /* --------------------------------------------------- */
 
     public void init(Context context) {
         config = new ImagePickerConfig(context);
     }
-
 
     public static ImagePickerWithActivity create(Activity activity) {
         return new ImagePickerWithActivity(activity);
@@ -75,6 +77,10 @@ public abstract class ImagePicker {
     public static ImagePickerWithFragment create(Fragment fragment) {
         return new ImagePickerWithFragment(fragment);
     }
+
+    /* --------------------------------------------------- */
+    /* > Builder */
+    /* --------------------------------------------------- */
 
     public ImagePicker single() {
         config.setMode(ImagePicker.MODE_SINGLE);
@@ -86,7 +92,7 @@ public abstract class ImagePicker {
         return this;
     }
 
-    public ImagePicker returnAfterCapture(boolean returnAfterCapture){
+    public ImagePicker returnAfterCapture(boolean returnAfterCapture) {
         config.setReturnAfterCapture(returnAfterCapture);
         return this;
     }

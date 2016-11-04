@@ -1,25 +1,28 @@
 package com.esafirm.imagepicker.features;
 
+import android.app.Activity;
 import android.content.Context;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.widget.Toast;
 
+import com.esafirm.imagepicker.R;
+import com.esafirm.imagepicker.features.camera.CameraModule;
+import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
+import com.esafirm.imagepicker.features.camera.OnImageReadyListener;
 import com.esafirm.imagepicker.features.common.BasePresenter;
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
-import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
     private ImageLoader imageLoader;
+    private CameraModule cameraModule = new DefaultCameraModule();
     private Handler handler = new Handler(Looper.getMainLooper());
 
     public ImagePickerPresenter(ImageLoader imageLoader) {
@@ -91,26 +94,26 @@ public class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         }
     }
 
-    public void finishCaptureImage(Context context, String imagePath, final ImagePickerConfig config) {
-        Uri imageUri = Uri.parse(imagePath);
-        if (imageUri != null) {
-            MediaScannerConnection.scanFile(context,
-                    new String[]{imageUri.getPath()}, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        @Override
-                        public void onScanCompleted(String path, Uri uri) {
-                            Log.v("ImagePicker", "File " + path + " was scanned successfully: " + uri);
-
-                            if (config.isReturnAfterCapture()) {
-                                List<Image> images = new ArrayList<>();
-                                images.add(new Image(0, ImagePickerUtils.getNameFromFilePath(path), path, true));
-                                getView().finishPickImages(images);
-                            } else {
-                                getView().showCapturedImage();
-                            }
-                        }
-                    });
+    public void captureImage(Activity activity, ImagePickerConfig config, int requestCode) {
+        Context context = activity.getApplicationContext();
+        Intent intent = cameraModule.getCameraIntent(activity, config);
+        if (intent == null) {
+            Toast.makeText(context, context.getString(R.string.error_create_image_file), Toast.LENGTH_LONG).show();
+            return;
         }
+        activity.startActivityForResult(intent, requestCode);
+    }
 
+    public void finishCaptureImage(Context context, Intent data, final ImagePickerConfig config) {
+        cameraModule.getImage(context, data, new OnImageReadyListener() {
+            @Override
+            public void onImageReady(List<Image> images) {
+                if (config.isReturnAfterCapture()) {
+                    getView().finishPickImages(images);
+                } else {
+                    getView().showCapturedImage();
+                }
+            }
+        });
     }
 }

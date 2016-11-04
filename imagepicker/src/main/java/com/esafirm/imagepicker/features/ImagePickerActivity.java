@@ -15,13 +15,11 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,8 +31,8 @@ import android.widget.Toast;
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
+import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
-import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.helper.IntentHelper;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.listeners.OnImageClickListener;
@@ -43,12 +41,9 @@ import com.esafirm.imagepicker.model.Image;
 import com.esafirm.imagepicker.view.GridSpacingItemDecoration;
 import com.esafirm.imagepicker.view.ProgressWheel;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import static com.esafirm.imagepicker.features.ImagePicker.EXTRA_IMAGE_DIRECTORY;
 import static com.esafirm.imagepicker.features.ImagePicker.EXTRA_SELECTED_IMAGES;
 import static com.esafirm.imagepicker.features.ImagePicker.MODE_MULTIPLE;
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
@@ -56,20 +51,14 @@ import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_E
 public class ImagePickerActivity extends AppCompatActivity
         implements ImagePickerView, OnImageClickListener {
 
-    private static final int REQUEST_CODE_CAPTURE = 2000;
+    private static final int RC_CAPTURE = 2000;
 
     private static final String TAG = "ImagePickerActivity";
 
     public static final int RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
     public static final int RC_PERMISSION_REQUEST_CAMERA = 24;
 
-    private String currentImagePath;
-    private String imageDirectory;
-
-    private ImagePickerConfig config;
-
     private ActionBar actionBar;
-
     private RelativeLayout mainLayout;
     private ProgressWheel progressBar;
     private TextView emptyTextView;
@@ -81,6 +70,7 @@ public class ImagePickerActivity extends AppCompatActivity
     private ImagePickerPresenter presenter;
     private ImagePickerPreferences preferences;
     private ImagePickerAdapter imageAdapter;
+    private ImagePickerConfig config;
     private FolderPickerAdapter folderAdapter;
 
     private Handler handler;
@@ -137,11 +127,6 @@ public class ImagePickerActivity extends AppCompatActivity
         config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
         if (config == null) {
             config = IntentHelper.makeConfigFromIntent(this, intent);
-        }
-
-        imageDirectory = bundle.getString(EXTRA_IMAGE_DIRECTORY);
-        if (imageDirectory == null || TextUtils.isEmpty(imageDirectory)) {
-            imageDirectory = getString(R.string.image_directory);
         }
 
         ArrayList<Image> selectedImages = null;
@@ -456,8 +441,8 @@ public class ImagePickerActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CAPTURE && resultCode == RESULT_OK) {
-            presenter.finishCaptureImage(this, currentImagePath, config);
+        if (requestCode == RC_CAPTURE && resultCode == RESULT_OK) {
+            presenter.finishCaptureImage(this, data, config);
         }
     }
 
@@ -483,21 +468,10 @@ public class ImagePickerActivity extends AppCompatActivity
      * Create a temporary file and pass file Uri to camera intent
      */
     private void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            File imageFile = ImagePickerUtils.createImageFile(imageDirectory);
-            if (imageFile != null) {
-                String providerName = String.format(Locale.ENGLISH, "%s%s", getPackageName(), ".imagepicker.provider");
-                Uri uri = FileProvider.getUriForFile(this, providerName, imageFile);
-                currentImagePath = "file:" + imageFile.getAbsolutePath();
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(intent, REQUEST_CODE_CAPTURE);
-            } else {
-                Toast.makeText(this, getString(R.string.error_create_image_file), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.error_no_camera), Toast.LENGTH_LONG).show();
+        if (!CameraHelper.checkCameraAvailability(this)) {
+            return;
         }
+        presenter.captureImage(this, config, RC_CAPTURE);
     }
 
 
