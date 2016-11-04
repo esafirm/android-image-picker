@@ -10,17 +10,19 @@ import android.util.Log;
 
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.helper.ImagePickerUtils;
-import com.esafirm.imagepicker.model.Image;
+import com.esafirm.imagepicker.model.ImageFactory;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class DefaultCameraModule implements CameraModule, Serializable {
 
-    private String currentImagePath;
+    protected String currentImagePath;
+
+    public Intent getCameraIntent(Context context) {
+        return getCameraIntent(context, new ImagePickerConfig(context));
+    }
 
     @Override
     public Intent getCameraIntent(Context context, ImagePickerConfig config) {
@@ -58,10 +60,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
                             if (path == null) {
                                 path = currentImagePath;
                             }
-
-                            List<Image> images = new ArrayList<>();
-                            images.add(new Image(0, ImagePickerUtils.getNameFromFilePath(path), path, true));
-                            imageReadyListener.onImageReady(images);
+                            imageReadyListener.onImageReady(ImageFactory.singleListFromPath(path));
                         }
                     });
         }
