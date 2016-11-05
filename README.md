@@ -5,7 +5,31 @@ A simple library to select images from the gallery and camera.
 
 <img src="https://raw.githubusercontent.com/esafirm/android-image-picker/master/art/ss.gif" height="460" width="284"/>
 
-## How to use
+## Download
+
+Add this to your project's `build.gradle`
+
+```groovy
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+
+And add this to your module's `build.gradle` 
+
+```groovy
+dependencies {
+	compile 'com.github.esafirm.android-image-picker:imagepicker:x.y.z'
+	// for experimental rx picker
+	compile 'com.github.esafirm.android-image-picker:rximagepicker:x.y.z'
+}
+```
+
+change `x.y.z` to version in the [release page](https://github.com/esafirm/android-image-picker/releases)
+
+## Usage
 
 For full example, please refer to `sample`
 
