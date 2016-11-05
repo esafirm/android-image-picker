@@ -1,7 +1,12 @@
 package com.esafirm.sample;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Switch;
@@ -9,6 +14,9 @@ import android.widget.TextView;
 
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerActivity;
+import com.esafirm.imagepicker.features.camera.CameraModule;
+import com.esafirm.imagepicker.features.camera.ImmediateCameraModule;
+import com.esafirm.imagepicker.features.camera.OnImageReadyListener;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
 
@@ -20,10 +28,12 @@ import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int REQUEST_CODE_PICKER = 2000;
+    private static final int RC_CODE_PICKER = 2000;
+    private static final int RC_CAMERA = 3000;
 
     private TextView textView;
     private ArrayList<Image> images = new ArrayList<>();
+    private CameraModule cameraModule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +55,41 @@ public class MainActivity extends AppCompatActivity {
                 getImagePickerObservable().forEach(action);
             }
         });
+
+        findViewById(R.id.button_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Activity activity = MainActivity.this;
+                final String[] permissions = new String[]{Manifest.permission.CAMERA};
+                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity, permissions, RC_CAMERA);
+                } else {
+                    captureImage();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == RC_CAMERA) {
+            if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                captureImage();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void captureImage() {
+        startActivityForResult(
+                getCameraModule().getCameraIntent(MainActivity.this), RC_CAMERA);
+    }
+
+    private ImmediateCameraModule getCameraModule() {
+        if (cameraModule == null) {
+            cameraModule = new ImmediateCameraModule();
+        }
+        return (ImmediateCameraModule) cameraModule;
     }
 
     Action1<List<Image>> action = new Action1<List<Image>>() {
@@ -74,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .origin(images) // original selected images, used in multi mode
-                .start(REQUEST_CODE_PICKER); // start image picker activity with request code
+                .start(RC_CODE_PICKER); // start image picker activity with request code
     }
 
     // Traditional intent
@@ -88,14 +133,25 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
         intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
         intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
-        startActivityForResult(intent, REQUEST_CODE_PICKER);
+        startActivityForResult(intent, RC_CODE_PICKER);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
+    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        if (requestCode == RC_CODE_PICKER && resultCode == RESULT_OK && data != null) {
             images = (ArrayList<Image>) ImagePicker.getImages(data);
             printImages(images);
+            return;
+        }
+
+        if (requestCode == RC_CAMERA && resultCode == RESULT_OK) {
+            getCameraModule().getImage(this, data, new OnImageReadyListener() {
+                @Override
+                public void onImageReady(List<Image> resultImages) {
+                    images = (ArrayList<Image>) resultImages;
+                    printImages(images);
+                }
+            });
         }
     }
 

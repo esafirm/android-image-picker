@@ -35,21 +35,32 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/button_pick_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:text="PICK IMAGE"/>
 
-    <Button
-        android:id="@+id/button_pick_image_rx"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="72dp"
-        android:text="PICK IMAGE RX"/>
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_pick_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PICK IMAGE"/>
+
+        <Button
+            android:id="@+id/button_pick_image_rx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PICK IMAGE RX"/>
+
+        <Button
+            android:id="@+id/button_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CAMERA ONLY"/>
+    </LinearLayout>
+
 </RelativeLayout>

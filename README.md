@@ -3,11 +3,12 @@ A simple library to select images from the gallery and camera.
 
 ## Screenshot
 
-<img src="https://cloud.githubusercontent.com/assets/4979755/18304733/46cfad58-750e-11e6-9a6c-129ece6cfc7d.png" height="683" width="384">
-<img src="https://cloud.githubusercontent.com/assets/4979755/18304727/44117484-750e-11e6-8ad1-85301a171690.png" height="683" width="384">
-
+<img src="https://raw.githubusercontent.com/esafirm/android-image-picker/master/art/ss.gif" height="460" width="284"/>
 
 ## How to use
+
+For full example, please refer to `sample`
+
 ### Start image picker activity
 - Quick call
 
@@ -68,6 +69,31 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 ```
 
+### Camera Only
+
+```java
+DefaultCameraModule cameraModule = new DefaultCameraModule() // or ImmediateCameraModule 
+startActivityForResult(cameraModule.getIntent(context), RC_REQUEST_CAMERA);  
+```
+
+- Receiving Result
+
+```java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == RC_REQUEST_CAMERA && resultCode == RESULT_OK && data != null) {
+        cameraModule.getImage(context, data, new OnImageReadyListener() {
+            @Override
+            public void onImageReady(List<Image> images) {
+	    	// do what you want to do with the image ...
+	    	// it's either List<Image> with one item or null (still need improvement)
+            }
+        });
+    }
+}
+```
+
+
 ##Mofidification License
 ```
 Copyright (c) 2016 Esa Firman
@@ -83,4 +109,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 [The Original Image Picker](https://github.com/nguyenhoanglam/ImagePicker)
 
 [You can find the original lincense here ](https://raw.githubusercontent.com/esafirm/ImagePicker/master/ORIGINAL_LICENSE) 
+
 
