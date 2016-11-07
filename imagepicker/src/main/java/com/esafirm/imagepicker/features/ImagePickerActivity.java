@@ -34,6 +34,7 @@ import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.IntentHelper;
+import com.esafirm.imagepicker.helper.UiUtil;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.listeners.OnImageClickListener;
 import com.esafirm.imagepicker.model.Folder;
@@ -117,6 +118,11 @@ public class ImagePickerActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             actionBar.setDisplayShowTitleEnabled(true);
+
+            toolbar.setBackgroundColor(config.getActionBarColor());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                UiUtil.setStatusBarColor(this, config.getStatusBarColor());
+            }
         }
     }
 

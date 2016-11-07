@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -119,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .origin(images) // original selected images, used in multi mode
+                .statusBarColor(ActivityCompat.getColor(this, R.color.colorPrimaryDark))
+                .actionBarColor(Color.parseColor("#E91E63"))
                 .start(RC_CODE_PICKER); // start image picker activity with request code
     }
 
