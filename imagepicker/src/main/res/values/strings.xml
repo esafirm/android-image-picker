@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ImagePicker</string>
+    <string name="imagepicker">ImagePicker</string>
 
     <string name="permission_write_external_rationale">Allow access external storage to select images</string>
 
