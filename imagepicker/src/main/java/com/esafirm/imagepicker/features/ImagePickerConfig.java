@@ -1,6 +1,7 @@
 package com.esafirm.imagepicker.features;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -24,6 +25,9 @@ public class ImagePickerConfig implements Parcelable {
     private boolean showCamera;
     private boolean returnAfterCapture;
 
+    private int actionBarColor;
+    private int statusBarColor;
+
     public ImagePickerConfig(Context context) {
         this.mode = ImagePicker.MODE_MULTIPLE;
         this.limit = ImagePicker.MAX_LIMIT;
@@ -34,6 +38,8 @@ public class ImagePickerConfig implements Parcelable {
         this.folderMode = false;
         this.imageDirectory = context.getString(R.string.image_directory);
         this.returnAfterCapture = true;
+        this.actionBarColor = Color.parseColor("#3F51B5");
+        this.statusBarColor = Color.parseColor("#303F9F");
     }
 
     public boolean isReturnAfterCapture() {
@@ -108,6 +114,22 @@ public class ImagePickerConfig implements Parcelable {
         this.imageDirectory = imageDirectory;
     }
 
+    public int getActionBarColor() {
+        return actionBarColor;
+    }
+
+    public void setActionBarColor(int actionBarColor) {
+        this.actionBarColor = actionBarColor;
+    }
+
+    public int getStatusBarColor() {
+        return statusBarColor;
+    }
+
+    public void setStatusBarColor(int statusBarColor) {
+        this.statusBarColor = statusBarColor;
+    }
+
     /* --------------------------------------------------- */
     /* > Parcelable */
     /* --------------------------------------------------- */
@@ -128,6 +150,8 @@ public class ImagePickerConfig implements Parcelable {
         dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
         dest.writeByte(this.returnAfterCapture ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.actionBarColor);
+        dest.writeInt(this.statusBarColor);
     }
 
     protected ImagePickerConfig(Parcel in) {
@@ -140,6 +164,8 @@ public class ImagePickerConfig implements Parcelable {
         this.folderMode = in.readByte() != 0;
         this.showCamera = in.readByte() != 0;
         this.returnAfterCapture = in.readByte() != 0;
+        this.actionBarColor = in.readInt();
+        this.statusBarColor = in.readInt();
     }
 
     public static final Creator<ImagePickerConfig> CREATOR = new Creator<ImagePickerConfig>() {

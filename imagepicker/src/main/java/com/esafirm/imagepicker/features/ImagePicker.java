@@ -132,6 +132,16 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker actionBarColor(int color) {
+        config.setActionBarColor(color);
+        return this;
+    }
+
+    public ImagePicker statusBarColor(int color) {
+        config.setStatusBarColor(color);
+        return this;
+    }
+
     public Intent getIntent(Context context) {
         Intent intent = new Intent(context, ImagePickerActivity.class);
         intent.putExtra(ImagePickerConfig.class.getSimpleName(), config);
