@@ -34,13 +34,16 @@ public class DefaultCameraModule implements CameraModule, Serializable {
             Uri uri = FileProvider.getUriForFile(appContext, providerName, imageFile);
             currentImagePath = "file:" + imageFile.getAbsolutePath();
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+            ImagePickerUtils.grantAppPermission(context, intent, uri);
+
             return intent;
         }
         return null;
     }
 
     @Override
-    public void getImage(Context context, Intent intent, final OnImageReadyListener imageReadyListener) {
+    public void getImage(final Context context, Intent intent, final OnImageReadyListener imageReadyListener) {
         if (imageReadyListener == null) {
             throw new IllegalStateException("OnImageReadyListener must not be null");
         }
@@ -48,7 +51,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
             imageReadyListener.onImageReady(null);
         }
 
-        Uri imageUri = Uri.parse(currentImagePath);
+        final Uri imageUri = Uri.parse(currentImagePath);
         if (imageUri != null) {
             MediaScannerConnection.scanFile(context.getApplicationContext(),
                     new String[]{imageUri.getPath()}, null,
@@ -61,6 +64,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
                                 path = currentImagePath;
                             }
                             imageReadyListener.onImageReady(ImageFactory.singleListFromPath(path));
+                            ImagePickerUtils.revokeAppPermission(context, imageUri);
                         }
                     });
         }
