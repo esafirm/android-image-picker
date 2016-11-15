@@ -34,7 +34,7 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
 
     @Override
     public FolderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.item_folder, parent, false);
+        View itemView = inflater.inflate(R.layout.ef_imagepicker_item_folder, parent, false);
         return new FolderViewHolder(itemView);
     }
 

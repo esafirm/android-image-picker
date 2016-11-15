@@ -35,7 +35,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.item_image, parent, false);
+        View itemView = inflater.inflate(R.layout.ef_imagepicker_item_image, parent, false);
         return new ImageViewHolder(itemView, itemClickListener);
     }
 
