@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">ImagePicker</string>
-
     <string name="permission_write_external_rationale">請允許存取外部存儲以選擇相片</string>
 
     <string name="ok">好</string>
