@@ -47,8 +47,10 @@ public class DefaultCameraModule implements CameraModule, Serializable {
         if (imageReadyListener == null) {
             throw new IllegalStateException("OnImageReadyListener must not be null");
         }
+
         if (currentImagePath == null) {
             imageReadyListener.onImageReady(null);
+            return;
         }
 
         final Uri imageUri = Uri.parse(currentImagePath);
