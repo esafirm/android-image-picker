@@ -4,7 +4,6 @@
     <string name="ok">好</string>
     <string name="done">完成</string>
     <string name="camera">相機</string>
-    <string name="image_directory">Camera</string>
 
     <string name="title_folder">Folder</string>
     <string name="title_select_image">選擇相片</string>

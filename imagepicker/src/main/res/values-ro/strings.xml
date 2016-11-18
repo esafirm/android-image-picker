@@ -5,7 +5,6 @@
     <string name="ok">OK</string>
     <string name="done">TERMINAT</string>
     <string name="camera">CAMERA</string>
-    <string name="image_directory">Camera</string>
 
     <string name="title_folder">Fișier</string>
     <string name="title_select_image">Atingeți pentru a selecta imagini</string>
