@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permission_write_external_rationale">Permite accesul de stocare extern pentru a selecta imagini</string>
+
+    <string name="ok">OK</string>
+    <string name="done">TERMINAT</string>
+    <string name="camera">CAMERA</string>
+    <string name="image_directory">Camera</string>
+
+    <string name="title_folder">Fișier</string>
+    <string name="title_select_image">Atingeți pentru a selecta imagini</string>
+    <string name="title_permission_denied">Acces refuzat</string>
+
+    <string name="selected">%d selectate</string>
+    <string name="selected_with_limit">%1$d/%2$d selectate</string>
+
+    <string name="error_create_image_file">Nu am putut crea imaginea</string>
+    <string name="error_no_camera">Camera foto nu a fost găsită</string>
+    <string name="error_null_cursor">Hopa, ceva a mers prost!</string>
+
+    <string name="msg_empty_images">Nu am găsit imaginea</string>
+    <string name="msg_no_write_external_permission">Vă rugăm să acordați permisiunea de stocare pentru a selecta imagini</string>
+    <string name="msg_no_camera_permission">Vă rugăm să acordați permisiunea fotocamerei pentru a captura imagini</string>
+    <string name="msg_limit_images">Limita de selecție a imaginii depăşită</string>
+
+</resources>
