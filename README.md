@@ -118,7 +118,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 
-##Mofidification License
+##Modification License
 ```
 Copyright (c) 2016 Esa Firman
 
