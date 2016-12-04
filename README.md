@@ -61,7 +61,7 @@ ImagePicker.create(this)
 Intent intent = new Intent(this, ImagePickerActivity.class);
 
 intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
-intent.putExtra(ImagePicker.EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
 intent.putExtra(ImagePicker.EXTRA_LIMIT, 10);
 intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, true);
 intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
