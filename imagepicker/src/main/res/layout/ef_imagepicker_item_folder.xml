@@ -17,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/black_alpha_50"
+        android:background="@color/ef_black_alpha_50"
         android:orientation="vertical"
-        android:padding="@dimen/padding_small">
+        android:padding="@dimen/ef_padding_small">
 
         <TextView
             android:id="@+id/tv_name"
@@ -28,16 +28,16 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="3"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_small"/>
+            android:textColor="@color/ef_white"
+            android:textSize="@dimen/ef_font_small"/>
 
         <TextView
             android:id="@+id/tv_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/font_small"/>
+            android:textColor="@color/ef_grey"
+            android:textSize="@dimen/ef_font_small"/>
     </LinearLayout>
 
 </com.esafirm.imagepicker.view.SquareFrameLayout>

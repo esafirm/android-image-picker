@@ -68,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        findViewById(R.id.button_pick_image_intent).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startWithIntent();
+            }
+        });
     }
 
     @Override
@@ -106,16 +113,22 @@ public class MainActivity extends AppCompatActivity {
 
     // Recommended builder
     public void start() {
-        boolean returnAfterCapture = ((Switch) findViewById(R.id.switch_return_after_capture)).isChecked();
+        boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
+        boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
 
-        ImagePicker.create(this)
-                .returnAfterCapture(returnAfterCapture) // set whether camera action should return immediate result or not
+        ImagePicker imagePicker = ImagePicker.create(this)
+                .returnAfterFirst(returnAfterCapture) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
                 .folderMode(true) // set folder mode (false by default)
                 .folderTitle("Folder") // folder selection title
-                .imageTitle("Tap to select") // image selection title
-                .single() // single mode
-                .multi() // multi mode (default mode)
-                .limit(10) // max images can be selected (99 by default)
+                .imageTitle("Tap to select"); // image selection title
+
+        if (isSingleMode) {
+            imagePicker.single();
+        } else {
+            imagePicker.multi(); // multi mode (default mode)
+        }
+
+        imagePicker.limit(10) // max images can be selected (99 by default)
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .origin(images) // original selected images, used in multi mode
@@ -133,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
         intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
         intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
+
+        /* Will force ImagePicker to single pick */
+        intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);
+
         startActivityForResult(intent, RC_CODE_PICKER);
     }
 

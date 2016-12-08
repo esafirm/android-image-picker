@@ -10,7 +10,7 @@
         <activity
             android:name="com.esafirm.imagepicker.features.ImagePickerActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/ImagePickerTheme"/>
+            android:theme="@style/ef_ImagePickerTheme"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

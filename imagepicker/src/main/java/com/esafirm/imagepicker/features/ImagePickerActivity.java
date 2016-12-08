@@ -46,6 +46,7 @@ import java.util.List;
 
 import static com.esafirm.imagepicker.features.ImagePicker.EXTRA_SELECTED_IMAGES;
 import static com.esafirm.imagepicker.features.ImagePicker.MODE_MULTIPLE;
+import static com.esafirm.imagepicker.features.ImagePicker.MODE_SINGLE;
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
 public class ImagePickerActivity extends AppCompatActivity
@@ -84,7 +85,7 @@ public class ImagePickerActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_picker);
+        setContentView(R.layout.ef_activity_image_picker);
 
         Intent intent = getIntent();
         if (intent == null || intent.getExtras() == null) {
@@ -206,6 +207,10 @@ public class ImagePickerActivity extends AppCompatActivity
         MenuItem menuDone = menu.findItem(R.id.menu_done);
         if (menuDone != null) {
             menuDone.setVisible(!isDisplayingFolderView() && !imageAdapter.getSelectedImages().isEmpty());
+
+            if (config.getMode() == MODE_SINGLE && config.isReturnAfterFirst()) {
+                menuDone.setVisible(false);
+            }
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -222,8 +227,7 @@ public class ImagePickerActivity extends AppCompatActivity
             return true;
         }
         if (id == R.id.menu_done) {
-            List<Image> selectedImages = imageAdapter.getSelectedImages();
-            presenter.onDoneSelectImages(selectedImages);
+            onDone();
             return true;
         }
         if (id == R.id.menu_camera) {
@@ -231,6 +235,15 @@ public class ImagePickerActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * On finish selected image
+     * Get all selected images then return image to caller activity
+     */
+    private void onDone() {
+        List<Image> selectedImages = imageAdapter.getSelectedImages();
+        presenter.onDoneSelectImages(selectedImages);
     }
 
     /**
@@ -263,7 +276,7 @@ public class ImagePickerActivity extends AppCompatActivity
         layoutManager.setSpanCount(columns);
         if (itemOffsetDecoration != null)
             recyclerView.removeItemDecoration(itemOffsetDecoration);
-        itemOffsetDecoration = new GridSpacingItemDecoration(columns, getResources().getDimensionPixelSize(R.dimen.item_padding), false);
+        itemOffsetDecoration = new GridSpacingItemDecoration(columns, getResources().getDimensionPixelSize(R.dimen.ef_item_padding), false);
         recyclerView.addItemDecoration(itemOffsetDecoration);
     }
 
@@ -303,9 +316,9 @@ public class ImagePickerActivity extends AppCompatActivity
                 preferences.setPermissionRequested(permission);
                 ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
             } else {
-                Snackbar snackbar = Snackbar.make(mainLayout, R.string.msg_no_write_external_permission,
+                Snackbar snackbar = Snackbar.make(mainLayout, R.string.ef_msg_no_write_external_permission,
                         Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                snackbar.setAction(R.string.ef_ok, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         openAppSettings();
@@ -331,9 +344,9 @@ public class ImagePickerActivity extends AppCompatActivity
                 preferences.setPermissionRequested(permission);
                 ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_CAMERA);
             } else {
-                Snackbar snackbar = Snackbar.make(mainLayout, R.string.msg_no_camera_permission,
+                Snackbar snackbar = Snackbar.make(mainLayout, R.string.ef_msg_no_camera_permission,
                         Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction(R.string.ok, new View.OnClickListener() {
+                snackbar.setAction(R.string.ef_ok, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         openAppSettings();
@@ -406,19 +419,23 @@ public class ImagePickerActivity extends AppCompatActivity
                 if (imageAdapter.getSelectedImages().size() < config.getLimit()) {
                     imageAdapter.addSelected(image);
                 } else {
-                    Toast.makeText(this, R.string.msg_limit_images, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 imageAdapter.removeSelectedPosition(selectedItemPosition, position);
             }
         } else {
-            if (selectedItemPosition != -1)
+            if (selectedItemPosition != -1) {
                 imageAdapter.removeSelectedPosition(selectedItemPosition, position);
-            else {
+            } else {
                 if (imageAdapter.getSelectedImages().size() > 0) {
                     imageAdapter.removeAllSelectedSingleClick();
                 }
                 imageAdapter.addSelected(image);
+
+                if (config.isReturnAfterFirst()) {
+                    onDone();
+                }
             }
         }
         updateTitle();
@@ -509,8 +526,8 @@ public class ImagePickerActivity extends AppCompatActivity
         } else if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
             int imageSize = imageAdapter.getSelectedImages().size();
             actionBar.setTitle(config.getLimit() == ImagePicker.MAX_LIMIT
-                    ? String.format(getString(R.string.selected), imageSize)
-                    : String.format(getString(R.string.selected_with_limit), imageSize, config.getLimit()));
+                    ? String.format(getString(R.string.ef_selected), imageSize)
+                    : String.format(getString(R.string.ef_selected_with_limit), imageSize, config.getLimit()));
         }
     }
 

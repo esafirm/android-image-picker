@@ -5,12 +5,12 @@
     <item
         android:id="@+id/menu_camera"
         android:icon="@drawable/ic_camera_white"
-        android:title="@string/camera"
+        android:title="@string/ef_camera"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
 
     <item
         android:id="@+id/menu_done"
-        android:title="@string/done"
+        android:title="@string/ef_done"
         app:showAsAction="always"/>
 </menu>

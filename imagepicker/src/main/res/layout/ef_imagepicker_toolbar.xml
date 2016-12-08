@@ -6,4 +6,4 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     app:contentInsetStart="0dp"
-    app:theme="@style/CustomToolbarTheme"/>
+    app:theme="@style/ef_CustomToolbarTheme"/>

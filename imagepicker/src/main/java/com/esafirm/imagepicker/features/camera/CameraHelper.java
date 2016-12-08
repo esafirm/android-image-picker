@@ -15,7 +15,7 @@ public class CameraHelper {
         if (!isAvailable) {
             Context appContext = context.getApplicationContext();
             Toast.makeText(appContext,
-                    appContext.getString(R.string.error_no_camera), Toast.LENGTH_LONG).show();
+                    appContext.getString(R.string.ef_error_no_camera), Toast.LENGTH_LONG).show();
         }
         return isAvailable;
     }

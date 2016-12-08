@@ -98,7 +98,7 @@ public class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         Context context = activity.getApplicationContext();
         Intent intent = cameraModule.getCameraIntent(activity, config);
         if (intent == null) {
-            Toast.makeText(context, context.getString(R.string.error_create_image_file), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, context.getString(R.string.ef_error_create_image_file), Toast.LENGTH_LONG).show();
             return;
         }
         activity.startActivityForResult(intent, requestCode);
@@ -108,7 +108,7 @@ public class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         cameraModule.getImage(context, data, new OnImageReadyListener() {
             @Override
             public void onImageReady(List<Image> images) {
-                if (config.isReturnAfterCapture()) {
+                if (config.isReturnAfterFirst()) {
                     getView().finishPickImages(images);
                 } else {
                     getView().showCapturedImage();

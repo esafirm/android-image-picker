@@ -15,9 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:padding="@dimen/padding_large"
-        android:text="@string/msg_empty_images"
-        android:textSize="@dimen/font_medium"
+        android:padding="@dimen/ef_padding_large"
+        android:text="@string/ef_msg_empty_images"
+        android:textSize="@dimen/ef_font_medium"
         android:visibility="gone"/>
 
     <com.esafirm.imagepicker.view.ProgressWheel
@@ -27,8 +27,8 @@
         android:layout_height="100dp"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        wheel:matProg_barColor="@color/teal"
-        wheel:matProg_progressIndeterminate="true"/>
+        wheel:ef_matProg_barColor="@color/ef_teal"
+        wheel:ef_matProg_progressIndeterminate="true"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

@@ -20,6 +20,7 @@ public abstract class ImagePicker {
     public static final String EXTRA_FOLDER_TITLE = "folderTitle";
     public static final String EXTRA_IMAGE_TITLE = "imageTitle";
     public static final String EXTRA_IMAGE_DIRECTORY = "imageDirectory";
+    public static final String EXTRA_RETURN_AFTER_FIRST = "returnAfterFirst";
 
     public static final int MAX_LIMIT = 99;
 
@@ -92,8 +93,8 @@ public abstract class ImagePicker {
         return this;
     }
 
-    public ImagePicker returnAfterCapture(boolean returnAfterCapture) {
-        config.setReturnAfterCapture(returnAfterCapture);
+    public ImagePicker returnAfterFirst(boolean returnAfterFirst) {
+        config.setReturnAfterFirst(returnAfterFirst);
         return this;
     }
 

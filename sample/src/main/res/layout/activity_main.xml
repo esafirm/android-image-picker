@@ -11,7 +11,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button_pick_image_rx"
+        android:layout_above="@+id/ef_bottom_container"
         android:fillViewport="true">
 
         <LinearLayout
@@ -20,11 +20,18 @@
             android:orientation="vertical">
 
             <Switch
-                android:id="@+id/switch_return_after_capture"
+                android:id="@+id/ef_switch_return_after_capture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:text="Return After Capture   "/>
+                android:text="Return After First   "/>
+
+            <Switch
+                android:id="@+id/ef_switch_single"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:text="Single Mode?   "/>
 
             <TextView
                 android:id="@+id/text_view"
@@ -37,6 +44,7 @@
 
 
     <LinearLayout
+        android:id="@+id/ef_bottom_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -44,11 +52,25 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button_pick_image"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="PICK IMAGE"/>
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_pick_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PICK IMAGE"/>
+
+            <Button
+                android:id="@+id/button_pick_image_intent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PICK IMAGE INTENT"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/button_pick_image_rx"

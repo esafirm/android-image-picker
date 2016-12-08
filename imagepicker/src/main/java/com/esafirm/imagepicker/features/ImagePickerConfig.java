@@ -22,26 +22,26 @@ public class ImagePickerConfig implements Parcelable {
 
     private boolean folderMode;
     private boolean showCamera;
-    private boolean returnAfterCapture;
+    private boolean returnAfterFirst;
 
     public ImagePickerConfig(Context context) {
         this.mode = ImagePicker.MODE_MULTIPLE;
         this.limit = ImagePicker.MAX_LIMIT;
         this.showCamera = true;
-        this.folderTitle = context.getString(R.string.title_folder);
-        this.imageTitle = context.getString(R.string.title_select_image);
+        this.folderTitle = context.getString(R.string.ef_title_folder);
+        this.imageTitle = context.getString(R.string.ef_title_select_image);
         this.selectedImages = new ArrayList<>();
         this.folderMode = false;
-        this.imageDirectory = context.getString(R.string.image_directory);
-        this.returnAfterCapture = true;
+        this.imageDirectory = context.getString(R.string.ef_image_directory);
+        this.returnAfterFirst = true;
     }
 
-    public boolean isReturnAfterCapture() {
-        return returnAfterCapture;
+    public boolean isReturnAfterFirst() {
+        return returnAfterFirst;
     }
 
-    public void setReturnAfterCapture(boolean returnAfterCapture) {
-        this.returnAfterCapture = returnAfterCapture;
+    public void setReturnAfterFirst(boolean returnAfterFirst) {
+        this.returnAfterFirst = returnAfterFirst;
     }
 
     public int getMode() {
@@ -127,7 +127,7 @@ public class ImagePickerConfig implements Parcelable {
         dest.writeInt(this.limit);
         dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.returnAfterCapture ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.returnAfterFirst ? (byte) 1 : (byte) 0);
     }
 
     protected ImagePickerConfig(Parcel in) {
@@ -139,7 +139,7 @@ public class ImagePickerConfig implements Parcelable {
         this.limit = in.readInt();
         this.folderMode = in.readByte() != 0;
         this.showCamera = in.readByte() != 0;
-        this.returnAfterCapture = in.readByte() != 0;
+        this.returnAfterFirst = in.readByte() != 0;
     }
 
     public static final Creator<ImagePickerConfig> CREATOR = new Creator<ImagePickerConfig>() {

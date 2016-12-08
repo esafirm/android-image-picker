@@ -44,7 +44,7 @@ ImagePicker.create(this) // Activity or Fragment
 
 ```java
 ImagePicker.create(this)
-	.returnAfterCapture(true) // set whether camera action should return immediate result or not
+	.returnAfterFirst(true) // set whether pick or camera action should return immediate result or not. For pick image only work on single mode
 	.folderMode(true) // folder mode (false by default)
 	.folderTitle("Folder") // folder selection title
 	.imageTitle("Tap to select") // image selection title
@@ -68,6 +68,7 @@ intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
 intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
 intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
 intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
+intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true); //default is false
 
 startActivityForResult(intent, REQUEST_CODE_PICKER);
 ```        
