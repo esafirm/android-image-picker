@@ -12,6 +12,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
 
 
 public class RxImagePicker {
@@ -30,10 +31,10 @@ public class RxImagePicker {
     /* > RxImagePicker */
     /* --------------------------------------------------- */
 
-    private PublishSubject<List<Image>> subject;
+    private SerializedSubject<List<Image>, List<Image>> subject;
 
     private RxImagePicker() {
-        this.subject = PublishSubject.create();
+        this.subject = new SerializedSubject<>(PublishSubject.<List<Image>>create());
     }
 
     public Observable<List<Image>> start(Context context, ImagePicker imagePicker) {
@@ -51,6 +52,5 @@ public class RxImagePicker {
 
     void onHandleResult(List<Image> images) {
         subject.onNext(images);
-        subject.onCompleted();
     }
 }
