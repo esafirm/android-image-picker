@@ -72,11 +72,25 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button_pick_image_rx"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="PICK IMAGE RX"/>
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_pick_image_rx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PICK IMAGE RX"/>
+
+            <Button
+                android:id="@+id/button_launch_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Launch Fragment"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/button_camera"
@@ -84,5 +98,10 @@
             android:layout_height="wrap_content"
             android:text="CAMERA ONLY"/>
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

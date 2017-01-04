@@ -69,6 +69,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.button_launch_fragment)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new MainFragment())
+                                .commitAllowingStateLoss();
+                    }
+                });
+
         findViewById(R.id.button_pick_image_intent).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void printImages(List<Image> images) {
