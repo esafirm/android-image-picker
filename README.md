@@ -5,7 +5,7 @@ A simple library to select images from the gallery and camera.
 
 <img src="https://raw.githubusercontent.com/esafirm/android-image-picker/master/art/ss.gif" height="460" width="284"/>
 
-## Download
+## Download [![](https://jitpack.io/v/esafirm/android-image-picker.svg)](https://jitpack.io/#esafirm/android-image-picker)
 
 Add this to your project's `build.gradle`
 
