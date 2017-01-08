@@ -8,7 +8,6 @@
 
     <string name="ef_title_folder">Cartella</string>
     <string name="ef_title_select_image">Premi per selezionare l\'immagine</string>
-    <string name="title_permission_denied">Permesso negato</string>
 
     <string name="ef_selected">%d selezionate</string>
     <string name="ef_selected_with_limit">%1$d/%2$d selezionate</string>
@@ -21,5 +20,7 @@
     <string name="ef_msg_no_write_external_permission">Dai il permesso per poter selezionare le immagini</string>
     <string name="ef_msg_no_camera_permission">Dai il permesso per poter scattare una foto</string>
     <string name="ef_msg_limit_images">Hai raggiunto il limite massimo di selezione</string>
+    <string name="ef_image_directory" translatable="false"></string>
+    <string name="ef_ltitle_permission_denied">Permesso negato</string>
 
 </resources>

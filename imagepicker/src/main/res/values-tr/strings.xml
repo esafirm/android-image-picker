@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_ok">TAMAM</string>
+    <string name="ef_done">BİTTİ</string>
+    <string name="ef_camera">KAMERA</string>
+    <string name="ef_permission_write_external_rationale">Görüntüleri seçmek için harici depolama alanına erişime izin ver</string>
+
+    <string name="ef_title_folder">Klasör</string>
+    <string name="ef_title_select_image">Resimleri seçmek için hafifçe dokunun</string>
+    <string name="ef_ltitle_permission_denied">İzin reddedildi</string>
+
+    <string name="ef_selected">%d seçili</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d seçili</string>
+
+    <string name="ef_error_create_image_file">Resim dosyası oluşturulamadı</string>
+    <string name="ef_error_no_camera">Kamera bulunamadı</string>
+    <string name="ef_error_null_cursor">Hoop! Birşeyler yanlış gitti!</string>
+
+    <string name="ef_msg_empty_images">Resimler bulunamadı</string>
+    <string name="ef_msg_no_write_external_permission">Lütfen resim seçmek için depolama iznini verin</string>
+    <string name="ef_msg_no_camera_permission">Resim çekmek için lütfen kamera iznini verin</string>
+    <string name="ef_msg_limit_images">Resim seçimi sınırı</string>
+</resources>

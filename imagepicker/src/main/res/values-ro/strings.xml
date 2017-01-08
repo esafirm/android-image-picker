@@ -8,7 +8,6 @@
 
     <string name="ef_title_folder">Fișier</string>
     <string name="ef_title_select_image">Atingeți pentru a selecta imagini</string>
-    <string name="title_permission_denied">Acces refuzat</string>
 
     <string name="ef_selected">%d selectate</string>
     <string name="ef_selected_with_limit">%1$d/%2$d selectate</string>
@@ -21,5 +20,6 @@
     <string name="ef_msg_no_write_external_permission">Vă rugăm să acordați permisiunea de stocare pentru a selecta imagini</string>
     <string name="ef_msg_no_camera_permission">Vă rugăm să acordați permisiunea fotocamerei pentru a captura imagini</string>
     <string name="ef_msg_limit_images">Limita de selecție a imaginii depăşită</string>
+    <string name="ef_ltitle_permission_denied">Acces refuzat</string>
 
 </resources>
