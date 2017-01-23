@@ -16,6 +16,4 @@
     <string name="ef_msg_no_write_external_permission">Дайте разрешение, чтобы выбрать изображения</string>
     <string name="ef_msg_no_camera_permission">Дайте разрешение, чтобы сделать снимок</string>
     <string name="ef_msg_limit_images">Лимит выбора изображений</string>
-    
-    <string name="ef_image_directory" translatable="false">Camera</string>
 </resources>
