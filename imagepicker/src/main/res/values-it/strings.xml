@@ -20,7 +20,6 @@
     <string name="ef_msg_no_write_external_permission">Dai il permesso per poter selezionare le immagini</string>
     <string name="ef_msg_no_camera_permission">Dai il permesso per poter scattare una foto</string>
     <string name="ef_msg_limit_images">Hai raggiunto il limite massimo di selezione</string>
-    <string name="ef_image_directory" translatable="false"></string>
     <string name="ef_ltitle_permission_denied">Permesso negato</string>
 
 </resources>
