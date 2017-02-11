@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Дозвольте доступ до сховища, щоб обрати зображення</string>
+    <string name="ef_ok">ОК</string>
+    <string name="ef_done">ГОТОВО</string>
+    <string name="ef_camera">КАМЕРА</string>
+    <string name="ef_title_folder">Папка</string>
+    <string name="ef_title_select_image">Торкніться, щоб обрати</string>
+    <string name="ef_ltitle_permission_denied">Доступ заборонено</string>
+    <string name="ef_selected">%d обрано</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d обрано</string>
+    <string name="ef_error_create_image_file">Не вдалося створити файл</string>
+    <string name="ef_error_no_camera">Камера недоступна</string>
+    <string name="ef_error_null_cursor">Ой! Щось пішло не так!</string>
+    <string name="ef_msg_empty_images">Зображень не знайдено</string>
+    <string name="ef_msg_no_write_external_permission">Будь ласка, дозвольте доступ до сховища, щоб обрати зображення</string>
+    <string name="ef_msg_no_camera_permission">Будь ласка, дозвольте доступ до камери, щоб зробити знімок</string>
+    <string name="ef_msg_limit_images">Ліміт вибору зображень</string>
+</resources>
