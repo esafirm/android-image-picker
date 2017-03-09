@@ -83,8 +83,8 @@ public class ImageLoader {
                     String path = cursor.getString(cursor.getColumnIndex(projection[2]));
                     String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
 
-                    File file = new File(path);
-                    if (file.exists()) {
+                    File file = makeSafeFile(path);
+                    if (file != null && file.exists()) {
                         Image image = new Image(id, name, path, false);
                         temp.add(image);
 
@@ -111,4 +111,16 @@ public class ImageLoader {
             listener.onImageLoaded(temp, folders);
         }
     }
+
+    private static File makeSafeFile(String path) {
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        try {
+            return new File(path);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
 }
