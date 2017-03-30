@@ -13,7 +13,6 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +23,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,12 +32,14 @@ import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.IntentHelper;
+import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.listeners.OnImageClickListener;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.imagepicker.view.GridSpacingItemDecoration;
 import com.esafirm.imagepicker.view.ProgressWheel;
+import com.esafirm.imagepicker.view.SnackBarView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,10 +60,10 @@ public class ImagePickerActivity extends AppCompatActivity
     public static final int RC_PERMISSION_REQUEST_CAMERA = 24;
 
     private ActionBar actionBar;
-    private RelativeLayout mainLayout;
     private ProgressWheel progressBar;
     private TextView emptyTextView;
     private RecyclerView recyclerView;
+    private SnackBarView snackBarView;
 
     private GridLayoutManager layoutManager;
     private GridSpacingItemDecoration itemOffsetDecoration;
@@ -104,10 +104,10 @@ public class ImagePickerActivity extends AppCompatActivity
     }
 
     private void setupView() {
-        mainLayout = (RelativeLayout) findViewById(R.id.main);
         progressBar = (ProgressWheel) findViewById(R.id.progress_bar);
         emptyTextView = (TextView) findViewById(R.id.tv_empty_images);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        snackBarView = (SnackBarView) findViewById(R.id.ef_snackbar);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -119,7 +119,14 @@ public class ImagePickerActivity extends AppCompatActivity
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             actionBar.setDisplayShowTitleEnabled(true);
         }
-    }
+
+        ViewUtils.onPreDraw(snackBarView, new Runnable() {
+            @Override
+            public void run() {
+                snackBarView.hide();
+            }
+        });
+    }a
 
     private void setupExtras() {
         Intent intent = getIntent();
@@ -316,15 +323,12 @@ public class ImagePickerActivity extends AppCompatActivity
                 preferences.setPermissionRequested(permission);
                 ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
             } else {
-                Snackbar snackbar = Snackbar.make(mainLayout, R.string.ef_msg_no_write_external_permission,
-                        Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction(R.string.ef_ok, new View.OnClickListener() {
+                snackBarView.show(R.string.ef_msg_no_write_external_permission, new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View v) {
                         openAppSettings();
                     }
                 });
-                snackbar.show();
             }
         }
 
@@ -344,15 +348,12 @@ public class ImagePickerActivity extends AppCompatActivity
                 preferences.setPermissionRequested(permission);
                 ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_CAMERA);
             } else {
-                Snackbar snackbar = Snackbar.make(mainLayout, R.string.ef_msg_no_camera_permission,
-                        Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction(R.string.ef_ok, new View.OnClickListener() {
+                snackBarView.show(R.string.ef_msg_no_camera_permission, new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View v) {
                         openAppSettings();
                     }
                 });
-                snackbar.show();
             }
         }
     }

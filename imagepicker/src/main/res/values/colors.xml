@@ -8,5 +8,6 @@
     <color name="ef_white">#FFFFFF</color>
     <color name="ef_grey">#9E9E9E</color>
     <color name="ef_black_alpha_50">#80000000</color>
+    <color name="ef_black_alpha_aa">#AA000000</color>
     <color name="ef_teal">#009688</color>
 </resources>

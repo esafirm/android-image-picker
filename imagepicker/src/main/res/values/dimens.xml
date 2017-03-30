@@ -3,7 +3,7 @@
 
     <dimen name="ef_padding_small">5dp</dimen>
     <dimen name="ef_padding_medium">10dp</dimen>
-    <dimen name="ef_padding_large">15dp</dimen>
+    <dimen name="ef_spacing_double">16dp</dimen>
 
     <dimen name="ef_margin_small">5dp</dimen>
     <dimen name="ef_margin_medium">10dp</dimen>
