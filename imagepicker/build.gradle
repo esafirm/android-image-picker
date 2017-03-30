@@ -21,10 +21,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
     final supportLibraryVersion = '25.3.1'
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+
+    testCompile 'junit:junit:4.12'
 }

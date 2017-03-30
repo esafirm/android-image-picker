@@ -126,7 +126,7 @@ public class ImagePickerActivity extends AppCompatActivity
                 snackBarView.hide();
             }
         });
-    }a
+    }
 
     private void setupExtras() {
         Intent intent = getIntent();

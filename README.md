@@ -21,6 +21,7 @@ And add this to your module's `build.gradle`
 
 ```groovy
 dependencies {
+	compile 'com.github.bumptech.glide:glide:3.7.0'
 	compile 'com.github.esafirm.android-image-picker:imagepicker:x.y.z@aar'
 	// for experimental rx picker
 	compile 'com.github.esafirm.android-image-picker:rximagepicker:x.y.z@aar'
