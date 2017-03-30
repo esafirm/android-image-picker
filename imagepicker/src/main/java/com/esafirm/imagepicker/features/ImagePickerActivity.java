@@ -500,7 +500,7 @@ public class ImagePickerActivity extends AppCompatActivity
         if (handler == null) {
             handler = new Handler();
         }
-        observer = new ContentObserver(new Handler()) {
+        observer = new ContentObserver(handler) {
             @Override
             public void onChange(boolean selfChange) {
                 getData();
