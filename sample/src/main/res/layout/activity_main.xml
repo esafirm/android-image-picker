@@ -42,7 +42,6 @@
         </LinearLayout>
     </ScrollView>
 
-
     <LinearLayout
         android:id="@+id/ef_bottom_container"
         android:layout_width="match_parent"

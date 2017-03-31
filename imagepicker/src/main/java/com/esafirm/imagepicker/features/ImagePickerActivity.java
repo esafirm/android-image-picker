@@ -85,25 +85,25 @@ public class ImagePickerActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ef_activity_image_picker);
 
+        /* This should not happen */
         Intent intent = getIntent();
         if (intent == null || intent.getExtras() == null) {
             finish();
             return;
         }
 
-        preferences = new ImagePickerPreferences(this);
-        presenter = new ImagePickerPresenter(new ImageLoader(this));
-        presenter.attachView(this);
+        ImagePickerConfig config = getConfig();
 
-        setupExtras();
-        setupView();
+        setTheme(config.getTheme());
+        setContentView(R.layout.ef_activity_image_picker);
+        setupComponents(config);
+        setupView(config);
 
         orientationBasedUI(getResources().getConfiguration().orientation);
     }
 
-    private void setupView() {
+    private void setupView(ImagePickerConfig config) {
         progressBar = (ProgressWheel) findViewById(R.id.progress_bar);
         emptyTextView = (TextView) findViewById(R.id.tv_empty_images);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -128,7 +128,7 @@ public class ImagePickerActivity extends AppCompatActivity
         });
     }
 
-    private void setupExtras() {
+    private ImagePickerConfig getConfig() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
@@ -136,7 +136,10 @@ public class ImagePickerActivity extends AppCompatActivity
         if (config == null) {
             config = IntentHelper.makeConfigFromIntent(this, intent);
         }
+        return config;
+    }
 
+    private void setupComponents(ImagePickerConfig config) {
         ArrayList<Image> selectedImages = null;
         if (config.getMode() == MODE_MULTIPLE && !config.getSelectedImages().isEmpty()) {
             selectedImages = config.getSelectedImages();
@@ -145,7 +148,7 @@ public class ImagePickerActivity extends AppCompatActivity
             selectedImages = new ArrayList<>();
         }
 
-        /** Init folder and image adapter */
+        /* Init folder and image adapter */
         imageAdapter = new ImagePickerAdapter(this, selectedImages, this);
         folderAdapter = new FolderPickerAdapter(this, new OnFolderClickListener() {
             @Override
@@ -154,6 +157,10 @@ public class ImagePickerActivity extends AppCompatActivity
                 setImageAdapter(bucket.getImages());
             }
         });
+
+        preferences = new ImagePickerPreferences(this);
+        presenter = new ImagePickerPresenter(new ImageLoader(this));
+        presenter.attachView(this);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.features;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
 import com.esafirm.imagepicker.model.Image;
@@ -130,6 +131,11 @@ public abstract class ImagePicker {
 
     public ImagePicker imageDirectory(String directory) {
         config.setImageDirectory(directory);
+        return this;
+    }
+
+    public ImagePicker theme(@StyleRes int theme) {
+        config.setTheme(theme);
         return this;
     }
 

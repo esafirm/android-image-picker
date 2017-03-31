@@ -1,17 +1,15 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="ef_AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/ef_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/ef_colorPrimaryDark</item>
-        <item name="colorAccent">@color/ef_colorAccent</item>
-    </style>
-
-    <style name="ef_ImagePickerTheme" parent="ef_AppTheme">
+    <style name="ef_BaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionModeOverlay">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ef_AppTheme" parent="ef_BaseTheme">
+        <item name="colorPrimary">@color/ef_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/ef_colorPrimaryDark</item>
+        <item name="colorAccent">@color/ef_colorAccent</item>
     </style>
 
     <style name="ef_CustomToolbarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">

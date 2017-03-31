@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.features;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.StyleRes;
 
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.model.Image;
@@ -19,6 +20,7 @@ public class ImagePickerConfig implements Parcelable {
 
     private int mode;
     private int limit;
+    private int theme;
 
     private boolean folderMode;
     private boolean showCamera;
@@ -108,6 +110,14 @@ public class ImagePickerConfig implements Parcelable {
         this.imageDirectory = imageDirectory;
     }
 
+    public void setTheme(@StyleRes int theme) {
+        this.theme = theme;
+    }
+
+    public int getTheme() {
+        return theme;
+    }
+
     /* --------------------------------------------------- */
     /* > Parcelable */
     /* --------------------------------------------------- */
@@ -125,6 +135,7 @@ public class ImagePickerConfig implements Parcelable {
         dest.writeString(this.imageDirectory);
         dest.writeInt(this.mode);
         dest.writeInt(this.limit);
+        dest.writeInt(this.theme);
         dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
         dest.writeByte(this.returnAfterFirst ? (byte) 1 : (byte) 0);
@@ -137,6 +148,7 @@ public class ImagePickerConfig implements Parcelable {
         this.imageDirectory = in.readString();
         this.mode = in.readInt();
         this.limit = in.readInt();
+        this.theme = in.readInt();
         this.folderMode = in.readByte() != 0;
         this.showCamera = in.readByte() != 0;
         this.returnAfterFirst = in.readByte() != 0;

@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
+                .theme(R.style.ImagePickerTheme)
                 .returnAfterFirst(returnAfterCapture) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
                 .folderMode(true) // set folder mode (false by default)
                 .folderTitle("Folder") // folder selection title
