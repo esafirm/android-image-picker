@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">이미지를 불러오기 위해 외부 저장공간 권한을 허용해주세요</string>
+
+    <string name="ef_ok">확인</string>
+    <string name="ef_done">완료</string>
+    <string name="ef_camera">카메라</string>
+
+    <string name="ef_title_folder">사진첩</string>
+    <string name="ef_title_select_image">이미지를 선택하세요</string>
+    <string name="ef_ltitle_permission_denied">권한이 없음</string>
+
+    <string name="ef_selected">%d 선택됨</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d 선택됨</string>
+
+    <string name="ef_error_create_image_file">이미지 생성에 실패하였습니다.</string>
+    <string name="ef_error_no_camera">카메라를 찾을 수 없습니다.</string>
+    <string name="ef_error_null_cursor">알 수 없는 오류가 발생하였습니다.</string>
+
+    <string name="ef_msg_empty_images">이미지가 비어있음</string>
+    <string name="ef_msg_no_write_external_permission">이미지를 불러오기 위해 저장공간 권한을 허용해주세요</string>
+    <string name="ef_msg_no_camera_permission">사진을 찍기위해 카메라 권한을 허용해주세요</string>
+    <string name="ef_msg_limit_images">이미지 선택 제한 초과</string>
+
+</resources>
