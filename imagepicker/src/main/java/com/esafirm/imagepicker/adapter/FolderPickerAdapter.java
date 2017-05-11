@@ -44,7 +44,7 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
         final Folder folder = folders.get(position);
 
         Glide.with(context)
-                .load(folder.getImages().get(0).getPath())
+                .load(folder.getImages().get(0).getPath()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(R.drawable.folder_placeholder)
                 .error(R.drawable.folder_placeholder)
                 .into(holder.image);
