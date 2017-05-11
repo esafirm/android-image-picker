@@ -45,7 +45,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         Image image = images.get(position);
 
         Glide.with(context)
-                .load(image.getPath())
+                .load(image.getPath()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(R.drawable.image_placeholder)
                 .error(R.drawable.image_placeholder)
                 .into(viewHolder.imageView);
