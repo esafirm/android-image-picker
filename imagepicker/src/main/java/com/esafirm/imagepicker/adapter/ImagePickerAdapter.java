@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.esafirm.imagepicker.R;
@@ -45,10 +46,16 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         Image image = images.get(position);
 
         Glide.with(context)
-                .load(image.getPath())
+                .load(image.getPath()).asBitmap()
                 .placeholder(R.drawable.image_placeholder)
                 .error(R.drawable.image_placeholder)
                 .into(viewHolder.imageView);
+
+        if (isGifFormat(image)) {
+            viewHolder.gifLabel.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.gifLabel.setVisibility(View.GONE);
+        }
 
         if (isSelected(image)) {
             viewHolder.alphaView.setAlpha(0.5f);
@@ -58,6 +65,11 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
             ((FrameLayout) viewHolder.itemView).setForeground(null);
         }
 
+    }
+
+    private boolean isGifFormat(Image image) {
+        String extension = image.getPath().substring(image.getPath().lastIndexOf(".") + 1, image.getPath().length());
+        return extension.equals("gif") || extension.equals("GIF");
     }
 
     private boolean isSelected(Image image) {
@@ -119,12 +131,14 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
         private ImageView imageView;
         private View alphaView;
+        private RelativeLayout gifLabel;
         private final OnImageClickListener itemClickListener;
 
         public ImageViewHolder(View itemView, OnImageClickListener itemClickListener) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.image_view);
             alphaView = itemView.findViewById(R.id.view_alpha);
+            gifLabel = (RelativeLayout) itemView.findViewById(R.id.gif_label);
             this.itemClickListener = itemClickListener;
             itemView.setOnClickListener(this);
         }
