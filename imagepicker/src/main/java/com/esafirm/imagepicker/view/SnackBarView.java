@@ -40,6 +40,8 @@ public class SnackBarView extends RelativeLayout {
         if (isInEditMode()) {
             return;
         }
+        int height = getContext().getResources().getDimensionPixelSize(R.dimen.ef_height_snackbar);
+        ViewCompat.setTranslationY(this, height);
         ViewCompat.setAlpha(this, 0f);
 
         int padding = getContext().getResources().getDimensionPixelSize(R.dimen.ef_spacing_double);
