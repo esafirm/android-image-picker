@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
+import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -14,14 +15,6 @@ import java.util.List;
 public abstract class ImagePicker {
 
     public static final String EXTRA_SELECTED_IMAGES = "selectedImages";
-    public static final String EXTRA_LIMIT = "limit";
-    public static final String EXTRA_SHOW_CAMERA = "showCamera";
-    public static final String EXTRA_MODE = "mode";
-    public static final String EXTRA_FOLDER_MODE = "folderMode";
-    public static final String EXTRA_FOLDER_TITLE = "folderTitle";
-    public static final String EXTRA_IMAGE_TITLE = "imageTitle";
-    public static final String EXTRA_IMAGE_DIRECTORY = "imageDirectory";
-    public static final String EXTRA_RETURN_AFTER_FIRST = "returnAfterFirst";
 
     public static final int MAX_LIMIT = 99;
 
@@ -136,6 +129,11 @@ public abstract class ImagePicker {
 
     public ImagePicker theme(@StyleRes int theme) {
         config.setTheme(theme);
+        return this;
+    }
+
+    public ImagePicker imageLoader(ImageLoader imageLoader) {
+        config.setImageLoader(imageLoader);
         return this;
     }
 

@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.esafirm.imagepicker.model.Image;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -65,5 +67,10 @@ public class ImagePickerUtils {
     public static void revokeAppPermission(Context context, Uri fileUri) {
         context.revokeUriPermission(fileUri,
                 Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    }
+
+    public static boolean isGifFormat(Image image) {
+        String extension = image.getPath().substring(image.getPath().lastIndexOf(".") + 1, image.getPath().length());
+        return extension.equalsIgnoreCase("gif");
     }
 }

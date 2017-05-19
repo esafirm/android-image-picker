@@ -30,8 +30,8 @@ import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
+import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
-import com.esafirm.imagepicker.helper.IntentHelper;
 import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.listeners.OnImageClickListener;
@@ -56,8 +56,8 @@ public class ImagePickerActivity extends AppCompatActivity
 
     private static final String TAG = "ImagePickerActivity";
 
-    public static final int RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
-    public static final int RC_PERMISSION_REQUEST_CAMERA = 24;
+    private static final int RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
+    private static final int RC_PERMISSION_REQUEST_CAMERA = 24;
 
     private ActionBar actionBar;
     private ProgressWheel progressBar;
@@ -131,11 +131,7 @@ public class ImagePickerActivity extends AppCompatActivity
     private ImagePickerConfig getConfig() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-
         config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
-        if (config == null) {
-            config = IntentHelper.makeConfigFromIntent(this, intent);
-        }
         return config;
     }
 
@@ -149,8 +145,9 @@ public class ImagePickerActivity extends AppCompatActivity
         }
 
         /* Init folder and image adapter */
-        imageAdapter = new ImagePickerAdapter(this, selectedImages, this);
-        folderAdapter = new FolderPickerAdapter(this, new OnFolderClickListener() {
+        final ImageLoader imageLoader = config.getImageLoader();
+        imageAdapter = new ImagePickerAdapter(this, imageLoader, selectedImages, this);
+        folderAdapter = new FolderPickerAdapter(this, imageLoader, new OnFolderClickListener() {
             @Override
             public void onFolderClick(Folder bucket) {
                 foldersState = recyclerView.getLayoutManager().onSaveInstanceState();
@@ -159,7 +156,7 @@ public class ImagePickerActivity extends AppCompatActivity
         });
 
         preferences = new ImagePickerPreferences(this);
-        presenter = new ImagePickerPresenter(new ImageLoader(this));
+        presenter = new ImagePickerPresenter(new ImageFileLoader(this));
         presenter.attachView(this);
     }
 
@@ -315,7 +312,7 @@ public class ImagePickerActivity extends AppCompatActivity
     /**
      * Request for permission
      * If permission denied or app is first launched, request for permission
-     * If permission denied and user choose 'Nerver Ask Again', show snackbar with an action that navigate to app settings
+     * If permission denied and user choose 'Never Ask Again', show snackbar with an action that navigate to app settings
      */
     private void requestWriteExternalPermission() {
         Log.w(TAG, "Write External permission is not granted. Requesting permission");

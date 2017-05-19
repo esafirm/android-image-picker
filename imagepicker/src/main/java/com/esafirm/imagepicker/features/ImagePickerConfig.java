@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import android.support.annotation.StyleRes;
 
 import com.esafirm.imagepicker.R;
+import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader;
+import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class ImagePickerConfig implements Parcelable {
     private boolean showCamera;
     private boolean returnAfterFirst;
 
+    private ImageLoader imageLoader;
+
     public ImagePickerConfig(Context context) {
         this.mode = ImagePicker.MODE_MULTIPLE;
         this.limit = ImagePicker.MAX_LIMIT;
@@ -36,6 +40,7 @@ public class ImagePickerConfig implements Parcelable {
         this.folderMode = false;
         this.imageDirectory = context.getString(R.string.ef_image_directory);
         this.returnAfterFirst = true;
+        this.imageLoader = new DefaultImageLoader();
     }
 
     public boolean isReturnAfterFirst() {
@@ -118,6 +123,14 @@ public class ImagePickerConfig implements Parcelable {
         return theme;
     }
 
+    public void setImageLoader(ImageLoader imageLoader) {
+        this.imageLoader = imageLoader;
+    }
+
+    public ImageLoader getImageLoader() {
+        return imageLoader;
+    }
+
     /* --------------------------------------------------- */
     /* > Parcelable */
     /* --------------------------------------------------- */
@@ -139,6 +152,7 @@ public class ImagePickerConfig implements Parcelable {
         dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
         dest.writeByte(this.returnAfterFirst ? (byte) 1 : (byte) 0);
+        dest.writeSerializable(this.imageLoader);
     }
 
     protected ImagePickerConfig(Parcel in) {
@@ -152,6 +166,7 @@ public class ImagePickerConfig implements Parcelable {
         this.folderMode = in.readByte() != 0;
         this.showCamera = in.readByte() != 0;
         this.returnAfterFirst = in.readByte() != 0;
+        this.imageLoader = (ImageLoader) in.readSerializable();
     }
 
     public static final Creator<ImagePickerConfig> CREATOR = new Creator<ImagePickerConfig>() {

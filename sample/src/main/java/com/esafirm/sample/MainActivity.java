@@ -13,7 +13,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ImagePickerActivity;
 import com.esafirm.imagepicker.features.camera.CameraModule;
 import com.esafirm.imagepicker.features.camera.ImmediateCameraModule;
 import com.esafirm.imagepicker.features.camera.OnImageReadyListener;
@@ -78,13 +77,6 @@ public class MainActivity extends AppCompatActivity {
                                 .commitAllowingStateLoss();
                     }
                 });
-
-        findViewById(R.id.button_pick_image_intent).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startWithIntent();
-            }
-        });
     }
 
     @Override
@@ -123,8 +115,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Recommended builder
     public void start() {
-        boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
-        boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
+        final boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
+        final boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
+        final boolean useCustomImageLoader = ((Switch) findViewById(R.id.ef_switch_imageloader)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
                 .theme(R.style.ImagePickerTheme)
@@ -132,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
                 .folderMode(true) // set folder mode (false by default)
                 .folderTitle("Folder") // folder selection title
                 .imageTitle("Tap to select"); // image selection title
+
+        if (useCustomImageLoader) {
+            imagePicker.imageLoader(new GrayscaleImageLoader());
+        }
 
         if (isSingleMode) {
             imagePicker.single();
@@ -144,24 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .origin(images) // original selected images, used in multi mode
                 .start(RC_CODE_PICKER); // start image picker activity with request code
-    }
-
-    // Traditional intent
-    public void startWithIntent() {
-        Intent intent = new Intent(this, ImagePickerActivity.class);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
-        intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
-        intent.putExtra(ImagePicker.EXTRA_LIMIT, 10);
-        intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, true);
-        intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
-        intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
-
-        /* Will force ImagePicker to single pick */
-        intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true);
-
-        startActivityForResult(intent, RC_CODE_PICKER);
     }
 
     @Override
