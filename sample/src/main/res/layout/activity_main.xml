@@ -63,12 +63,6 @@
                 android:layout_height="wrap_content"
                 android:text="PICK IMAGE"/>
 
-            <Button
-                android:id="@+id/button_pick_image_intent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PICK IMAGE INTENT"/>
-
         </LinearLayout>
 
         <LinearLayout

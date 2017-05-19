@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.esafirm.imagepicker.view.SquareFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foregroundGravity="center">
@@ -15,5 +16,22 @@
         android:id="@+id/view_alpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black"/>
+        android:background="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/ef_item_gif_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/ef_black_alpha_aa"
+        android:paddingBottom="@dimen/ef_spacing_half"
+        android:paddingLeft="@dimen/ef_spacing_double"
+        android:paddingRight="@dimen/ef_spacing_double"
+        android:paddingTop="@dimen/ef_spacing_half"
+        android:text="@string/ef_gif"
+        android:textColor="@color/ef_white"
+        android:textSize="@dimen/ef_font_small"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
 </com.esafirm.imagepicker.view.SquareFrameLayout>
