@@ -33,6 +33,13 @@
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:text="Single Mode?   "/>
 
+            <Switch
+                android:id="@+id/ef_switch_imageloader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:text="Custom Image Loader?   "/>
+
             <TextView
                 android:id="@+id/text_view"
                 android:layout_width="wrap_content"

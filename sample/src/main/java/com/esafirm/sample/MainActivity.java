@@ -115,8 +115,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Recommended builder
     public void start() {
-        boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
-        boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
+        final boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
+        final boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
+        final boolean useCustomImageLoader = ((Switch) findViewById(R.id.ef_switch_imageloader)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
                 .theme(R.style.ImagePickerTheme)
@@ -124,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
                 .folderMode(true) // set folder mode (false by default)
                 .folderTitle("Folder") // folder selection title
                 .imageTitle("Tap to select"); // image selection title
+
+        if (useCustomImageLoader) {
+            imagePicker.imageLoader(new GrayscaleImageLoader());
+        }
 
         if (isSingleMode) {
             imagePicker.single();

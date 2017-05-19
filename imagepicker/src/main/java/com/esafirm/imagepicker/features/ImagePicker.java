@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
+import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -128,6 +129,11 @@ public abstract class ImagePicker {
 
     public ImagePicker theme(@StyleRes int theme) {
         config.setTheme(theme);
+        return this;
+    }
+
+    public ImagePicker imageLoader(ImageLoader imageLoader) {
+        config.setImageLoader(imageLoader);
         return this;
     }
 
