@@ -123,6 +123,10 @@ public class ImagePickerConfig implements Parcelable {
         return theme;
     }
 
+    public void setImageLoader(ImageLoader imageLoader) {
+        this.imageLoader = imageLoader;
+    }
+
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
