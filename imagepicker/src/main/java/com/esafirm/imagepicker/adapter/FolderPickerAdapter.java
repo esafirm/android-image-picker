@@ -2,68 +2,60 @@ package com.esafirm.imagepicker.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.esafirm.imagepicker.R;
+import com.esafirm.imagepicker.features.imageloader.ImageLoader;
+import com.esafirm.imagepicker.features.imageloader.ImageType;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.model.Folder;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by boss1088 on 8/22/16.
- */
-public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapter.FolderViewHolder> {
+public class FolderPickerAdapter extends BaseListAdapter<FolderPickerAdapter.FolderViewHolder> {
 
-    private Context context;
-    private LayoutInflater inflater;
     private final OnFolderClickListener folderClickListener;
 
-    private List<Folder> folders;
+    private List<Folder> folders = new ArrayList<>();
 
-    public FolderPickerAdapter(Context context, OnFolderClickListener folderClickListener) {
-        this.context = context;
+    public FolderPickerAdapter(Context context, ImageLoader imageLoader, OnFolderClickListener folderClickListener) {
+        super(context, imageLoader);
         this.folderClickListener = folderClickListener;
-        inflater = LayoutInflater.from(this.context);
     }
 
     @Override
     public FolderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.ef_imagepicker_item_folder, parent, false);
-        return new FolderViewHolder(itemView);
+        return new FolderViewHolder(
+                getInflater().inflate(R.layout.ef_imagepicker_item_folder, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final FolderViewHolder holder, int position) {
-
         final Folder folder = folders.get(position);
 
-        Glide.with(context)
-                .load(folder.getImages().get(0).getPath())
-                .placeholder(R.drawable.folder_placeholder)
-                .error(R.drawable.folder_placeholder)
-                .into(holder.image);
+        getImageLoader().loadImage(
+                folder.getImages().get(0).getPath(),
+                holder.image,
+                ImageType.FOLDER
+        );
 
         holder.name.setText(folders.get(position).getFolderName());
         holder.number.setText(String.valueOf(folders.get(position).getImages().size()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (folderClickListener != null)
-                    folderClickListener.onFolderClick(folder);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (folderClickListener != null)
+                folderClickListener.onFolderClick(folder);
         });
     }
 
     public void setData(List<Folder> folders) {
-        this.folders = folders;
-
+        if (folders != null) {
+            this.folders.addAll(folders);
+        }
         notifyDataSetChanged();
     }
 
@@ -72,13 +64,13 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
         return folders.size();
     }
 
-    public static class FolderViewHolder extends RecyclerView.ViewHolder {
+    static class FolderViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;
         private TextView name;
         private TextView number;
 
-        public FolderViewHolder(View itemView) {
+        FolderViewHolder(View itemView) {
             super(itemView);
 
             image = (ImageView) itemView.findViewById(R.id.image);
@@ -86,5 +78,4 @@ public class FolderPickerAdapter extends RecyclerView.Adapter<FolderPickerAdapte
             number = (TextView) itemView.findViewById(R.id.tv_number);
         }
     }
-
 }

@@ -22,6 +22,9 @@
     <string name="ef_msg_no_camera_permission">Please grant camera permission to capture image</string>
     <string name="ef_msg_limit_images">Image selection limit</string>
 
+    <!--Don't Translate-->
+    <string name="ef_gif">GIF</string>
+
     <!--Config-->
     <string name="ef_image_directory" translatable="false">Camera</string>
 

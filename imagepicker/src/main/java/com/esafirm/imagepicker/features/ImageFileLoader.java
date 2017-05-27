@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ImageLoader {
+public class ImageFileLoader {
 
     private Context context;
     private ExecutorService executorService;
 
-    public ImageLoader(Context context) {
+    public ImageFileLoader(Context context) {
         this.context = context;
     }
 
@@ -85,7 +85,7 @@ public class ImageLoader {
 
                     File file = makeSafeFile(path);
                     if (file != null && file.exists()) {
-                        Image image = new Image(id, name, path, false);
+                        Image image = new Image(id, name, path);
                         temp.add(image);
 
                         if (folderMap != null) {
