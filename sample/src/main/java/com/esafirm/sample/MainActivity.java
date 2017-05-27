@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                 .start(this, ImagePicker.create(this));
     }
 
-    // Recommended builder
     public void start() {
         final boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
         final boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();

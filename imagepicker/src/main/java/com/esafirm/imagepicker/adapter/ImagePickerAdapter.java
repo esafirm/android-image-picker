@@ -13,6 +13,7 @@ import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.features.imageloader.ImageType;
 import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.listeners.OnImageClickListener;
+import com.esafirm.imagepicker.listeners.OnImageSelectedListener;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -21,22 +22,25 @@ import java.util.List;
 public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.ImageViewHolder> {
 
     private List<Image> images = new ArrayList<>();
-    private List<Image> selectedImages;
+    private List<Image> selectedImages = new ArrayList<>();
 
     private OnImageClickListener itemClickListener;
+    private OnImageSelectedListener imageSelectedListener;
 
     public ImagePickerAdapter(Context context, ImageLoader imageLoader,
                               List<Image> selectedImages, OnImageClickListener itemClickListener) {
         super(context, imageLoader);
-        this.selectedImages = selectedImages;
         this.itemClickListener = itemClickListener;
+
+        if (selectedImages != null && !selectedImages.isEmpty()) {
+            this.selectedImages.addAll(selectedImages);
+        }
     }
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ImageViewHolder(
-                getInflater().inflate(R.layout.ef_imagepicker_item_image, parent, false),
-                itemClickListener
+                getInflater().inflate(R.layout.ef_imagepicker_item_image, parent, false)
         );
     }
 
@@ -60,7 +64,20 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
                 ? 0.5f
                 : 0f);
 
-        ((FrameLayout) viewHolder.itemView).setForeground(isSelected
+        viewHolder.itemView.setOnClickListener(v -> {
+            boolean shouldSelect = itemClickListener.onImageClick(
+                    viewHolder.getAdapterPosition(),
+                    !isSelected
+            );
+
+            if (isSelected) {
+                removeSelectedImage(image, position);
+            } else if (shouldSelect) {
+                addSelected(image, position);
+            }
+        });
+
+        viewHolder.container.setForeground(isSelected
                 ? ContextCompat.getDrawable(getContext(), R.drawable.ic_done_white)
                 : null);
     }
@@ -71,7 +88,6 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
                 return true;
             }
         }
-
         return false;
     }
 
@@ -86,30 +102,36 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         this.images.addAll(images);
     }
 
-    public void addAll(List<Image> images) {
-        int startIndex = this.images.size();
-        this.images.addAll(startIndex, images);
-        notifyItemRangeInserted(startIndex, images.size());
+    private void addSelected(final Image image, final int position) {
+        mutateSelection(() -> {
+            selectedImages.add(image);
+            notifyItemChanged(position);
+        });
     }
 
-    public void addSelected(Image image) {
-        selectedImages.add(image);
-        notifyItemChanged(images.indexOf(image));
-    }
-
-    public void removeSelectedImage(Image image) {
-        selectedImages.remove(image);
-        notifyItemChanged(images.indexOf(image));
-    }
-
-    public void removeSelectedPosition(int position, int clickPosition) {
-        selectedImages.remove(position);
-        notifyItemChanged(clickPosition);
+    private void removeSelectedImage(final Image image, final int position) {
+        mutateSelection(() -> {
+            selectedImages.remove(image);
+            notifyItemChanged(position);
+        });
     }
 
     public void removeAllSelectedSingleClick() {
-        selectedImages.clear();
-        notifyDataSetChanged();
+        mutateSelection(() -> {
+            selectedImages.clear();
+            notifyDataSetChanged();
+        });
+    }
+
+    private void mutateSelection(Runnable runnable) {
+        runnable.run();
+        if (imageSelectedListener != null) {
+            imageSelectedListener.onSelectionUpdate(selectedImages);
+        }
+    }
+
+    public void setImageSelectedListener(OnImageSelectedListener imageSelectedListener) {
+        this.imageSelectedListener = imageSelectedListener;
     }
 
     public Image getItem(int position) {
@@ -120,30 +142,21 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         return selectedImages;
     }
 
-    static class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ImageViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
         private View alphaView;
         private View gifIndicator;
-        private final OnImageClickListener onImageClickListener;
+        private FrameLayout container;
 
-        ImageViewHolder(View itemView, OnImageClickListener itemClickListener) {
+        ImageViewHolder(View itemView) {
             super(itemView);
 
+            container = (FrameLayout) itemView;
             imageView = (ImageView) itemView.findViewById(R.id.image_view);
             alphaView = itemView.findViewById(R.id.view_alpha);
             gifIndicator = itemView.findViewById(R.id.ef_item_gif_indicator);
-            onImageClickListener = itemClickListener;
-
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            view.setSelected(true);
-            onImageClickListener.onClick(view, getAdapterPosition());
         }
     }
-
 
 }
