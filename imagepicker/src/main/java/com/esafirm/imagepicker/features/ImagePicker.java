@@ -7,6 +7,7 @@ import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
+import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
@@ -134,6 +135,11 @@ public abstract class ImagePicker {
 
     public ImagePicker imageLoader(ImageLoader imageLoader) {
         config.setImageLoader(imageLoader);
+        return this;
+    }
+
+    public ImagePicker enableLog(boolean isEnable) {
+        IpLogger.getInstance().setEnable(isEnable);
         return this;
     }
 

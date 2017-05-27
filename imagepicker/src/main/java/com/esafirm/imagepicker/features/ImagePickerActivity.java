@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +28,7 @@ import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
+import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
@@ -45,10 +45,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     private static final int RC_CAPTURE = 2000;
 
-    private static final String TAG = "ImagePickerActivity";
-
     private static final int RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
     private static final int RC_PERMISSION_REQUEST_CAMERA = 24;
+
+    private IpLogger logger = IpLogger.getInstance();
 
     private ActionBar actionBar;
     private ProgressWheel progressBar;
@@ -237,7 +237,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
      * If permission denied and user choose 'Never Ask Again', show snackbar with an action that navigate to app settings
      */
     private void requestWriteExternalPermission() {
-        Log.w(TAG, "Write External permission is not granted. Requesting permission");
+        logger.w("Write External permission is not granted. Requesting permission");
 
         final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -255,7 +255,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     private void requestCameraPermission() {
-        Log.w(TAG, "Write External permission is not granted. Requesting permission");
+        logger.w("Write External permission is not granted. Requesting permission");
 
         final String[] permissions = new String[]{Manifest.permission.CAMERA};
 
@@ -281,27 +281,27 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         switch (requestCode) {
             case RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Write External permission granted");
+                    logger.d("Write External permission granted");
                     getData();
                     return;
                 }
-                Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                logger.e("Permission not granted: results len = " + grantResults.length +
                         " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
                 finish();
             }
             break;
             case RC_PERMISSION_REQUEST_CAMERA: {
                 if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Camera permission granted");
+                    logger.d("Camera permission granted");
                     captureImage();
                     return;
                 }
-                Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+                logger.e("Permission not granted: results len = " + grantResults.length +
                         " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
                 break;
             }
             default: {
-                Log.d(TAG, "Got unexpected permission result: " + requestCode);
+                logger.d("Got unexpected permission result: " + requestCode);
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
             }
@@ -339,7 +339,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             if (rc == PackageManager.PERMISSION_GRANTED) {
                 captureImage();
             } else {
-                Log.w(TAG, "Camera permission is not granted. Requesting permission");
+                logger.w("Camera permission is not granted. Requesting permission");
                 requestCameraPermission();
             }
         } else {
