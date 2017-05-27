@@ -55,27 +55,24 @@ ImagePicker.create(this)
 	.showCamera(true) // show camera or not (true by default)
 	.imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
 	.origin(images) // original selected images, used in multi mode
+	.theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
+	.enableLog(false) // disabling log
+	.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
 	.start(REQUEST_CODE_PICKER); // start image picker activity with request code
 ```                
-- Or use traditional Intent
+
+- Get Intent
+
+If you want to call it outside `Activity` or `Fragment`, you can simply get the `Intent` from the builder
+
 ```java
-Intent intent = new Intent(this, ImagePickerActivity.class);
+ImagePicker.create(activity).getIntent(context)
 
-intent.putExtra(ImagePicker.EXTRA_FOLDER_MODE, true);
-intent.putExtra(ImagePicker.EXTRA_MODE, ImagePicker.MODE_MULTIPLE);
-intent.putExtra(ImagePicker.EXTRA_LIMIT, 10);
-intent.putExtra(ImagePicker.EXTRA_SHOW_CAMERA, true);
-intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGES, images);
-intent.putExtra(ImagePicker.EXTRA_FOLDER_TITLE, "Album");
-intent.putExtra(ImagePicker.EXTRA_IMAGE_TITLE, "Tap to select images");
-intent.putExtra(ImagePicker.EXTRA_IMAGE_DIRECTORY, "Camera");
-intent.putExtra(ImagePicker.EXTRA_RETURN_AFTER_FIRST, true); //default is false
+```
 
-startActivityForResult(intent, REQUEST_CODE_PICKER);
-```        
+       
 ### Receive result
 
-- Using helper 
 
 ```java
 @Override
@@ -83,17 +80,7 @@ if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != nul
     ArrayList<Image> images = (ArrayList<Image>) ImagePicker.getImages(data);
 }
 ```
-- via Intent
 
-```java
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
-        ArrayList<Image> images = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
-        // do your logic ....
-    }
-}
-```
 
 ### Camera Only
 
