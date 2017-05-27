@@ -13,13 +13,14 @@ import com.esafirm.imagepicker.features.imageloader.ImageType;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.model.Folder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FolderPickerAdapter extends BaseListAdapter<FolderPickerAdapter.FolderViewHolder> {
 
     private final OnFolderClickListener folderClickListener;
 
-    private List<Folder> folders;
+    private List<Folder> folders = new ArrayList<>();
 
     public FolderPickerAdapter(Context context, ImageLoader imageLoader, OnFolderClickListener folderClickListener) {
         super(context, imageLoader);
@@ -34,7 +35,6 @@ public class FolderPickerAdapter extends BaseListAdapter<FolderPickerAdapter.Fol
 
     @Override
     public void onBindViewHolder(final FolderViewHolder holder, int position) {
-
         final Folder folder = folders.get(position);
 
         getImageLoader().loadImage(
@@ -46,18 +46,16 @@ public class FolderPickerAdapter extends BaseListAdapter<FolderPickerAdapter.Fol
         holder.name.setText(folders.get(position).getFolderName());
         holder.number.setText(String.valueOf(folders.get(position).getImages().size()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (folderClickListener != null)
-                    folderClickListener.onFolderClick(folder);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            if (folderClickListener != null)
+                folderClickListener.onFolderClick(folder);
         });
     }
 
     public void setData(List<Folder> folders) {
-        this.folders = folders;
-
+        if (folders != null) {
+            this.folders.addAll(folders);
+        }
         notifyDataSetChanged();
     }
 

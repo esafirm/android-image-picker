@@ -16,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,17 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esafirm.imagepicker.R;
-import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
-import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
-import com.esafirm.imagepicker.features.imageloader.ImageLoader;
+import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.ViewUtils;
-import com.esafirm.imagepicker.listeners.OnFolderClickListener;
-import com.esafirm.imagepicker.listeners.OnImageClickListener;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
-import com.esafirm.imagepicker.view.GridSpacingItemDecoration;
 import com.esafirm.imagepicker.view.ProgressWheel;
 import com.esafirm.imagepicker.view.SnackBarView;
 
@@ -45,12 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.esafirm.imagepicker.features.ImagePicker.EXTRA_SELECTED_IMAGES;
-import static com.esafirm.imagepicker.features.ImagePicker.MODE_MULTIPLE;
-import static com.esafirm.imagepicker.features.ImagePicker.MODE_SINGLE;
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
-public class ImagePickerActivity extends AppCompatActivity
-        implements ImagePickerView, OnImageClickListener {
+public class ImagePickerActivity extends AppCompatActivity implements ImagePickerView {
 
     private static final int RC_CAPTURE = 2000;
 
@@ -65,22 +56,14 @@ public class ImagePickerActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private SnackBarView snackBarView;
 
-    private GridLayoutManager layoutManager;
-    private GridSpacingItemDecoration itemOffsetDecoration;
+    private RecyclerViewManager recyclerViewManager;
 
     private ImagePickerPresenter presenter;
     private ImagePickerPreferences preferences;
-    private ImagePickerAdapter imageAdapter;
     private ImagePickerConfig config;
-    private FolderPickerAdapter folderAdapter;
 
     private Handler handler;
     private ContentObserver observer;
-
-    private Parcelable foldersState;
-
-    private int imageColumns;
-    private int folderColumns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +77,17 @@ public class ImagePickerActivity extends AppCompatActivity
         }
 
         ImagePickerConfig config = getConfig();
-
         setTheme(config.getTheme());
         setContentView(R.layout.ef_activity_image_picker);
-        setupComponents(config);
         setupView(config);
+        setupComponents(config);
+    }
 
-        orientationBasedUI(getResources().getConfiguration().orientation);
+    private ImagePickerConfig getConfig() {
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
+        return config;
     }
 
     private void setupView(ImagePickerConfig config) {
@@ -120,40 +107,18 @@ public class ImagePickerActivity extends AppCompatActivity
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        ViewUtils.onPreDraw(snackBarView, new Runnable() {
-            @Override
-            public void run() {
-                snackBarView.hide();
-            }
-        });
-    }
-
-    private ImagePickerConfig getConfig() {
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
-        return config;
+        ViewUtils.onPreDraw(snackBarView, () -> snackBarView.hide());
     }
 
     private void setupComponents(ImagePickerConfig config) {
-        ArrayList<Image> selectedImages = null;
-        if (config.getMode() == MODE_MULTIPLE && !config.getSelectedImages().isEmpty()) {
-            selectedImages = config.getSelectedImages();
-        }
-        if (selectedImages == null) {
-            selectedImages = new ArrayList<>();
-        }
-
-        /* Init folder and image adapter */
-        final ImageLoader imageLoader = config.getImageLoader();
-        imageAdapter = new ImagePickerAdapter(this, imageLoader, selectedImages, this);
-        folderAdapter = new FolderPickerAdapter(this, imageLoader, new OnFolderClickListener() {
-            @Override
-            public void onFolderClick(Folder bucket) {
-                foldersState = recyclerView.getLayoutManager().onSaveInstanceState();
-                setImageAdapter(bucket.getImages());
-            }
-        });
+        recyclerViewManager = new RecyclerViewManager(
+                recyclerView,
+                config,
+                getResources().getConfiguration().orientation
+        );
+        recyclerViewManager.setupAdapters((position, isSelected) -> recyclerViewManager.selectImage(this::onDone)
+                , bucket -> setImageAdapter(bucket.getImages()));
+        recyclerViewManager.setImageSelectedListener(selectedImage -> invalidateTitle());
 
         preferences = new ImagePickerPreferences(this);
         presenter = new ImagePickerPresenter(new ImageFileLoader(this));
@@ -173,30 +138,18 @@ public class ImagePickerActivity extends AppCompatActivity
      * 3. Update title
      */
     private void setImageAdapter(List<Image> images) {
-        imageAdapter.setData(images);
-        setItemDecoration(imageColumns);
-        recyclerView.setAdapter(imageAdapter);
-        updateTitle();
+        recyclerViewManager.setImageAdapter(images);
+        invalidateTitle();
     }
 
-    /**
-     * Set folder adapter
-     * 1. Set new data
-     * 2. Update item decoration
-     * 3. Update title
-     */
     private void setFolderAdapter(List<Folder> folders) {
-        if (folders != null) {
-            folderAdapter.setData(folders);
-        }
-        setItemDecoration(folderColumns);
-        recyclerView.setAdapter(folderAdapter);
+        recyclerViewManager.setFolderAdapter(folders);
+        invalidateTitle();
+    }
 
-        if (foldersState != null) {
-            layoutManager.setSpanCount(folderColumns);
-            recyclerView.getLayoutManager().onRestoreInstanceState(foldersState);
-        }
-        updateTitle();
+    private void invalidateTitle() {
+        supportInvalidateOptionsMenu();
+        actionBar.setTitle(recyclerViewManager.getTitle());
     }
 
     /**
@@ -217,11 +170,7 @@ public class ImagePickerActivity extends AppCompatActivity
 
         MenuItem menuDone = menu.findItem(R.id.menu_done);
         if (menuDone != null) {
-            menuDone.setVisible(!isDisplayingFolderView() && !imageAdapter.getSelectedImages().isEmpty());
-
-            if (config.getMode() == MODE_SINGLE && config.isReturnAfterFirst()) {
-                menuDone.setVisible(false);
-            }
+            menuDone.setVisible(recyclerViewManager.isShowDoneButton());
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -253,8 +202,7 @@ public class ImagePickerActivity extends AppCompatActivity
      * Get all selected images then return image to caller activity
      */
     private void onDone() {
-        List<Image> selectedImages = imageAdapter.getSelectedImages();
-        presenter.onDoneSelectImages(selectedImages);
+        presenter.onDoneSelectImages(recyclerViewManager.getSelectedImages());
     }
 
     /**
@@ -263,34 +211,8 @@ public class ImagePickerActivity extends AppCompatActivity
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        orientationBasedUI(newConfig.orientation);
+        recyclerViewManager.changeOrientation(newConfig.orientation);
     }
-
-    /**
-     * Set item size, column size base on the screen orientation
-     */
-    private void orientationBasedUI(int orientation) {
-        imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
-        folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
-
-        int columns = isDisplayingFolderView() ? folderColumns : imageColumns;
-        layoutManager = new GridLayoutManager(this, columns);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        setItemDecoration(columns);
-    }
-
-    /**
-     * Set item decoration
-     */
-    private void setItemDecoration(int columns) {
-        layoutManager.setSpanCount(columns);
-        if (itemOffsetDecoration != null)
-            recyclerView.removeItemDecoration(itemOffsetDecoration);
-        itemOffsetDecoration = new GridSpacingItemDecoration(columns, getResources().getDimensionPixelSize(R.dimen.ef_item_padding), false);
-        recyclerView.addItemDecoration(itemOffsetDecoration);
-    }
-
 
     /**
      * Check permission
@@ -327,17 +249,10 @@ public class ImagePickerActivity extends AppCompatActivity
                 preferences.setPermissionRequested(permission);
                 ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
             } else {
-                snackBarView.show(R.string.ef_msg_no_write_external_permission, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openAppSettings();
-                    }
-                });
+                snackBarView.show(R.string.ef_msg_no_write_external_permission, v -> openAppSettings());
             }
         }
-
     }
-
 
     private void requestCameraPermission() {
         Log.w(TAG, "Write External permission is not granted. Requesting permission");
@@ -352,12 +267,7 @@ public class ImagePickerActivity extends AppCompatActivity
                 preferences.setPermissionRequested(permission);
                 ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_CAMERA);
             } else {
-                snackBarView.show(R.string.ef_msg_no_camera_permission, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openAppSettings();
-                    }
-                });
+                snackBarView.show(R.string.ef_msg_no_camera_permission, v -> openAppSettings());
             }
         }
     }
@@ -406,54 +316,6 @@ public class ImagePickerActivity extends AppCompatActivity
                 Uri.fromParts("package", getPackageName(), null));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
-
-    @Override
-    public void onClick(View view, int position) {
-        clickImage(position);
-    }
-
-    /**
-     * Handle image selection event: add or remove selected image, change title
-     */
-    private void clickImage(int position) {
-        Image image = imageAdapter.getItem(position);
-        int selectedItemPosition = selectedImagePosition(image);
-        if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
-            if (selectedItemPosition == -1) {
-                if (imageAdapter.getSelectedImages().size() < config.getLimit()) {
-                    imageAdapter.addSelected(image);
-                } else {
-                    Toast.makeText(this, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                imageAdapter.removeSelectedPosition(selectedItemPosition, position);
-            }
-        } else {
-            if (selectedItemPosition != -1) {
-                imageAdapter.removeSelectedPosition(selectedItemPosition, position);
-            } else {
-                if (imageAdapter.getSelectedImages().size() > 0) {
-                    imageAdapter.removeAllSelectedSingleClick();
-                }
-                imageAdapter.addSelected(image);
-
-                if (config.isReturnAfterFirst()) {
-                    onDone();
-                }
-            }
-        }
-        updateTitle();
-    }
-
-    private int selectedImagePosition(Image image) {
-        List<Image> selectedImages = imageAdapter.getSelectedImages();
-        for (int i = 0; i < selectedImages.size(); i++) {
-            if (selectedImages.get(i).getPath().equals(image.getPath())) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     /**
@@ -513,29 +375,6 @@ public class ImagePickerActivity extends AppCompatActivity
         getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
     }
 
-    /**
-     * Update activity title
-     * If we're displaying folder, set folder title
-     * If we're displaying images, show number of selected images
-     */
-    private void updateTitle() {
-        supportInvalidateOptionsMenu();
-
-        if (isDisplayingFolderView()) {
-            actionBar.setTitle(config.getFolderTitle());
-            return;
-        }
-
-        if (imageAdapter.getSelectedImages().isEmpty()) {
-            actionBar.setTitle(config.getImageTitle());
-        } else if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
-            int imageSize = imageAdapter.getSelectedImages().size();
-            actionBar.setTitle(config.getLimit() == ImagePicker.MAX_LIMIT
-                    ? String.format(getString(R.string.ef_selected), imageSize)
-                    : String.format(getString(R.string.ef_selected_with_limit), imageSize, config.getLimit()));
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -555,20 +394,9 @@ public class ImagePickerActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Check if displaying folders view
-     */
-    private boolean isDisplayingFolderView() {
-        return (config.isFolderMode() &&
-                (recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter));
-    }
-
-    /**
-     * When press back button, show folders if view is displaying images
-     */
     @Override
     public void onBackPressed() {
-        if (config.isFolderMode() && !isDisplayingFolderView()) {
+        if (!recyclerViewManager.isDisplayingFolderView()) {
             setFolderAdapter(null);
             return;
         }
