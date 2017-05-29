@@ -106,8 +106,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             actionBar.setDisplayShowTitleEnabled(true);
         }
-
-        ViewUtils.onPreDraw(snackBarView, () -> snackBarView.hide());
     }
 
     private void setupComponents(ImagePickerConfig config) {
