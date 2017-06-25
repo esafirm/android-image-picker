@@ -138,6 +138,10 @@ public abstract class ImagePicker {
         return this;
     }
 
+    protected ImagePickerConfig getConfig() {
+        return config;
+    }
+
     public ImagePicker enableLog(boolean isEnable) {
         IpLogger.getInstance().setEnable(isEnable);
         return this;
