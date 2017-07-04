@@ -149,7 +149,7 @@ public abstract class ImagePicker {
 
     public Intent getIntent(Context context) {
         Intent intent = new Intent(context, ImagePickerActivity.class);
-        intent.putExtra(ImagePickerConfig.class.getSimpleName(), config);
+        intent.putExtra(ImagePickerConfig.class.getSimpleName(), getConfig());
         return intent;
     }
 
