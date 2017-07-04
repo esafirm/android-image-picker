@@ -57,7 +57,8 @@ public class RecyclerViewManager {
         imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
         folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
 
-        int columns = isDisplayingFolderView() ? folderColumns : imageColumns;
+        boolean shouldShowFolder = config.isFolderMode() && isDisplayingFolderView();
+        int columns = shouldShowFolder ? folderColumns : imageColumns;
         layoutManager = new GridLayoutManager(context, columns);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -93,9 +94,17 @@ public class RecyclerViewManager {
         layoutManager.setSpanCount(columns);
     }
 
-    public boolean isDisplayingFolderView() {
-        return config.isFolderMode()
-                && (recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter);
+    public void handleBack(OnBackAction action) {
+        if (config.isFolderMode() && !isDisplayingFolderView()) {
+            setFolderAdapter(null);
+            action.onBackToFolder();
+            return;
+        }
+        action.onFinishImagePicker();
+    }
+
+    private boolean isDisplayingFolderView() {
+        return recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter;
     }
 
     public String getTitle() {

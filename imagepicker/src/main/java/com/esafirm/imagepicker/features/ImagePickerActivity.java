@@ -26,10 +26,10 @@ import android.widget.Toast;
 
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
+import com.esafirm.imagepicker.features.recyclers.OnBackAction;
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.IpLogger;
-import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.imagepicker.view.ProgressWheel;
@@ -394,12 +394,18 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     @Override
     public void onBackPressed() {
-        if (!recyclerViewManager.isDisplayingFolderView()) {
-            setFolderAdapter(null);
-            return;
-        }
-        setResult(RESULT_CANCELED);
-        super.onBackPressed();
+        recyclerViewManager.handleBack(new OnBackAction() {
+            @Override
+            public void onBackToFolder() {
+                invalidateTitle();
+            }
+
+            @Override
+            public void onFinishImagePicker() {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
     }
 
     /* --------------------------------------------------- */
