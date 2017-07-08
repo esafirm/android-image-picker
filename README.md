@@ -89,7 +89,7 @@ DefaultCameraModule cameraModule = new DefaultCameraModule() // or ImmediateCame
 startActivityForResult(cameraModule.getIntent(context), RC_REQUEST_CAMERA);  
 ```
 
-- Receiving Result
+And for receiving the result:
 
 ```java
 @Override
@@ -107,7 +107,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 
-##Modification License
+## Modification License
+
 ```
 Copyright (c) 2016 Esa Firman
 
@@ -118,7 +119,8 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-##Original License
+## Original License
+
 [The Original Image Picker](https://github.com/nguyenhoanglam/ImagePicker)
 
 [You can find the original lincense here ](https://raw.githubusercontent.com/esafirm/ImagePicker/master/ORIGINAL_LICENSE) 
