@@ -9,6 +9,7 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import com.esafirm.imagepicker.features.ImagePickerConfig;
+import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
 import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.model.ImageFactory;
 
@@ -21,7 +22,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
     protected String currentImagePath;
 
     public Intent getCameraIntent(Context context) {
-        return getCameraIntent(context, new ImagePickerConfig(context));
+        return getCameraIntent(context, ImagePickerConfigFactory.createDefault(context));
     }
 
     @Override

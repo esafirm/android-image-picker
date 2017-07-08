@@ -64,7 +64,7 @@ public abstract class ImagePicker {
     /* --------------------------------------------------- */
 
     public void init(Context context) {
-        config = new ImagePickerConfig(context);
+        config = ImagePickerConfigFactory.createDefault(context);
     }
 
     public static ImagePickerWithActivity create(Activity activity) {

@@ -1,12 +1,9 @@
 package com.esafirm.imagepicker.features;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.StyleRes;
 
-import com.esafirm.imagepicker.R;
-import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.model.Image;
 
@@ -30,17 +27,7 @@ public class ImagePickerConfig implements Parcelable {
 
     private ImageLoader imageLoader;
 
-    public ImagePickerConfig(Context context) {
-        this.mode = ImagePicker.MODE_MULTIPLE;
-        this.limit = ImagePicker.MAX_LIMIT;
-        this.showCamera = true;
-        this.folderTitle = context.getString(R.string.ef_title_folder);
-        this.imageTitle = context.getString(R.string.ef_title_select_image);
-        this.selectedImages = new ArrayList<>();
-        this.folderMode = false;
-        this.imageDirectory = context.getString(R.string.ef_image_directory);
-        this.returnAfterFirst = true;
-        this.imageLoader = new DefaultImageLoader();
+    public ImagePickerConfig() {
     }
 
     public boolean isReturnAfterFirst() {
