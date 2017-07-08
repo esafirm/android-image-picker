@@ -7,6 +7,7 @@ import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
+import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.Image;
 
@@ -148,8 +149,9 @@ public abstract class ImagePicker {
     }
 
     public Intent getIntent(Context context) {
+        ImagePickerConfig config = ConfigUtils.checkConfig(getConfig());
         Intent intent = new Intent(context, ImagePickerActivity.class);
-        intent.putExtra(ImagePickerConfig.class.getSimpleName(), getConfig());
+        intent.putExtra(ImagePickerConfig.class.getSimpleName(), config);
         return intent;
     }
 
