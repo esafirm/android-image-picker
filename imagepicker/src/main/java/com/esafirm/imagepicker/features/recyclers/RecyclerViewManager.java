@@ -159,7 +159,7 @@ public class RecyclerViewManager {
         imageAdapter.setImageSelectedListener(listener);
     }
 
-    public boolean selectImage(Runnable onDone) {
+    public boolean selectImage() {
         if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
             if (imageAdapter.getSelectedImages().size() >= config.getLimit()) {
                 Toast.makeText(context, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
@@ -168,9 +168,6 @@ public class RecyclerViewManager {
         } else if (config.getMode() == ImagePicker.MODE_SINGLE) {
             if (imageAdapter.getSelectedImages().size() > 0) {
                 imageAdapter.removeAllSelectedSingleClick();
-            }
-            if (config.isReturnAfterFirst()) {
-                onDone.run();
             }
         }
         return true;

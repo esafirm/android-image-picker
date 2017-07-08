@@ -28,6 +28,7 @@ import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.recyclers.OnBackAction;
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
+import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.Folder;
@@ -114,9 +115,16 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                 config,
                 getResources().getConfiguration().orientation
         );
-        recyclerViewManager.setupAdapters((position, isSelected) -> recyclerViewManager.selectImage(this::onDone)
+
+        recyclerViewManager.setupAdapters((position, isSelected) -> recyclerViewManager.selectImage()
                 , bucket -> setImageAdapter(bucket.getImages()));
-        recyclerViewManager.setImageSelectedListener(selectedImage -> invalidateTitle());
+
+        recyclerViewManager.setImageSelectedListener(selectedImage -> {
+            invalidateTitle();
+            if (ConfigUtils.isReturnAfterFirst(config) && !selectedImage.isEmpty()) {
+                onDone();
+            }
+        });
 
         preferences = new ImagePickerPreferences(this);
         presenter = new ImagePickerPresenter(new ImageFileLoader(this));
