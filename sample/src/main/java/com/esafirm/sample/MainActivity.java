@@ -117,11 +117,12 @@ public class MainActivity extends AppCompatActivity {
         final boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
         final boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
         final boolean useCustomImageLoader = ((Switch) findViewById(R.id.ef_switch_imageloader)).isChecked();
+        final boolean folderMode = ((Switch) findViewById(R.id.ef_switch_folder_mode)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
                 .theme(R.style.ImagePickerTheme)
                 .returnAfterFirst(returnAfterCapture) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
-                .folderMode(false) // set folder mode (false by default)
+                .folderMode(folderMode) // set folder mode (false by default)
                 .folderTitle("Folder") // folder selection title
                 .imageTitle("Tap to select"); // image selection title
 
