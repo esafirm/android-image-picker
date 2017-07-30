@@ -26,6 +26,14 @@
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:text="Return After First   "/>
 
+
+            <Switch
+                android:id="@+id/ef_switch_folder_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:text="Folder Mode   "/>
+
             <Switch
                 android:id="@+id/ef_switch_single"
                 android:layout_width="wrap_content"
