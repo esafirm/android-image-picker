@@ -1,4 +1,7 @@
 ## ImagePicker
+
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/4618)
+
 A simple library to select images from the gallery and camera.
 
 ## Screenshot
