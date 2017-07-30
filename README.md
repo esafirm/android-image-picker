@@ -21,10 +21,9 @@ And add this to your module's `build.gradle`
 
 ```groovy
 dependencies {
-	compile 'com.github.bumptech.glide:glide:3.7.0'
-	compile 'com.github.esafirm.android-image-picker:imagepicker:x.y.z@aar'
+	compile 'com.github.esafirm.android-image-picker:imagepicker:x.y.z'
 	// for experimental rx picker
-	compile 'com.github.esafirm.android-image-picker:rximagepicker:x.y.z@aar'
+	compile 'com.github.esafirm.android-image-picker:rximagepicker:x.y.z'
 }
 ```
 
@@ -119,6 +118,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ```
 
 ##Original License
+
 [The Original Image Picker](https://github.com/nguyenhoanglam/ImagePicker)
 
 [You can find the original lincense here ](https://raw.githubusercontent.com/esafirm/ImagePicker/master/ORIGINAL_LICENSE) 
