@@ -18,7 +18,7 @@ public class ImagePickerConfig implements Parcelable {
 
     private String folderTitle;
     private String imageTitle;
-    private String imageDirectory;
+    private ImagePickerSavePath savePath;
 
     private int mode;
     private int limit;
@@ -38,7 +38,7 @@ public class ImagePickerConfig implements Parcelable {
         this.imageTitle = context.getString(R.string.ef_title_select_image);
         this.selectedImages = new ArrayList<>();
         this.folderMode = false;
-        this.imageDirectory = context.getString(R.string.ef_image_directory);
+        this.savePath = ImagePickerSavePath.DEFAULT;
         this.returnAfterFirst = true;
         this.imageLoader = new DefaultImageLoader();
     }
@@ -107,12 +107,16 @@ public class ImagePickerConfig implements Parcelable {
         this.folderMode = folderMode;
     }
 
-    public String getImageDirectory() {
-        return imageDirectory;
+    public ImagePickerSavePath getImageDirectory() {
+        return savePath;
     }
 
-    public void setImageDirectory(String imageDirectory) {
-        this.imageDirectory = imageDirectory;
+    public void setImageDirectory(String dirName) {
+        savePath = new ImagePickerSavePath(dirName, false);
+    }
+
+    public void setImageFullDirectory(String path) {
+        savePath = new ImagePickerSavePath(path, true);
     }
 
     public void setTheme(@StyleRes int theme) {
@@ -145,7 +149,7 @@ public class ImagePickerConfig implements Parcelable {
         dest.writeTypedList(this.selectedImages);
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
-        dest.writeString(this.imageDirectory);
+        dest.writeParcelable(this.savePath, flags);
         dest.writeInt(this.mode);
         dest.writeInt(this.limit);
         dest.writeInt(this.theme);
@@ -159,7 +163,7 @@ public class ImagePickerConfig implements Parcelable {
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
-        this.imageDirectory = in.readString();
+        this.savePath = in.readParcelable(ImagePickerSavePath.class.getClassLoader());
         this.mode = in.readInt();
         this.limit = in.readInt();
         this.theme = in.readInt();

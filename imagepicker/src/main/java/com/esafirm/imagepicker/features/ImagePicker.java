@@ -128,6 +128,11 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker imageFullDirectory(String fullPath) {
+        config.setImageFullDirectory(fullPath);
+        return this;
+    }
+
     public ImagePicker theme(@StyleRes int theme) {
         config.setTheme(theme);
         return this;
