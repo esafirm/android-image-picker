@@ -6,8 +6,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 
+import com.esafirm.imagepicker.features.ImagePickerSavePath;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
@@ -19,16 +19,17 @@ import java.util.Locale;
 
 public class ImagePickerUtils {
 
-    private static final String TAG = "ImageUtils";
-
-    public static File createImageFile(String directory) {
+    public static File createImageFile(ImagePickerSavePath savePath) {
         // External sdcard location
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), directory);
+        final String path = savePath.getPath();
+        File mediaStorageDir = savePath.isFullPath()
+                ? new File(path)
+                : new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), path);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(TAG, "Oops! Failed create " + directory + " directory");
+                IpLogger.getInstance().d("Oops! Failed create " + path);
                 return null;
             }
         }
@@ -41,7 +42,7 @@ public class ImagePickerUtils {
         try {
             imageFile = File.createTempFile(imageFileName, ".jpg", mediaStorageDir);
         } catch (IOException e) {
-            Log.d(TAG, "Oops! Failed create " + imageFileName + " file");
+            IpLogger.getInstance().d("Oops! Failed create " + imageFileName + " file");
         }
         return imageFile;
     }
