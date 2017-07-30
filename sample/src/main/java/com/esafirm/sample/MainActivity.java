@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -117,11 +118,12 @@ public class MainActivity extends AppCompatActivity {
         final boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
         final boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
         final boolean useCustomImageLoader = ((Switch) findViewById(R.id.ef_switch_imageloader)).isChecked();
+        final boolean folderMode = ((Switch) findViewById(R.id.ef_switch_folder_mode)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
                 .theme(R.style.ImagePickerTheme)
                 .returnAfterFirst(returnAfterCapture) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
-                .folderMode(false) // set folder mode (false by default)
+                .folderMode(folderMode) // set folder mode (false by default)
                 .folderTitle("Folder") // folder selection title
                 .imageTitle("Tap to select"); // image selection title
 
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         imagePicker.limit(10) // max images can be selected (99 by default)
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
+                .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()) // can be full path
                 .origin(images) // original selected images, used in multi mode
                 .start(RC_CODE_PICKER); // start image picker activity with request code
     }

@@ -25,7 +25,4 @@
     <!--Don't Translate-->
     <string name="ef_gif">GIF</string>
 
-    <!--Config-->
-    <string name="ef_image_directory" translatable="false">Camera</string>
-
 </resources>

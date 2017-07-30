@@ -18,7 +18,7 @@ public class ImagePickerConfigFactory {
         config.setFolderTitle(context.getString(R.string.ef_title_folder));
         config.setImageTitle(context.getString(R.string.ef_title_select_image));
         config.setSelectedImages(new ArrayList<>());
-        config.setImageDirectory(context.getString(R.string.ef_image_directory));
+        config.setSavePath(ImagePickerSavePath.DEFAULT);
         config.setReturnAfterFirst(true);
         config.setImageLoader(new DefaultImageLoader());
         return config;
