@@ -54,6 +54,7 @@ public class FolderPickerAdapter extends BaseListAdapter<FolderPickerAdapter.Fol
 
     public void setData(List<Folder> folders) {
         if (folders != null) {
+            this.folders.clear();
             this.folders.addAll(folders);
         }
         notifyDataSetChanged();
