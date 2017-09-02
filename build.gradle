@@ -10,6 +10,15 @@ buildscript {
     }
 }
 
+ext {
+    sdk = [
+            compileSdk: 25,
+            buildTools: '26.0.1',
+            minSdk    : 14,
+            targetSdk : 25
+    ]
+}
+
 allprojects {
     repositories {
         jcenter()
