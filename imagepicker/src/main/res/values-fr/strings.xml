@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ef_permission_write_external_rationale">Autoriser l'application à accéder au stockage externe pour afficher les images</string>
+    <string name="ef_permission_write_external_rationale">Autoriser l\'application à accéder au stockage externe pour afficher les images</string>
 
     <string name="ef_ok">OK</string>
     <string name="ef_done">TERMINER</string>
@@ -15,14 +15,14 @@
 
     <string name="ef_error_create_image_file">Impossible de créer le fichier photo</string>
     <string name="ef_error_no_camera">Aucune caméra détectée</string>
-    <string name="ef_error_null_cursor">Oups, quelque chose s'est mal déroulé!</string>
+    <string name="ef_error_null_cursor">Oups, quelque chose s\'est mal déroulé!</string>
 
     <string name="ef_msg_empty_images">Aucune image trouvée</string>
-    <string name="ef_msg_no_write_external_permission">L'application nécessite l'autorisation de stockage pour afficher les images</string>
-    <string name="ef_msg_no_camera_permission">L'application nécessite l'autorisation de la caméra</string>
-    <string name="ef_msg_limit_images">Limite du nombre d'images</string>
+    <string name="ef_msg_no_write_external_permission">L\'application nécessite l\'autorisation de stockage pour afficher les images</string>
+    <string name="ef_msg_no_camera_permission">L\'application nécessite l\'autorisation de la caméra</string>
+    <string name="ef_msg_limit_images">Limite du nombre d\'images</string>
 
-    <!--Don't Translate-->
+    <!--Don\'t Translate-->
     <string name="ef_gif">GIF</string>
 
 </resources>
