@@ -80,7 +80,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         ImagePickerConfig config = getConfig();
         setTheme(config.getTheme());
         setContentView(R.layout.ef_activity_image_picker);
-        setupView(config);
+        setupView();
         setupComponents(config);
     }
 
@@ -91,7 +91,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         return config;
     }
 
-    private void setupView(ImagePickerConfig config) {
+    private void setupView() {
         progressBar = (ProgressWheel) findViewById(R.id.progress_bar);
         emptyTextView = (TextView) findViewById(R.id.tv_empty_images);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -102,7 +102,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle(config.isFolderMode() ? config.getFolderTitle() : config.getImageTitle());
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
             actionBar.setDisplayShowTitleEnabled(true);

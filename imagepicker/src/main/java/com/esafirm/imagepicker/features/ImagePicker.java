@@ -33,7 +33,7 @@ public abstract class ImagePicker {
 
         public ImagePickerWithActivity(Activity activity) {
             this.activity = activity;
-            init(activity);
+            init();
         }
 
         @Override
@@ -49,7 +49,7 @@ public abstract class ImagePicker {
 
         public ImagePickerWithFragment(Fragment fragment) {
             this.fragment = fragment;
-            init(fragment.getActivity());
+            init();
         }
 
         @Override
@@ -63,8 +63,8 @@ public abstract class ImagePicker {
     /* > Stater */
     /* --------------------------------------------------- */
 
-    public void init(Context context) {
-        config = ImagePickerConfigFactory.createDefault(context);
+    public void init() {
+        config = ImagePickerConfigFactory.createDefault();
     }
 
     public static ImagePickerWithActivity create(Activity activity) {

@@ -1,5 +1,8 @@
 package com.esafirm.imagepicker.helper;
 
+import android.content.Context;
+
+import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 
@@ -23,5 +26,19 @@ public class ConfigUtils {
 
     public static boolean isReturnAfterFirst(ImagePickerConfig config) {
         return config.getMode() == ImagePicker.MODE_SINGLE && config.isReturnAfterFirst();
+    }
+
+    public static String getFolderTitle(Context context, ImagePickerConfig config) {
+        final String folderTitle = config.getFolderTitle();
+        return ImagePickerUtils.isStringEmpty(folderTitle)
+                ? context.getString(R.string.ef_title_folder)
+                : folderTitle;
+    }
+
+    public static String getImageTitle(Context context, ImagePickerConfig config) {
+        final String configImageTitle = config.getImageTitle();
+        return ImagePickerUtils.isStringEmpty(configImageTitle)
+                ? context.getString(R.string.ef_title_select_image)
+                : configImageTitle;
     }
 }

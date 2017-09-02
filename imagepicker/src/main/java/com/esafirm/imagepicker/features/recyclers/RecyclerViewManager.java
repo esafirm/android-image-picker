@@ -13,6 +13,8 @@ import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
+import com.esafirm.imagepicker.helper.ConfigUtils;
+import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.listeners.OnFolderClickListener;
 import com.esafirm.imagepicker.listeners.OnImageClickListener;
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener;
@@ -109,17 +111,22 @@ public class RecyclerViewManager {
 
     public String getTitle() {
         if (isDisplayingFolderView()) {
-            return config.getFolderTitle();
+            return ConfigUtils.getFolderTitle(context, config);
         }
 
-        if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
-            int imageSize = imageAdapter.getSelectedImages().size();
-            return config.getLimit() == ImagePicker.MAX_LIMIT
-                    ? String.format(context.getString(R.string.ef_selected), imageSize)
-                    : String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.getLimit());
+        if (config.getMode() == ImagePicker.MODE_SINGLE) {
+            return ConfigUtils.getImageTitle(context, config);
         }
 
-        return config.getImageTitle();
+        final int imageSize = imageAdapter.getSelectedImages().size();
+        final boolean useDefaultTitle = !ImagePickerUtils.isStringEmpty(config.getImageTitle()) && imageSize == 0;
+
+        if (useDefaultTitle) {
+            return ConfigUtils.getImageTitle(context, config);
+        }
+        return config.getLimit() == ImagePicker.MAX_LIMIT
+                ? String.format(context.getString(R.string.ef_selected), imageSize)
+                : String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.getLimit());
     }
 
     public void setImageAdapter(List<Image> images) {

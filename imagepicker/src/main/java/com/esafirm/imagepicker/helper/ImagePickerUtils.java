@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 
 import com.esafirm.imagepicker.features.ImagePickerSavePath;
 import com.esafirm.imagepicker.model.Image;
@@ -18,6 +19,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class ImagePickerUtils {
+
+    public static boolean isStringEmpty(@Nullable String str) {
+        return str == null || str.length() == 0;
+    }
 
     public static File createImageFile(ImagePickerSavePath savePath) {
         // External sdcard location
