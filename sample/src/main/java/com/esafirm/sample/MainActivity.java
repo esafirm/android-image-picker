@@ -56,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.button_intent).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startWithIntent();
+            }
+        });
+
         findViewById(R.id.button_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +119,13 @@ public class MainActivity extends AppCompatActivity {
     private Observable<List<Image>> getImagePickerObservable() {
         return RxImagePicker.getInstance()
                 .start(this, ImagePicker.create(this));
+    }
+
+    private void startWithIntent() {
+        startActivityForResult(ImagePicker.create(this)
+                .single()
+                .returnAfterFirst(true)
+                .getIntent(this), RC_CODE_PICKER);
     }
 
     public void start() {

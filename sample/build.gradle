@@ -35,7 +35,7 @@ dependencies {
     compile project(':imagepicker')
 
     /* Release Check */
-//    final imagePickerVersion = '1.7.4'
+//    final imagePickerVersion = '1.9.0'
 //    compile "com.github.esafirm.android-image-picker:imagepicker:${imagePickerVersion}"
 //    compile("com.github.esafirm.android-image-picker:rximagepicker:${imagePickerVersion}")
 }
