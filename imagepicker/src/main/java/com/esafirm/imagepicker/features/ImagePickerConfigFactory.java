@@ -14,7 +14,7 @@ public class ImagePickerConfigFactory {
         config.setFolderMode(false);
         config.setSelectedImages(new ArrayList<>());
         config.setSavePath(ImagePickerSavePath.DEFAULT);
-        config.setReturnAfterFirst(true);
+        config.setReturnAfterFirst(false);
         config.setImageLoader(new DefaultImageLoader());
         return config;
     }
