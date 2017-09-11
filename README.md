@@ -32,6 +32,11 @@ dependencies {
 
 change `x.y.z` to version in the [release page](https://github.com/esafirm/android-image-picker/releases)
 
+**Breaking changes**
+
+If you're not using custom image loader and have Glide v3 in your classpath, please using version `1.8.0` below! 
+Will improve this image loader compatibility issue in ImagePicker v2! 
+
 ## Usage
 
 For full example, please refer to `sample`
