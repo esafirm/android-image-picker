@@ -7,7 +7,7 @@ android {
     buildToolsVersion sdk.buildTools
 
     defaultConfig {
-        minSdkVersion sdk.minSdik
+        minSdkVersion sdk.minSdk
         targetSdkVersion sdk.targetSdk
         versionCode 1
         versionName "1.0"

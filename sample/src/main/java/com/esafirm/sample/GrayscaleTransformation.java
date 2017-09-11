@@ -1,57 +1,45 @@
 
 package com.esafirm.sample;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
-public class GrayscaleTransformation implements Transformation<Bitmap> {
+import java.security.MessageDigest;
 
-    private BitmapPool mBitmapPool;
+public class GrayscaleTransformation extends BitmapTransformation {
 
-    public GrayscaleTransformation(Context context) {
-        this(Glide.get(context).getBitmapPool());
-    }
-
-    public GrayscaleTransformation(BitmapPool pool) {
-        mBitmapPool = pool;
-    }
+    private static final String ID = "GrayscaleTransformation()";
 
     @Override
-    public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
-        Bitmap source = resource.get();
+    protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
+        int width = toTransform.getWidth();
+        int height = toTransform.getHeight();
 
-        int width = source.getWidth();
-        int height = source.getHeight();
+        Bitmap.Config config = toTransform.getConfig() != null
+                ? toTransform.getConfig()
+                : Bitmap.Config.ARGB_8888;
 
-        Bitmap.Config config =
-                source.getConfig() != null ? source.getConfig() : Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = mBitmapPool.get(width, height, config);
-        if (bitmap == null) {
-            bitmap = Bitmap.createBitmap(width, height, config);
-        }
+        Bitmap bitmap = pool.get(width, height, config);
 
         Canvas canvas = new Canvas(bitmap);
         ColorMatrix saturation = new ColorMatrix();
         saturation.setSaturation(0f);
         Paint paint = new Paint();
         paint.setColorFilter(new ColorMatrixColorFilter(saturation));
-        canvas.drawBitmap(source, 0, 0, paint);
+        canvas.drawBitmap(toTransform, 0, 0, paint);
 
-        return BitmapResource.obtain(bitmap, mBitmapPool);
+        return bitmap;
     }
 
     @Override
-    public String getId() {
-        return "GrayscaleTransformation()";
+    public void updateDiskCacheKey(MessageDigest messageDigest) {
+        messageDigest.update(ID.getBytes());
     }
 }
