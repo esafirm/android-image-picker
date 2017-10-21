@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Erlaube Zugriff auf deinen Speicher um Bilder auszuwählen</string>
+
+    <string name="ef_ok">OK</string>
+    <string name="ef_done">Fertig</string>
+    <string name="ef_camera">Kamera</string>
+
+    <string name="ef_title_folder">Ordner</string>
+    <string name="ef_title_select_image">Zum Auswählen antippen</string>
+    <string name="ef_ltitle_permission_denied">Zugriff verweigert</string>
+
+    <string name="ef_selected">%d ausgewählt</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d ausgewählt</string>
+
+    <string name="ef_error_create_image_file">Fehler beim Erstellen der Bilddatei</string>
+    <string name="ef_error_no_camera">Keine Kamera gefunden</string>
+    <string name="ef_error_null_cursor">Huch, ein Fehler ist aufgetreten!</string>
+
+    <string name="ef_msg_empty_images">Keine Bilder gefunden</string>
+    <string name="ef_msg_no_write_external_permission">Erlaube Zugriff auf deinen Speicher um Bilder auszuwählen</string>
+    <string name="ef_msg_no_camera_permission">Erlaube Zugriff auf deine Kamera um Fotos aufzunehmen</string>
+    <string name="ef_msg_limit_images">Maximale Anzahl an Bildern ausgewählt</string>
+</resources>
