@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_ok">OK</string>
+    <string name="ef_done">PRONTO</string>
+    <string name="ef_camera">CÂMERA</string>
+    <string name="ef_permission_write_external_rationale">Permita acesso ao armazenamento externo para selecionar imagens</string>
+
+    <string name="ef_title_folder">Pastas</string>
+    <string name="ef_title_select_image">Toque para selecionar imagens</string>
+    <string name="ef_ltitle_permission_denied">Permissão negada</string>
+
+    <string name="ef_selected">%d selecionada(s)</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d selecionada(s)</string>
+
+    <string name="ef_error_create_image_file">Falha ao criar arquivo da imagem</string>
+    <string name="ef_error_no_camera">Nenhuma câmera encontrada</string>
+    <string name="ef_error_null_cursor">Oops, algo deu errado!</string>
+
+    <string name="ef_msg_empty_images">Nenhuma imagem encontrada</string>
+    <string name="ef_msg_no_write_external_permission">Por favor dê permissão para selecionar imagens</string>
+    <string name="ef_msg_no_camera_permission">Por favor permita o uso da câmera para fotografar</string>
+    <string name="ef_msg_limit_images">Limite de seleção de imagens</string>
+</resources>
