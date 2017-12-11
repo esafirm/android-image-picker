@@ -1,26 +1,27 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.6.1'
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
 ext {
     sdk = [
+            buildTools: '27.0.1',
             compileSdk: 25,
-            buildTools: '26.0.1',
-            minSdk    : 14,
-            targetSdk : 25
+            targetSdk : 25,
+            minSdk    : 14
     ]
 }
 
 allprojects {
     repositories {
         jcenter()
-        maven { url 'https://maven.google.com' }
+        google()
     }
 }
 

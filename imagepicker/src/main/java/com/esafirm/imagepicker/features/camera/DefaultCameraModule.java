@@ -6,11 +6,11 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
 import com.esafirm.imagepicker.helper.ImagePickerUtils;
+import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.ImageFactory;
 
 import java.io.File;
@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class DefaultCameraModule implements CameraModule, Serializable {
 
-    protected String currentImagePath;
+    String currentImagePath;
 
     public Intent getCameraIntent(Context context) {
         return getCameraIntent(context, ImagePickerConfigFactory.createDefault());
@@ -57,18 +57,17 @@ public class DefaultCameraModule implements CameraModule, Serializable {
         final Uri imageUri = Uri.parse(currentImagePath);
         if (imageUri != null) {
             MediaScannerConnection.scanFile(context.getApplicationContext(),
-                    new String[]{imageUri.getPath()}, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        @Override
-                        public void onScanCompleted(String path, Uri uri) {
-                            Log.v("ImagePicker", "File " + path + " was scanned successfully: " + uri);
+                    new String[]{imageUri.getPath()}, null, (path, uri) -> {
 
-                            if (path == null) {
-                                path = currentImagePath;
-                            }
-                            imageReadyListener.onImageReady(ImageFactory.singleListFromPath(path));
-                            ImagePickerUtils.revokeAppPermission(context, imageUri);
+                        IpLogger.getInstance().d("File " + path + " was scanned successfully: " + uri);
+
+                        if (path == null) {
+                            IpLogger.getInstance().d("This should not happen, go back to Immediate implemenation");
+                            path = currentImagePath;
                         }
+
+                        imageReadyListener.onImageReady(ImageFactory.singleListFromPath(path));
+                        ImagePickerUtils.revokeAppPermission(context, imageUri);
                     });
         }
     }

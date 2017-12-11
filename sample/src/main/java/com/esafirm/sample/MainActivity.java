@@ -14,8 +14,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
 import com.esafirm.imagepicker.features.camera.CameraModule;
-import com.esafirm.imagepicker.features.camera.ImmediateCameraModule;
+import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
 import com.esafirm.imagepicker.features.camera.OnImageReadyListener;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
@@ -99,14 +100,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void captureImage() {
         startActivityForResult(
-                getCameraModule().getCameraIntent(MainActivity.this), RC_CAMERA);
+                getCameraModule().getCameraIntent(this, ImagePickerConfigFactory.createDefault()), RC_CAMERA);
     }
 
-    private ImmediateCameraModule getCameraModule() {
+    private CameraModule getCameraModule() {
         if (cameraModule == null) {
-            cameraModule = new ImmediateCameraModule();
+            cameraModule = new DefaultCameraModule();
         }
-        return (ImmediateCameraModule) cameraModule;
+        return cameraModule;
     }
 
     Action1<List<Image>> action = new Action1<List<Image>>() {
