@@ -22,7 +22,7 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
     private ImageFileLoader imageLoader;
     private CameraModule cameraModule = new DefaultCameraModule();
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private Handler main = new Handler(Looper.getMainLooper());
 
     ImagePickerPresenter(ImageFileLoader imageLoader) {
         this.imageLoader = imageLoader;
@@ -35,30 +35,32 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     void loadImages(boolean isFolderMode) {
         if (!isViewAttached()) return;
 
-        getView().showLoading(true);
+        main.post(() -> getView().showLoading(true));
+
         imageLoader.loadDeviceImages(isFolderMode, new ImageLoaderListener() {
             @Override
             public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
-                handler.post(() -> {
-                    if (isViewAttached()) {
-                        getView().showFetchCompleted(images, folders);
+                main.post(() -> {
+                    if (!isViewAttached())
+                        return;
 
-                        final boolean isEmpty = folders != null
-                                ? folders.isEmpty()
-                                : images.isEmpty();
+                    getView().showFetchCompleted(images, folders);
 
-                        if (isEmpty) {
-                            getView().showEmpty();
-                        } else {
-                            getView().showLoading(false);
-                        }
+                    final boolean isEmpty = folders != null
+                            ? folders.isEmpty()
+                            : images.isEmpty();
+
+                    if (isEmpty) {
+                        getView().showEmpty();
+                    } else {
+                        getView().showLoading(false);
                     }
                 });
             }
 
             @Override
             public void onFailed(final Throwable throwable) {
-                handler.post(() -> {
+                main.post(() -> {
                     if (isViewAttached()) {
                         getView().showError(throwable);
                     }
