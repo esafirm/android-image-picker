@@ -1,0 +1,24 @@
+<resources>
+    <string name="ef_permission_write_external_rationale">请给予存取外部存储权限以选择照片</string>
+
+    <string name="ef_ok">好</string>
+    <string name="ef_done">完成</string>
+    <string name="ef_camera">相机</string>
+
+    <string name="ef_title_folder">文件夹</string>
+    <string name="ef_title_select_image">选择照片</string>
+
+    <string name="ef_selected">已选择 %d</string>
+    <string name="ef_selected_with_limit">已选择 %1$d/%2$d</string>
+
+    <string name="ef_error_create_image_file">建立照片文件失败</string>
+    <string name="ef_error_no_camera">找不到相机</string>
+    <string name="ef_error_null_cursor">啊哦，发生错误！</string>
+
+    <string name="ef_msg_empty_images">找不到照片</string>
+    <string name="ef_msg_no_write_external_permission">请给予存取外部存储权限以选择照片</string>
+    <string name="ef_msg_no_camera_permission">请给予获取相机权限以拍摄照片</string>
+    <string name="ef_msg_limit_images">已达到最多选择照片数量</string>
+    <string name="ef_ltitle_permission_denied">没有权限</string>
+
+</resources>
