@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Izinkan akses penyimpanan eksternal untuk memilih gambar</string>
+
+    <string name="ef_ok">OK</string>
+    <string name="ef_done">SELESAI</string>
+    <string name="ef_camera">KAMERA</string>
+
+    <string name="ef_title_folder">Folder</string>
+    <string name="ef_title_select_image">Ketuk untuk memilih gambar</string>
+    <string name="ef_ltitle_permission_denied">Izin ditolak</string>
+
+    <string name="ef_selected">%d terpilih</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d terpilih</string>
+
+    <string name="ef_error_create_image_file">Gagal membuat berkas gambar</string>
+    <string name="ef_error_no_camera">Kamera tidak ditemukan</string>
+    <string name="ef_error_null_cursor">Ups, ada yang tidak beres!</string>
+
+    <string name="ef_msg_empty_images">Gambar tidak ditemukan</string>
+    <string name="ef_msg_no_write_external_permission">Mohon berikan izin terhadap penyimpanan untuk memilih gambar</string>
+    <string name="ef_msg_no_camera_permission">Mohon berikan izin terhadap kamera untuk mengambil gambar</string>
+    <string name="ef_msg_limit_images">Gambar yang terpilih sudah mencapai batas maksimal</string>
+</resources>
