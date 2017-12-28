@@ -67,7 +67,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         viewHolder.itemView.setOnClickListener(v -> {
             boolean shouldSelect = itemClickListener.onImageClick(
                     viewHolder.getAdapterPosition(),
-                    !isSelected
+                    isSelected
             );
 
             if (isSelected) {

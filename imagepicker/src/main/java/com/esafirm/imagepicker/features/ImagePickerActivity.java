@@ -115,7 +115,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                 getResources().getConfiguration().orientation
         );
 
-        recyclerViewManager.setupAdapters((position, isSelected) -> recyclerViewManager.selectImage()
+        recyclerViewManager.setupAdapters((position, isSelected) -> recyclerViewManager.selectImage(isSelected)
                 , bucket -> setImageAdapter(bucket.getImages()));
 
         recyclerViewManager.setImageSelectedListener(selectedImage -> {

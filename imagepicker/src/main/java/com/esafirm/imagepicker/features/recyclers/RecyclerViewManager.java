@@ -166,10 +166,12 @@ public class RecyclerViewManager {
         imageAdapter.setImageSelectedListener(listener);
     }
 
-    public boolean selectImage() {
+    public boolean selectImage(boolean isSelected) {
         if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
             if (imageAdapter.getSelectedImages().size() >= config.getLimit()) {
-                Toast.makeText(context, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
+                if(!isSelected){
+                    Toast.makeText(context, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
         } else if (config.getMode() == ImagePicker.MODE_SINGLE) {
