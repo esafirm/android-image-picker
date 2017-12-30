@@ -35,15 +35,12 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     void loadImages(boolean isFolderMode) {
         if (!isViewAttached()) return;
 
-        main.post(() -> getView().showLoading(true));
+        runOnUiIfAvailable(() -> getView().showLoading(true));
 
         imageLoader.loadDeviceImages(isFolderMode, new ImageLoaderListener() {
             @Override
             public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
-                main.post(() -> {
-                    if (!isViewAttached())
-                        return;
-
+                runOnUiIfAvailable(() -> {
                     getView().showFetchCompleted(images, folders);
 
                     final boolean isEmpty = folders != null
@@ -60,11 +57,7 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
             @Override
             public void onFailed(final Throwable throwable) {
-                main.post(() -> {
-                    if (isViewAttached()) {
-                        getView().showError(throwable);
-                    }
-                });
+                runOnUiIfAvailable(() -> getView().showError(throwable));
             }
         });
     }
@@ -101,6 +94,14 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
                 getView().finishPickImages(images);
             } else {
                 getView().showCapturedImage();
+            }
+        });
+    }
+
+    private void runOnUiIfAvailable(Runnable runnable) {
+        main.post(() -> {
+            if (isViewAttached()) {
+                runnable.run();
             }
         });
     }
