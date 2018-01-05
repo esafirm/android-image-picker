@@ -166,9 +166,9 @@ public class RecyclerViewManager {
         imageAdapter.setImageSelectedListener(listener);
     }
 
-    public boolean selectImage() {
+    public boolean selectImage(boolean isSelected) {
         if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
-            if (imageAdapter.getSelectedImages().size() >= config.getLimit()) {
+            if (imageAdapter.getSelectedImages().size() >= config.getLimit() && !isSelected) {
                 Toast.makeText(context, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
                 return false;
             }
