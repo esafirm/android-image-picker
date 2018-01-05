@@ -92,26 +92,13 @@ if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != nul
 ### Camera Only
 
 ```java
-DefaultCameraModule cameraModule = new DefaultCameraModule() // or ImmediateCameraModule 
-startActivityForResult(cameraModule.getIntent(context), RC_REQUEST_CAMERA);  
+ImagePicker.cameraOnly().start(activity) // Could be Activity, Fragment, Support Fragment 
+
+// You could also get the Intent 
+ImagePicker.cameraOnly().getIntent(context)
 ```
 
-And for receiving the result:
-
-```java
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == RC_REQUEST_CAMERA && resultCode == RESULT_OK && data != null) {
-        cameraModule.getImage(context, data, new OnImageReadyListener() {
-            @Override
-            public void onImageReady(List<Image> images) {
-	    	// do what you want to do with the image ...
-	    	// it's either List<Image> with one item or null (still need improvement)
-            }
-        });
-    }
-}
-```
+You also still can use the `DefaultCameraModule` but discouraged to do it. 
 
 
 ## Modification License
