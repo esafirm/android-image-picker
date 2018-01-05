@@ -7,8 +7,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 
-import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
+import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.ImageFactory;
@@ -26,7 +26,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
     }
 
     @Override
-    public Intent getCameraIntent(Context context, ImagePickerConfig config) {
+    public Intent getCameraIntent(Context context, BaseConfig config) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File imageFile = ImagePickerUtils.createImageFile(config.getImageDirectory());
         if (imageFile != null) {

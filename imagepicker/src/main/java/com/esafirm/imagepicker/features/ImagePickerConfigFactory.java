@@ -1,10 +1,18 @@
 package com.esafirm.imagepicker.features;
 
+import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
 import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader;
 
 import java.util.ArrayList;
 
 public class ImagePickerConfigFactory {
+
+    public static CameraOnlyConfig createCameraDefault() {
+        CameraOnlyConfig config = new CameraOnlyConfig();
+        config.setSavePath(ImagePickerSavePath.DEFAULT);
+        config.setReturnAfterFirst(true);
+        return config;
+    }
 
     public static ImagePickerConfig createDefault() {
         ImagePickerConfig config = new ImagePickerConfig();

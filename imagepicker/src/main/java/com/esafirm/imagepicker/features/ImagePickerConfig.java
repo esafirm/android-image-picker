@@ -4,18 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.StyleRes;
 
+import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
 
-public class ImagePickerConfig implements Parcelable {
+public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     private ArrayList<Image> selectedImages;
 
     private String folderTitle;
     private String imageTitle;
-    private ImagePickerSavePath savePath;
 
     private int mode;
     private int limit;
@@ -23,19 +23,10 @@ public class ImagePickerConfig implements Parcelable {
 
     private boolean folderMode;
     private boolean showCamera;
-    private boolean returnAfterFirst;
 
     private ImageLoader imageLoader;
 
     public ImagePickerConfig() {
-    }
-
-    public boolean isReturnAfterFirst() {
-        return returnAfterFirst;
-    }
-
-    public void setReturnAfterFirst(boolean returnAfterFirst) {
-        this.returnAfterFirst = returnAfterFirst;
     }
 
     public int getMode() {
@@ -94,22 +85,6 @@ public class ImagePickerConfig implements Parcelable {
         this.folderMode = folderMode;
     }
 
-    public ImagePickerSavePath getImageDirectory() {
-        return savePath;
-    }
-
-    public void setSavePath(ImagePickerSavePath savePath) {
-        this.savePath = savePath;
-    }
-
-    public void setImageDirectory(String dirName) {
-        savePath = new ImagePickerSavePath(dirName, false);
-    }
-
-    public void setImageFullDirectory(String path) {
-        savePath = new ImagePickerSavePath(path, true);
-    }
-
     public void setTheme(@StyleRes int theme) {
         this.theme = theme;
     }
@@ -137,30 +112,28 @@ public class ImagePickerConfig implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeTypedList(this.selectedImages);
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
-        dest.writeParcelable(this.savePath, flags);
         dest.writeInt(this.mode);
         dest.writeInt(this.limit);
         dest.writeInt(this.theme);
         dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.returnAfterFirst ? (byte) 1 : (byte) 0);
         dest.writeSerializable(this.imageLoader);
     }
 
     protected ImagePickerConfig(Parcel in) {
+        super(in);
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
-        this.savePath = in.readParcelable(ImagePickerSavePath.class.getClassLoader());
         this.mode = in.readInt();
         this.limit = in.readInt();
         this.theme = in.readInt();
         this.folderMode = in.readByte() != 0;
         this.showCamera = in.readByte() != 0;
-        this.returnAfterFirst = in.readByte() != 0;
         this.imageLoader = (ImageLoader) in.readSerializable();
     }
 

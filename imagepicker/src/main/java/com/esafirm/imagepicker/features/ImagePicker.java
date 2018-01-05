@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
+import com.esafirm.imagepicker.features.cameraonly.ImagePickerCameraOnly;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.IpLogger;
@@ -73,6 +74,10 @@ public abstract class ImagePicker {
 
     public static ImagePickerWithFragment create(Fragment fragment) {
         return new ImagePickerWithFragment(fragment);
+    }
+
+    public static ImagePickerCameraOnly cameraOnly() {
+        return new ImagePickerCameraOnly();
     }
 
     /* --------------------------------------------------- */

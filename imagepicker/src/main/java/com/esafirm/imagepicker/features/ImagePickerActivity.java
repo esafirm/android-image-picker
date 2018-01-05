@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
+import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
+import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.recyclers.OnBackAction;
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ConfigUtils;
@@ -69,6 +71,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private Handler handler;
     private ContentObserver observer;
 
+    private boolean isCameraOnly;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,17 +84,37 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             return;
         }
 
-        ImagePickerConfig config = getConfig();
-        setTheme(config.getTheme());
-        setContentView(R.layout.ef_activity_image_picker);
-        setupView();
-        setupComponents(config);
+        isCameraOnly = getIntent().hasExtra(CameraOnlyConfig.class.getSimpleName());
+
+        setupComponents();
+
+        if (isCameraOnly) {
+            captureImageWithPermission();
+        } else {
+            ImagePickerConfig config = getImagePickerConfig();
+            setTheme(config.getTheme());
+            setContentView(R.layout.ef_activity_image_picker);
+            setupView();
+            setupRecyclerView(config);
+        }
     }
 
-    private ImagePickerConfig getConfig() {
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
+    private BaseConfig getBaseConfig() {
+        return isCameraOnly
+                ? getCameraOnlyConfig()
+                : getImagePickerConfig();
+    }
+
+    private CameraOnlyConfig getCameraOnlyConfig() {
+        return getIntent().getParcelableExtra(CameraOnlyConfig.class.getSimpleName());
+    }
+
+    private ImagePickerConfig getImagePickerConfig() {
+        if (config == null) {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
+        }
         return config;
     }
 
@@ -111,7 +135,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
-    private void setupComponents(ImagePickerConfig config) {
+    private void setupRecyclerView(ImagePickerConfig config) {
         recyclerViewManager = new RecyclerViewManager(
                 recyclerView,
                 config,
@@ -128,6 +152,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             }
         });
 
+    }
+
+    private void setupComponents() {
         preferences = new ImagePickerPreferences(this);
         presenter = new ImagePickerPresenter(new ImageFileLoader(this));
         presenter.attachView(this);
@@ -136,7 +163,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     protected void onResume() {
         super.onResume();
-        getDataWithPermission();
+        if (!isCameraOnly) {
+            getDataWithPermission();
+        }
     }
 
     @Override
@@ -287,7 +316,13 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                 preferences.setPermissionRequested(permission);
                 ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_CAMERA);
             } else {
-                snackBarView.show(R.string.ef_msg_no_camera_permission, v -> openAppSettings());
+                if (isCameraOnly) {
+                    Toast.makeText(getApplicationContext(),
+                            getString(R.string.ef_msg_no_camera_permission), Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    snackBarView.show(R.string.ef_msg_no_camera_permission, v -> openAppSettings());
+                }
             }
         }
     }
@@ -345,8 +380,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_CAPTURE && resultCode == RESULT_OK) {
-            presenter.finishCaptureImage(this, data, config);
+        if (requestCode == RC_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                presenter.finishCaptureImage(this, data, getBaseConfig());
+            } else if (resultCode == RESULT_CANCELED && isCameraOnly) {
+                finish();
+            }
         }
     }
 
@@ -375,13 +414,17 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         if (!CameraHelper.checkCameraAvailability(this)) {
             return;
         }
-        presenter.captureImage(this, config, RC_CAPTURE);
+        presenter.captureImage(this, getBaseConfig(), RC_CAPTURE);
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (isCameraOnly) {
+            return;
+        }
 
         if (handler == null) {
             handler = new Handler();
@@ -416,6 +459,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     @Override
     public void onBackPressed() {
+        if (isCameraOnly) {
+            super.onBackPressed();
+            return;
+        }
+
         recyclerViewManager.handleBack(new OnBackAction() {
             @Override
             public void onBackToFolder() {

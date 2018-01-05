@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
+import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.common.BasePresenter;
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
 import com.esafirm.imagepicker.model.Folder;
@@ -89,7 +90,7 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         }
     }
 
-    void captureImage(Activity activity, ImagePickerConfig config, int requestCode) {
+    void captureImage(Activity activity, BaseConfig config, int requestCode) {
         Context context = activity.getApplicationContext();
         Intent intent = getCameraModule().getCameraIntent(activity, config);
         if (intent == null) {
@@ -99,7 +100,7 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         activity.startActivityForResult(intent, requestCode);
     }
 
-    void finishCaptureImage(Context context, Intent data, final ImagePickerConfig config) {
+    void finishCaptureImage(Context context, Intent data, final BaseConfig config) {
         getCameraModule().getImage(context, data, images -> {
             if (config.isReturnAfterFirst()) {
                 getView().finishPickImages(images);
