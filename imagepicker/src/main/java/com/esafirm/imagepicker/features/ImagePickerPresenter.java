@@ -28,10 +28,13 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     }
 
     DefaultCameraModule getCameraModule() {
+        if (cameraModule == null) {
+            cameraModule = new DefaultCameraModule();
+        }
         return cameraModule;
     }
 
-    /* Camera Module is late initiated */
+    /* Set the camera module in onRestoreInstance */
     void setCameraModule(DefaultCameraModule cameraModule) {
         this.cameraModule = cameraModule;
     }
@@ -87,12 +90,8 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     }
 
     void captureImage(Activity activity, ImagePickerConfig config, int requestCode) {
-        if (cameraModule == null) {
-            throw new IllegalStateException("Camera Module must be set first");
-        }
-
         Context context = activity.getApplicationContext();
-        Intent intent = cameraModule.getCameraIntent(activity, config);
+        Intent intent = getCameraModule().getCameraIntent(activity, config);
         if (intent == null) {
             Toast.makeText(context, context.getString(R.string.ef_error_create_image_file), Toast.LENGTH_LONG).show();
             return;
@@ -101,11 +100,7 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     }
 
     void finishCaptureImage(Context context, Intent data, final ImagePickerConfig config) {
-        if (cameraModule == null) {
-            throw new IllegalStateException("Camera Module must be set first");
-        }
-
-        cameraModule.getImage(context, data, images -> {
+        getCameraModule().getImage(context, data, images -> {
             if (config.isReturnAfterFirst()) {
                 getView().finishPickImages(images);
             } else {
