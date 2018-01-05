@@ -2,8 +2,11 @@
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
     android:background="?colorPrimary"
+    android:elevation="@dimen/ef_toolbar_elevation"
     android:theme="@style/ef_CustomToolbarTheme"
-    app:contentInsetStart="0dp"/>
+    app:contentInsetStart="0dp"
+    tools:ignore="UnusedAttribute"/>

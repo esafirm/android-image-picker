@@ -16,4 +16,6 @@
     <dimen name="ef_font_medium">16sp</dimen>
 
     <dimen name="ef_height_snackbar">80dp</dimen>
+
+    <dimen name="ef_toolbar_elevation">6dp</dimen>
 </resources>
