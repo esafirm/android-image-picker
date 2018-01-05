@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class DefaultCameraModule implements CameraModule, Serializable {
 
-    protected String currentImagePath;
+    private String currentImagePath;
 
     public Intent getCameraIntent(Context context) {
         return getCameraIntent(context, ImagePickerConfigFactory.createDefault());
@@ -50,6 +50,8 @@ public class DefaultCameraModule implements CameraModule, Serializable {
         }
 
         if (currentImagePath == null) {
+            IpLogger.getInstance().w("currentImagePath null. " +
+                    "This happen if you haven't call #getCameraIntent() or the activity is being recreated");
             imageReadyListener.onImageReady(null);
             return;
         }
