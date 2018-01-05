@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
+import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
 import com.esafirm.imagepicker.features.recyclers.OnBackAction;
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ConfigUtils;
@@ -43,6 +44,8 @@ import static com.esafirm.imagepicker.features.ImagePicker.EXTRA_SELECTED_IMAGES
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
 public class ImagePickerActivity extends AppCompatActivity implements ImagePickerView {
+
+    private static final String STATE_KEY_CAMERA_MODULE = "Key.CameraModule";
 
     private static final int RC_CAPTURE = 2000;
 
@@ -134,6 +137,18 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     protected void onResume() {
         super.onResume();
         getDataWithPermission();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(STATE_KEY_CAMERA_MODULE, presenter.getCameraModule());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        presenter.setCameraModule((DefaultCameraModule) savedInstanceState.getSerializable(STATE_KEY_CAMERA_MODULE));
     }
 
     /**

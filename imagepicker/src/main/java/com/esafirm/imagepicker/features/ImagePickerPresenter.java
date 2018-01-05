@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import com.esafirm.imagepicker.R;
-import com.esafirm.imagepicker.features.camera.CameraModule;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
 import com.esafirm.imagepicker.features.common.BasePresenter;
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
@@ -21,11 +20,20 @@ import java.util.List;
 class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
     private ImageFileLoader imageLoader;
-    private CameraModule cameraModule = new DefaultCameraModule();
+    private DefaultCameraModule cameraModule;
     private Handler main = new Handler(Looper.getMainLooper());
 
     ImagePickerPresenter(ImageFileLoader imageLoader) {
         this.imageLoader = imageLoader;
+    }
+
+    DefaultCameraModule getCameraModule() {
+        return cameraModule;
+    }
+
+    /* Camera Module is late initiated */
+    void setCameraModule(DefaultCameraModule cameraModule) {
+        this.cameraModule = cameraModule;
     }
 
     void abortLoad() {
@@ -79,6 +87,10 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     }
 
     void captureImage(Activity activity, ImagePickerConfig config, int requestCode) {
+        if (cameraModule == null) {
+            throw new IllegalStateException("Camera Module must be set first");
+        }
+
         Context context = activity.getApplicationContext();
         Intent intent = cameraModule.getCameraIntent(activity, config);
         if (intent == null) {
@@ -89,6 +101,10 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     }
 
     void finishCaptureImage(Context context, Intent data, final ImagePickerConfig config) {
+        if (cameraModule == null) {
+            throw new IllegalStateException("Camera Module must be set first");
+        }
+
         cameraModule.getImage(context, data, images -> {
             if (config.isReturnAfterFirst()) {
                 getView().finishPickImages(images);
