@@ -10,18 +10,6 @@ public class BaseConfig implements Parcelable {
     private ImagePickerSavePath savePath;
     private boolean returnAfterFirst;
 
-    public static final Creator<BaseConfig> CREATOR = new Creator<BaseConfig>() {
-        @Override
-        public BaseConfig createFromParcel(Parcel in) {
-            return new BaseConfig(in);
-        }
-
-        @Override
-        public BaseConfig[] newArray(int size) {
-            return new BaseConfig[size];
-        }
-    };
-
     public boolean isReturnAfterFirst() {
         return returnAfterFirst;
     }

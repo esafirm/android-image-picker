@@ -23,30 +23,36 @@
                 android:id="@+id/ef_switch_return_after_capture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/ef_spacing"
                 android:text="Return After First   "/>
-
 
             <Switch
                 android:id="@+id/ef_switch_folder_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/ef_spacing"
                 android:text="Folder Mode   "/>
 
             <Switch
                 android:id="@+id/ef_switch_single"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/ef_spacing"
                 android:text="Single Mode?   "/>
 
             <Switch
                 android:id="@+id/ef_switch_imageloader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/ef_spacing"
                 android:text="Custom Image Loader?   "/>
+
+            <Switch
+                android:id="@+id/ef_switch_include_exclude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:text="Exclude   "/>
 
             <TextView
                 android:id="@+id/text_view"

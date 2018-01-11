@@ -64,6 +64,8 @@ ImagePicker.create(this)
 	.showCamera(true) // show camera or not (true by default)
 	.imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
 	.origin(images) // original selected images, used in multi mode
+	.exclude(images) // exclude anything that in image.getPath()
+	.excludeFiles(files) // same as exclude but using ArrayList<File>
 	.theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
 	.enableLog(false) // disabling log
 	.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable

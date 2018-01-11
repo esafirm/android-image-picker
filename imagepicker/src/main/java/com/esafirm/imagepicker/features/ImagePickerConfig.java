@@ -84,10 +84,13 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     }
 
     public void setExcludedImages(ArrayList<Image> excludedImages) {
-        if(excludedImages != null && !excludedImages.isEmpty()) {
+        if (excludedImages != null && !excludedImages.isEmpty()) {
+            this.excludedImages = new ArrayList<>();
             for (Image image : excludedImages) {
                 this.excludedImages.add(new File(image.getPath()));
             }
+        } else {
+            this.excludedImages = null;
         }
     }
 
@@ -146,6 +149,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     protected ImagePickerConfig(Parcel in) {
         super(in);
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
+        this.excludedImages = new ArrayList<>();
         in.readList(this.excludedImages, File.class.getClassLoader());
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();

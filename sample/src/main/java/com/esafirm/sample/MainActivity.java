@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -36,51 +35,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView) findViewById(R.id.text_view);
+        textView = findViewById(R.id.text_view);
 
-        findViewById(R.id.button_pick_image).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                start();
-            }
-        });
-
-        findViewById(R.id.button_pick_image_rx).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getImagePickerObservable().forEach(action);
-            }
-        });
-
-        findViewById(R.id.button_intent).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startWithIntent();
-            }
-        });
-
-        findViewById(R.id.button_camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Activity activity = MainActivity.this;
-                final String[] permissions = new String[]{Manifest.permission.CAMERA};
-                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(activity, permissions, RC_CAMERA);
-                } else {
-                    captureImage();
-                }
+        findViewById(R.id.button_pick_image).setOnClickListener(view -> start());
+        findViewById(R.id.button_pick_image_rx).setOnClickListener(view -> getImagePickerObservable().forEach(action));
+        findViewById(R.id.button_intent).setOnClickListener(v -> startWithIntent());
+        findViewById(R.id.button_camera).setOnClickListener(v -> {
+            final Activity activity = MainActivity.this;
+            final String[] permissions = new String[]{Manifest.permission.CAMERA};
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, permissions, RC_CAMERA);
+            } else {
+                captureImage();
             }
         });
 
         findViewById(R.id.button_launch_fragment)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, new MainFragment())
-                                .commitAllowingStateLoss();
-                    }
-                });
+                .setOnClickListener(view -> getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new MainFragment())
+                        .commitAllowingStateLoss());
     }
 
     @Override
@@ -97,12 +70,7 @@ public class MainActivity extends AppCompatActivity {
         ImagePicker.cameraOnly().start(this, RC_CODE_PICKER);
     }
 
-    Action1<List<Image>> action = new Action1<List<Image>>() {
-        @Override
-        public void call(List<Image> images) {
-            printImages(images);
-        }
-    };
+    Action1<List<Image>> action = this::printImages;
 
     private Observable<List<Image>> getImagePickerObservable() {
         return RxImagePicker.getInstance()
@@ -121,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         final boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
         final boolean useCustomImageLoader = ((Switch) findViewById(R.id.ef_switch_imageloader)).isChecked();
         final boolean folderMode = ((Switch) findViewById(R.id.ef_switch_folder_mode)).isChecked();
+        final boolean isExclude = ((Switch) findViewById(R.id.ef_switch_include_exclude)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
                 .theme(R.style.ImagePickerTheme)
@@ -139,11 +108,16 @@ public class MainActivity extends AppCompatActivity {
             imagePicker.multi(); // multi mode (default mode)
         }
 
+        if (isExclude) {
+            imagePicker.exclude(images); // don't show anything on this selected images
+        } else {
+            imagePicker.origin(images); // original selected images, used in multi mode
+        }
+
         imagePicker.limit(10) // max images can be selected (99 by default)
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()) // can be full path
-                .origin(images) // original selected images, used in multi mode
                 .start(RC_CODE_PICKER); // start image picker activity with request code
     }
 
