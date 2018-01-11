@@ -12,6 +12,7 @@ import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.Image;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,6 +122,16 @@ public abstract class ImagePicker {
 
     public ImagePicker origin(ArrayList<Image> images) {
         config.setSelectedImages(images);
+        return this;
+    }
+
+    public ImagePicker exclude(ArrayList<Image> images) {
+        config.setExcludedImages(images);
+        return this;
+    }
+
+    public ImagePicker excludeFiles(ArrayList<File> files) {
+        config.setExcludedImageFiles(files);
         return this;
     }
 

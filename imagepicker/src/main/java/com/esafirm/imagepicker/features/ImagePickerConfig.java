@@ -8,11 +8,13 @@ import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.model.Image;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     private ArrayList<Image> selectedImages;
+    private ArrayList<File> excludedImages;
 
     private String folderTitle;
     private String imageTitle;
@@ -77,6 +79,22 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         this.selectedImages = selectedImages;
     }
 
+    public ArrayList<File> getExcludedImages() {
+        return excludedImages;
+    }
+
+    public void setExcludedImages(ArrayList<Image> excludedImages) {
+        if(excludedImages != null && !excludedImages.isEmpty()) {
+            for (Image image : excludedImages) {
+                this.excludedImages.add(new File(image.getPath()));
+            }
+        }
+    }
+
+    public void setExcludedImageFiles(ArrayList<File> excludedImages) {
+        this.excludedImages = excludedImages;
+    }
+
     public boolean isFolderMode() {
         return folderMode;
     }
@@ -114,6 +132,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeTypedList(this.selectedImages);
+        dest.writeList(this.excludedImages);
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
         dest.writeInt(this.mode);
@@ -127,6 +146,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     protected ImagePickerConfig(Parcel in) {
         super(in);
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
+        in.readList(this.excludedImages, File.class.getClassLoader());
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
         this.mode = in.readInt();

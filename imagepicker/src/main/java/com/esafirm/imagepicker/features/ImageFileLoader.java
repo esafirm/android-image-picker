@@ -32,8 +32,8 @@ public class ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
-    public void loadDeviceImages(final boolean isFolderMode, final ImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, listener));
+    public void loadDeviceImages(final boolean isFolderMode, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
+        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, excludedImages, listener));
     }
 
     public void abortLoadImages() {
@@ -53,10 +53,12 @@ public class ImageFileLoader {
     private class ImageLoadRunnable implements Runnable {
 
         private boolean isFolderMode;
+        private ArrayList<File> exlucedImages;
         private ImageLoaderListener listener;
 
-        public ImageLoadRunnable(boolean isFolderMode, ImageLoaderListener listener) {
+        public ImageLoadRunnable(boolean isFolderMode, ArrayList<File> excludedImages, ImageLoaderListener listener) {
             this.isFolderMode = isFolderMode;
+            this.exlucedImages = excludedImages;
             this.listener = listener;
         }
 
@@ -70,7 +72,7 @@ public class ImageFileLoader {
                 return;
             }
 
-            List<Image> temp = new ArrayList<>(cursor.getCount());
+            List<Image> temp = new ArrayList<>();
             Map<String, Folder> folderMap = null;
             if (isFolderMode) {
                 folderMap = new HashMap<>();
@@ -85,6 +87,9 @@ public class ImageFileLoader {
 
                     File file = makeSafeFile(path);
                     if (file != null && file.exists()) {
+                        if(exlucedImages != null && exlucedImages.contains(file))
+                            continue;
+
                         Image image = new Image(id, name, path);
                         temp.add(image);
 

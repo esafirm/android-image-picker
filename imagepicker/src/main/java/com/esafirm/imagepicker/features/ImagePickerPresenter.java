@@ -16,6 +16,7 @@ import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
@@ -44,12 +45,12 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         imageLoader.abortLoadImages();
     }
 
-    void loadImages(boolean isFolderMode) {
+    void loadImages(boolean isFolderMode, ArrayList<File> excludedImages) {
         if (!isViewAttached()) return;
 
         runOnUiIfAvailable(() -> getView().showLoading(true));
 
-        imageLoader.loadDeviceImages(isFolderMode, new ImageLoaderListener() {
+        imageLoader.loadDeviceImages(isFolderMode, excludedImages, new ImageLoaderListener() {
             @Override
             public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
                 runOnUiIfAvailable(() -> {
