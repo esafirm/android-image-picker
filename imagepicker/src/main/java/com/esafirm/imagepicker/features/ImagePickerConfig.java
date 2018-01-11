@@ -8,11 +8,13 @@ import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.model.Image;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     private ArrayList<Image> selectedImages;
+    private ArrayList<File> excludedImages;
 
     private String folderTitle;
     private String imageTitle;
@@ -75,6 +77,24 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     public void setSelectedImages(ArrayList<Image> selectedImages) {
         this.selectedImages = selectedImages;
+    }
+
+    public ArrayList<File> getExcludedImages() {
+        return excludedImages;
+    }
+
+    public void setExcludedImages(ArrayList<Image> excludedImages) {
+        if(excludedImages == null)
+        {
+            this.excludedImages = null;
+        } else {
+            for(Image image : excludedImages)
+                this.excludedImages.add(new File(image.getPath()));
+        }
+    }
+
+    public void setExcludedImageFiles(ArrayList<File> excludedImages) {
+        this.excludedImages = excludedImages;
     }
 
     public boolean isFolderMode() {
