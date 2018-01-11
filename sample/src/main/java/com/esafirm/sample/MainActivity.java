@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -98,8 +99,9 @@ public class MainActivity extends AppCompatActivity {
                         ? ReturnMode.ALL
                         : ReturnMode.NONE) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
                 .folderMode(folderMode) // set folder mode (false by default)
-                .folderTitle("Folder") // folder selection title
-                .imageTitle("Tap to select"); // image selection title
+                .toolbarArrowColor(Color.RED) // set toolbar arrow up color
+                .toolbarFolderTitle("Folder") // folder selection title
+                .toolbarImageTitle("Tap to select"); // image selection title
 
         if (useCustomImageLoader) {
             imagePicker.imageLoader(new GrayscaleImageLoader());

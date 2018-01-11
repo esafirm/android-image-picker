@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.features;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
@@ -111,12 +112,17 @@ public abstract class ImagePicker {
         return this;
     }
 
-    public ImagePicker folderTitle(String title) {
+    public ImagePicker toolbarArrowColor(@ColorInt int color) {
+        config.setArrowColor(color);
+        return this;
+    }
+
+    public ImagePicker toolbarFolderTitle(String title) {
         config.setFolderTitle(title);
         return this;
     }
 
-    public ImagePicker imageTitle(String title) {
+    public ImagePicker toolbarImageTitle(String title) {
         config.setImageTitle(title);
         return this;
     }

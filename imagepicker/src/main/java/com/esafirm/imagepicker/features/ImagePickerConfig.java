@@ -13,11 +13,15 @@ import java.util.ArrayList;
 
 public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
+    public static final int NO_COLOR = -1;
+
     private ArrayList<Image> selectedImages;
     private ArrayList<File> excludedImages;
 
     private String folderTitle;
     private String imageTitle;
+    private int arrowColor = NO_COLOR;
+
 
     private int mode;
     private int limit;
@@ -29,6 +33,14 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     private ImageLoader imageLoader;
 
     public ImagePickerConfig() {
+    }
+
+    public int getArrowColor() {
+        return arrowColor;
+    }
+
+    public void setArrowColor(int arrowColor) {
+        this.arrowColor = arrowColor;
     }
 
     public int getMode() {
@@ -138,6 +150,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         dest.writeList(this.excludedImages);
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
+        dest.writeInt(this.arrowColor);
         dest.writeInt(this.mode);
         dest.writeInt(this.limit);
         dest.writeInt(this.theme);
@@ -149,10 +162,11 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     protected ImagePickerConfig(Parcel in) {
         super(in);
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
-        this.excludedImages = new ArrayList<>();
+        this.excludedImages = new ArrayList<File>();
         in.readList(this.excludedImages, File.class.getClassLoader());
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
+        this.arrowColor = in.readInt();
         this.mode = in.readInt();
         this.limit = in.readInt();
         this.theme = in.readInt();

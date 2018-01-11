@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -94,7 +97,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             ImagePickerConfig config = getImagePickerConfig();
             setTheme(config.getTheme());
             setContentView(R.layout.ef_activity_image_picker);
-            setupView();
+            setupView(config);
             setupRecyclerView(config);
         }
     }
@@ -118,7 +121,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         return config;
     }
 
-    private void setupView() {
+    private void setupView(ImagePickerConfig config) {
         progressBar = findViewById(R.id.progress_bar);
         emptyTextView = findViewById(R.id.tv_empty_images);
         recyclerView = findViewById(R.id.recyclerView);
@@ -129,8 +132,13 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         actionBar = getSupportActionBar();
 
         if (actionBar != null) {
+            final Drawable arrowDrawable = ContextCompat.getDrawable(this, R.drawable.ef_ic_arrow_back);
+            final int arrowColor = config.getArrowColor();
+            if (arrowColor != ImagePickerConfig.NO_COLOR && arrowDrawable != null) {
+                arrowDrawable.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
+            }
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ef_ic_arrow_back);
+            actionBar.setHomeAsUpIndicator(arrowDrawable);
             actionBar.setDisplayShowTitleEnabled(true);
         }
     }

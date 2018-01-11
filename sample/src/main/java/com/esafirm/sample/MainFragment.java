@@ -37,8 +37,8 @@ public class MainFragment extends Fragment {
                             .returnMode(ReturnMode.ALL) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
                             .folderMode(true) // set folder mode (false by default)
                             .single()
-                            .folderTitle("Folder") // folder selection title
-                            .imageTitle("Tap to select")
+                            .toolbarFolderTitle("Folder") // folder selection title
+                            .toolbarImageTitle("Tap to select")
                             .start(0); // image selection title
                 });
 
