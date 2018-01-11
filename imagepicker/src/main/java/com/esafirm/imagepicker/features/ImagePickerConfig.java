@@ -147,7 +147,12 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeTypedList(this.selectedImages);
-        dest.writeList(this.excludedImages);
+
+        dest.writeByte((byte) (excludedImages != null ? 1 : 0));
+        if (excludedImages != null) {
+            dest.writeList(this.excludedImages);
+        }
+
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
         dest.writeInt(this.arrowColor);
@@ -162,8 +167,13 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     protected ImagePickerConfig(Parcel in) {
         super(in);
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
-        this.excludedImages = new ArrayList<File>();
-        in.readList(this.excludedImages, File.class.getClassLoader());
+
+        boolean isPresent = in.readByte() != 0;
+        if (isPresent) {
+            this.excludedImages = new ArrayList<>();
+            in.readList(this.excludedImages, File.class.getClassLoader());
+        }
+
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
         this.arrowColor = in.readInt();
