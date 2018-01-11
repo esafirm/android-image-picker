@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,14 +21,12 @@
         android:textSize="@dimen/ef_font_medium"
         android:visibility="gone"/>
 
-    <com.esafirm.imagepicker.view.ProgressWheel
+    <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:ef_matProg_barColor="@color/ef_teal"
-        app:ef_matProg_progressIndeterminate="true"/>
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

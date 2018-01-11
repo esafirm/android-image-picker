@@ -23,6 +23,8 @@
     <string name="ef_msg_limit_images">Image selection limit</string>
 
     <!--Don't Translate-->
-    <string name="ef_gif">GIF</string>
+    <string name="ef_gif" translatable="false">GIF</string>
+    <string name="ef_content_desc_folder" translatable="false">Folder</string>
+    <string name="ef_content_desc_image" translatable="false">Image</string>
 
 </resources>

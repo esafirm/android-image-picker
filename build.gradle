@@ -4,8 +4,9 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:3.6.1'
         classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
     }
 }
 

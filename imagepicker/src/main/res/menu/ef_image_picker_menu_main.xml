@@ -4,7 +4,7 @@
       xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/menu_camera"
-        android:icon="@drawable/ic_camera_white"
+        android:icon="@drawable/ef_ic_camera_white"
         android:title="@string/ef_camera"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>

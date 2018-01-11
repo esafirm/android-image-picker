@@ -15,11 +15,11 @@ public class DefaultImageLoader implements ImageLoader {
                 .load(path)
                 .apply(new RequestOptions()
                         .placeholder(imageType == ImageType.FOLDER
-                                ? R.drawable.folder_placeholder
-                                : R.drawable.image_placeholder)
+                                ? R.drawable.ef_folder_placeholder
+                                : R.drawable.ef_image_placeholder)
                         .error(imageType == ImageType.FOLDER
-                                ? R.drawable.folder_placeholder
-                                : R.drawable.image_placeholder)
+                                ? R.drawable.ef_folder_placeholder
+                                : R.drawable.ef_image_placeholder)
                 )
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView);

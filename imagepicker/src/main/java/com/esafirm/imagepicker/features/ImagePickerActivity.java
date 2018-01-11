@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,6 @@ import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
-import com.esafirm.imagepicker.view.ProgressWheel;
 import com.esafirm.imagepicker.view.SnackBarView;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private IpLogger logger = IpLogger.getInstance();
 
     private ActionBar actionBar;
-    private ProgressWheel progressBar;
+    private ProgressBar progressBar;
     private TextView emptyTextView;
     private RecyclerView recyclerView;
     private SnackBarView snackBarView;
@@ -119,18 +119,18 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     private void setupView() {
-        progressBar = (ProgressWheel) findViewById(R.id.progress_bar);
-        emptyTextView = (TextView) findViewById(R.id.tv_empty_images);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        snackBarView = (SnackBarView) findViewById(R.id.ef_snackbar);
+        progressBar = findViewById(R.id.progress_bar);
+        emptyTextView = findViewById(R.id.tv_empty_images);
+        recyclerView = findViewById(R.id.recyclerView);
+        snackBarView = findViewById(R.id.ef_snackbar);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
 
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            actionBar.setHomeAsUpIndicator(R.drawable.ef_ic_arrow_back);
             actionBar.setDisplayShowTitleEnabled(true);
         }
     }
@@ -206,7 +206,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.image_picker_menu_main, menu);
+        getMenuInflater().inflate(R.menu.ef_image_picker_menu_main, menu);
         return true;
     }
 

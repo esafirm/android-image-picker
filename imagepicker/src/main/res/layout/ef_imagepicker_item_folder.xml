@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:background="@drawable/folder_placeholder"
+        android:background="@drawable/ef_folder_placeholder"
+        android:contentDescription="@string/ef_content_desc_folder"
         android:scaleType="centerCrop"/>
 
     <LinearLayout

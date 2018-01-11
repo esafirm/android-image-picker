@@ -77,7 +77,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         });
 
         viewHolder.container.setForeground(isSelected
-                ? ContextCompat.getDrawable(getContext(), R.drawable.ic_done_white)
+                ? ContextCompat.getDrawable(getContext(), R.drawable.ef_ic_done_white)
                 : null);
     }
 
