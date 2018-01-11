@@ -13,6 +13,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
 
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private void startWithIntent() {
         startActivityForResult(ImagePicker.create(this)
                 .single()
-                .returnAfterFirst(true)
+                .returnMode(ReturnMode.ALL)
                 .getIntent(this), RC_CODE_PICKER);
     }
 
@@ -93,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
         ImagePicker imagePicker = ImagePicker.create(this)
                 .theme(R.style.ImagePickerTheme)
-                .returnAfterFirst(returnAfterCapture) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
+                .returnMode(returnAfterCapture
+                        ? ReturnMode.ALL
+                        : ReturnMode.NONE) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
                 .folderMode(folderMode) // set folder mode (false by default)
                 .folderTitle("Folder") // folder selection title
                 .imageTitle("Tap to select"); // image selection title

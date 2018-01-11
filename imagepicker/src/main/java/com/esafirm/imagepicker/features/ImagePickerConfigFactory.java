@@ -10,7 +10,7 @@ public class ImagePickerConfigFactory {
     public static CameraOnlyConfig createCameraDefault() {
         CameraOnlyConfig config = new CameraOnlyConfig();
         config.setSavePath(ImagePickerSavePath.DEFAULT);
-        config.setReturnAfterFirst(true);
+        config.setReturnMode(ReturnMode.ALL);
         return config;
     }
 
@@ -22,7 +22,7 @@ public class ImagePickerConfigFactory {
         config.setFolderMode(false);
         config.setSelectedImages(new ArrayList<>());
         config.setSavePath(ImagePickerSavePath.DEFAULT);
-        config.setReturnAfterFirst(false);
+        config.setReturnMode(ReturnMode.NONE);
         config.setImageLoader(new DefaultImageLoader());
         return config;
     }

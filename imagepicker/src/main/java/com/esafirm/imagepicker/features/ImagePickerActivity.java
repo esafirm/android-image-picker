@@ -147,7 +147,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
         recyclerViewManager.setImageSelectedListener(selectedImage -> {
             invalidateTitle();
-            if (ConfigUtils.isReturnAfterFirst(config) && !selectedImage.isEmpty()) {
+            if (ConfigUtils.shouldReturn(config, false) && !selectedImage.isEmpty()) {
                 onDone();
             }
         });

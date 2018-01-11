@@ -12,6 +12,7 @@ import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
+import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.ImagePickerUtils;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.esafirm.imagepicker.features.ImagePicker.MODE_MULTIPLE;
-import static com.esafirm.imagepicker.features.ImagePicker.MODE_SINGLE;
 
 public class RecyclerViewManager {
 
@@ -183,7 +183,7 @@ public class RecyclerViewManager {
     public boolean isShowDoneButton() {
         return !isDisplayingFolderView()
                 && !imageAdapter.getSelectedImages().isEmpty()
-                && !(config.getMode() == MODE_SINGLE && config.isReturnAfterFirst());
+                && (config.getReturnMode() != ReturnMode.ALL && config.getReturnMode() != ReturnMode.GALLERY_ONLY);
     }
 
 }

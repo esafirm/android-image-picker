@@ -5,6 +5,8 @@ import android.content.Context;
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
+import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.features.common.BaseConfig;
 
 import java.io.Serializable;
 
@@ -14,8 +16,10 @@ public class ConfigUtils {
         if (config == null) {
             throw new IllegalStateException("ImagePickerConfig cannot be null");
         }
-        if (config.getMode() == ImagePicker.MODE_MULTIPLE && config.isReturnAfterFirst()) {
-            throw new IllegalStateException("return after first only usable with MODE_SINGLE");
+        if (config.getMode() != ImagePicker.MODE_SINGLE
+                && (config.getReturnMode() == ReturnMode.GALLERY_ONLY
+                || config.getReturnMode() == ReturnMode.ALL)) {
+            throw new IllegalStateException("ReturnMode.GALLERY_ONLY and ReturnMode.ALL is only applicable in Single Mode!");
         }
         if (config.getImageLoader() != null && !(config.getImageLoader() instanceof Serializable)) {
             throw new IllegalStateException("Custom image loader must be a class that implement ImageLoader." +
@@ -24,8 +28,13 @@ public class ConfigUtils {
         return config;
     }
 
-    public static boolean isReturnAfterFirst(ImagePickerConfig config) {
-        return config.getMode() == ImagePicker.MODE_SINGLE && config.isReturnAfterFirst();
+    public static boolean shouldReturn(BaseConfig config, boolean isCamera) {
+        ReturnMode mode = config.getReturnMode();
+        if (isCamera) {
+            return mode == ReturnMode.ALL || mode == ReturnMode.CAMERA_ONLY;
+        } else {
+            return mode == ReturnMode.ALL || mode == ReturnMode.GALLERY_ONLY;
+        }
     }
 
     public static String getFolderTitle(Context context, ImagePickerConfig config) {

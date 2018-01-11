@@ -4,14 +4,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.esafirm.imagepicker.features.ImagePickerSavePath;
+import com.esafirm.imagepicker.features.ReturnMode;
 
 public class BaseConfig implements Parcelable {
 
     private ImagePickerSavePath savePath;
-    private boolean returnAfterFirst;
+    private ReturnMode returnMode;
 
-    public boolean isReturnAfterFirst() {
-        return returnAfterFirst;
+    public ReturnMode getReturnMode() {
+        return returnMode;
     }
 
     public ImagePickerSavePath getImageDirectory() {
@@ -30,8 +31,8 @@ public class BaseConfig implements Parcelable {
         savePath = new ImagePickerSavePath(path, true);
     }
 
-    public void setReturnAfterFirst(boolean returnAfterFirst) {
-        this.returnAfterFirst = returnAfterFirst;
+    public void setReturnMode(ReturnMode returnMode) {
+        this.returnMode = returnMode;
     }
 
     public BaseConfig() {
@@ -45,11 +46,24 @@ public class BaseConfig implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.savePath, flags);
-        dest.writeByte(this.returnAfterFirst ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.returnMode == null ? -1 : this.returnMode.ordinal());
     }
 
     protected BaseConfig(Parcel in) {
         this.savePath = in.readParcelable(ImagePickerSavePath.class.getClassLoader());
-        this.returnAfterFirst = in.readByte() != 0;
+        int tmpReturnMode = in.readInt();
+        this.returnMode = tmpReturnMode == -1 ? null : ReturnMode.values()[tmpReturnMode];
     }
+
+    public static final Creator<BaseConfig> CREATOR = new Creator<BaseConfig>() {
+        @Override
+        public BaseConfig createFromParcel(Parcel source) {
+            return new BaseConfig(source);
+        }
+
+        @Override
+        public BaseConfig[] newArray(int size) {
+            return new BaseConfig[size];
+        }
+    };
 }

@@ -12,6 +12,7 @@ import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
 import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.common.BasePresenter;
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
+import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 
@@ -103,7 +104,7 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
     void finishCaptureImage(Context context, Intent data, final BaseConfig config) {
         getCameraModule().getImage(context, data, images -> {
-            if (config.isReturnAfterFirst()) {
+            if (ConfigUtils.shouldReturn(config, true)) {
                 getView().finishPickImages(images);
             } else {
                 getView().showCapturedImage();

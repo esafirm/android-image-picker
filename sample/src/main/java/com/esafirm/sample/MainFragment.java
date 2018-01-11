@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.List;
@@ -28,32 +29,23 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        imageView = (ImageView) view.findViewById(R.id.img_fragment);
+        imageView = view.findViewById(R.id.img_fragment);
 
         view.findViewById(R.id.button_pick_fragment)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ImagePicker.create(MainFragment.this)
-                                .returnAfterFirst(true) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
-                                .folderMode(true) // set folder mode (false by default)
-                                .single()
-                                .folderTitle("Folder") // folder selection title
-                                .imageTitle("Tap to select")
-                                .start(0); // image selection title
-                    }
+                .setOnClickListener(view1 -> {
+                    ImagePicker.create(MainFragment.this)
+                            .returnMode(ReturnMode.ALL) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
+                            .folderMode(true) // set folder mode (false by default)
+                            .single()
+                            .folderTitle("Folder") // folder selection title
+                            .imageTitle("Tap to select")
+                            .start(0); // image selection title
                 });
 
         view.findViewById(R.id.button_close)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getFragmentManager().beginTransaction()
-                                .remove(MainFragment.this)
-                                .commitAllowingStateLoss();
-                    }
-                });
+                .setOnClickListener(view12 -> getFragmentManager().beginTransaction()
+                        .remove(MainFragment.this)
+                        .commitAllowingStateLoss());
     }
 
     @Override

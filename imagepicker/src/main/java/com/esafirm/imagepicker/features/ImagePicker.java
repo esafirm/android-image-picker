@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.features;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
@@ -95,8 +96,8 @@ public abstract class ImagePicker {
         return this;
     }
 
-    public ImagePicker returnAfterFirst(boolean returnAfterFirst) {
-        config.setReturnAfterFirst(returnAfterFirst);
+    public ImagePicker returnMode(@NonNull ReturnMode returnMode) {
+        config.setReturnMode(returnMode);
         return this;
     }
 
