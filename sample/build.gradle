@@ -40,11 +40,11 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.0.2'
 
     /* Development */
-    compile project(':rximagepicker')
-    compile project(':imagepicker')
+//    implementation project(':rximagepicker')
+//    implementation project(':imagepicker')
 
     /* Release Check */
-//    final imagePickerVersion = '1.9.0'
-//    compile "com.github.esafirm.android-image-picker:imagepicker:${imagePickerVersion}"
-//    compile("com.github.esafirm.android-image-picker:rximagepicker:${imagePickerVersion}")
+    final imagePickerVersion = '1.11.0-0'
+    compile "com.github.esafirm.android-image-picker:imagepicker:${imagePickerVersion}"
+    compile "com.github.esafirm.android-image-picker:rximagepicker:${imagePickerVersion}"
 }

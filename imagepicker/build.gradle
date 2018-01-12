@@ -27,6 +27,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     resourcePrefix "ef_"
 }
 
