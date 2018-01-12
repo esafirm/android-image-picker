@@ -3,8 +3,8 @@ package com.esafirm.imagepicker.helper;
 import android.content.Context;
 
 import com.esafirm.imagepicker.R;
-import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
+import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.features.common.BaseConfig;
 
@@ -16,7 +16,7 @@ public class ConfigUtils {
         if (config == null) {
             throw new IllegalStateException("ImagePickerConfig cannot be null");
         }
-        if (config.getMode() != ImagePicker.MODE_SINGLE
+        if (config.getMode() != IpCons.MODE_SINGLE
                 && (config.getReturnMode() == ReturnMode.GALLERY_ONLY
                 || config.getReturnMode() == ReturnMode.ALL)) {
             throw new IllegalStateException("ReturnMode.GALLERY_ONLY and ReturnMode.ALL is only applicable in Single Mode!");

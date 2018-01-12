@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
-    public static final int NO_COLOR = -1;
+    static final int NO_COLOR = -1;
 
     private ArrayList<Image> selectedImages;
     private ArrayList<File> excludedImages;
@@ -21,7 +21,6 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     private String folderTitle;
     private String imageTitle;
     private int arrowColor = NO_COLOR;
-
 
     private int mode;
     private int limit;

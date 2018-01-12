@@ -20,14 +20,9 @@ import java.util.List;
 
 public abstract class ImagePicker {
 
-    public static final String EXTRA_SELECTED_IMAGES = "selectedImages";
-
-    public static final int MAX_LIMIT = 999;
-
-    public static final int MODE_SINGLE = 1;
-    public static final int MODE_MULTIPLE = 2;
-
     private ImagePickerConfig config;
+
+    public abstract void start();
 
     public abstract void start(int requestCode);
 
@@ -42,8 +37,12 @@ public abstract class ImagePicker {
 
         @Override
         public void start(int requestCode) {
-            Intent intent = getIntent(activity);
-            activity.startActivityForResult(intent, requestCode);
+            activity.startActivityForResult(getIntent(activity), requestCode);
+        }
+
+        @Override
+        public void start() {
+            activity.startActivityForResult(getIntent(activity), IpCons.RC_IMAGE_PICKER);
         }
     }
 
@@ -58,8 +57,12 @@ public abstract class ImagePicker {
 
         @Override
         public void start(int requestCode) {
-            Intent intent = getIntent(fragment.getActivity());
-            fragment.startActivityForResult(intent, requestCode);
+            fragment.startActivityForResult(getIntent(fragment.getActivity()), requestCode);
+        }
+
+        @Override
+        public void start() {
+            fragment.startActivityForResult(getIntent(fragment.getActivity()), IpCons.RC_IMAGE_PICKER);
         }
     }
 
@@ -88,12 +91,12 @@ public abstract class ImagePicker {
     /* --------------------------------------------------- */
 
     public ImagePicker single() {
-        config.setMode(ImagePicker.MODE_SINGLE);
+        config.setMode(IpCons.MODE_SINGLE);
         return this;
     }
 
     public ImagePicker multi() {
-        config.setMode(ImagePicker.MODE_MULTIPLE);
+        config.setMode(IpCons.MODE_MULTIPLE);
         return this;
     }
 
@@ -187,10 +190,24 @@ public abstract class ImagePicker {
     /* > Helper */
     /* --------------------------------------------------- */
 
+    public static boolean shouldHandle(int requestCode, int resultCode, Intent data) {
+        return resultCode == Activity.RESULT_OK
+                && requestCode == IpCons.RC_IMAGE_PICKER
+                && data != null;
+    }
+
     public static List<Image> getImages(Intent intent) {
         if (intent == null) {
             return null;
         }
-        return intent.getParcelableArrayListExtra(ImagePicker.EXTRA_SELECTED_IMAGES);
+        return intent.getParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES);
+    }
+
+    public static Image getFirstImageOrNull(Intent intent) {
+        List<Image> images = getImages(intent);
+        if (images == null || images.isEmpty()) {
+            return null;
+        }
+        return images.get(0);
     }
 }

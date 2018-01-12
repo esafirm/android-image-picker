@@ -123,12 +123,12 @@ public class MainActivity extends AppCompatActivity {
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
                 .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()) // can be full path
-                .start(RC_CODE_PICKER); // start image picker activity with request code
+                .start(); // start image picker activity with request code
     }
 
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
-        if (requestCode == RC_CODE_PICKER && resultCode == RESULT_OK && data != null) {
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             images = (ArrayList<Image>) ImagePicker.getImages(data);
             printImages(images);
             return;

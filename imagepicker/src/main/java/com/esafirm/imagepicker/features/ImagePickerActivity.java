@@ -45,7 +45,6 @@ import com.esafirm.imagepicker.view.SnackBarView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.esafirm.imagepicker.features.ImagePicker.EXTRA_SELECTED_IMAGES;
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
 public class ImagePickerActivity extends AppCompatActivity implements ImagePickerView {
@@ -493,8 +492,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     public void finishPickImages(List<Image> images) {
         Intent data = new Intent();
-        data.putParcelableArrayListExtra(EXTRA_SELECTED_IMAGES,
-                (ArrayList<? extends Parcelable>) images);
+        data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, (ArrayList<? extends Parcelable>) images);
         setResult(RESULT_OK, data);
         finish();
     }

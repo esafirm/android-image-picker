@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
-import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
@@ -26,7 +25,9 @@ import com.esafirm.imagepicker.view.GridSpacingItemDecoration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.esafirm.imagepicker.features.ImagePicker.MODE_MULTIPLE;
+import static com.esafirm.imagepicker.features.IpCons.MAX_LIMIT;
+import static com.esafirm.imagepicker.features.IpCons.MODE_MULTIPLE;
+import static com.esafirm.imagepicker.features.IpCons.MODE_SINGLE;
 
 public class RecyclerViewManager {
 
@@ -114,7 +115,7 @@ public class RecyclerViewManager {
             return ConfigUtils.getFolderTitle(context, config);
         }
 
-        if (config.getMode() == ImagePicker.MODE_SINGLE) {
+        if (config.getMode() == MODE_SINGLE) {
             return ConfigUtils.getImageTitle(context, config);
         }
 
@@ -124,7 +125,7 @@ public class RecyclerViewManager {
         if (useDefaultTitle) {
             return ConfigUtils.getImageTitle(context, config);
         }
-        return config.getLimit() == ImagePicker.MAX_LIMIT
+        return config.getLimit() == MAX_LIMIT
                 ? String.format(context.getString(R.string.ef_selected), imageSize)
                 : String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.getLimit());
     }
@@ -167,12 +168,12 @@ public class RecyclerViewManager {
     }
 
     public boolean selectImage(boolean isSelected) {
-        if (config.getMode() == ImagePicker.MODE_MULTIPLE) {
+        if (config.getMode() == MODE_MULTIPLE) {
             if (imageAdapter.getSelectedImages().size() >= config.getLimit() && !isSelected) {
                 Toast.makeText(context, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
                 return false;
             }
-        } else if (config.getMode() == ImagePicker.MODE_SINGLE) {
+        } else if (config.getMode() == MODE_SINGLE) {
             if (imageAdapter.getSelectedImages().size() > 0) {
                 imageAdapter.removeAllSelectedSingleClick();
             }

@@ -16,8 +16,8 @@ public class ImagePickerConfigFactory {
 
     public static ImagePickerConfig createDefault() {
         ImagePickerConfig config = new ImagePickerConfig();
-        config.setMode(ImagePicker.MODE_MULTIPLE);
-        config.setLimit(ImagePicker.MAX_LIMIT);
+        config.setMode(IpCons.MODE_MULTIPLE);
+        config.setLimit(IpCons.MAX_LIMIT);
         config.setShowCamera(true);
         config.setFolderMode(false);
         config.setSelectedImages(new ArrayList<>());
