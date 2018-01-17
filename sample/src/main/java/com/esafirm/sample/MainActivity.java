@@ -14,6 +14,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
@@ -26,7 +27,6 @@ import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int RC_CODE_PICKER = 2000;
     private static final int RC_CAMERA = 3000;
 
     private TextView textView;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void captureImage() {
-        ImagePicker.cameraOnly().start(this, RC_CODE_PICKER);
+        ImagePicker.cameraOnly().start(this);
     }
 
     Action1<List<Image>> action = this::printImages;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(ImagePicker.create(this)
                 .single()
                 .returnMode(ReturnMode.ALL)
-                .getIntent(this), RC_CODE_PICKER);
+                .getIntent(this), IpCons.RC_IMAGE_PICKER);
     }
 
     public void start() {

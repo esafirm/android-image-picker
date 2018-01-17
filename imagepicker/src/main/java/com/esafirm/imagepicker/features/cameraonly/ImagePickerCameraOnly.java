@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 
 import com.esafirm.imagepicker.features.ImagePickerActivity;
 import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
+import com.esafirm.imagepicker.features.IpCons;
 
 public class ImagePickerCameraOnly {
 
@@ -22,12 +23,24 @@ public class ImagePickerCameraOnly {
         return this;
     }
 
+    public void start(Activity activity) {
+        start(activity, IpCons.RC_IMAGE_PICKER);
+    }
+
     public void start(Activity activity, int requestCode) {
         activity.startActivityForResult(getIntent(activity), requestCode);
     }
 
+    public void start(Fragment fragment) {
+        start(fragment, IpCons.RC_IMAGE_PICKER);
+    }
+
     public void start(Fragment fragment, int requestCode) {
         fragment.startActivityForResult(getIntent(fragment.getActivity()), requestCode);
+    }
+
+    public void start(android.app.Fragment fragment) {
+        start(fragment, IpCons.RC_IMAGE_PICKER);
     }
 
     public void start(android.app.Fragment fragment, int requestCode) {
