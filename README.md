@@ -44,20 +44,23 @@ Will improve this image loader compatibility issue in ImagePicker v2!
 For full example, please refer to `sample`
 
 ### Start image picker activity
-- Quick call
+
+The simplest way to start 
 
 ```java
 ImagePicker.create(this) // Activity or Fragment
-	    .start(REQUEST_CODE_PICKER);
+	    .start();
 ``` 
-- Complete options
+
+Complete features of what you can do with ImagePicker
 
 ```java
 ImagePicker.create(this)
-	.returnAfterFirst(true) // set whether pick or camera action should return immediate result or not. For pick image only work on single mode
+	.returnMode(ReturnMode.ALL) // set whether pick and / or camera action should return immediate result or not.
 	.folderMode(true) // folder mode (false by default)
-	.folderTitle("Folder") // folder selection title
-	.imageTitle("Tap to select") // image selection title
+	.toolbarFolderTitle("Folder") // folder selection title
+	.toolbarImageTitle("Tap to select") // image selection title
+	.toolbarArrowColor(Color.BLACK) // Toolbar 'up' arrow color
 	.single() // single mode
 	.multi() // multi mode (default mode)
 	.limit(10) // max images can be selected (99 by default)
@@ -69,10 +72,8 @@ ImagePicker.create(this)
 	.theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
 	.enableLog(false) // disabling log
 	.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
-	.start(REQUEST_CODE_PICKER); // start image picker activity with request code
+	.start(); // start image picker activity with request code
 ```                
-
-- Get Intent
 
 If you want to call it outside `Activity` or `Fragment`, you can simply get the `Intent` from the builder
 
@@ -81,15 +82,19 @@ ImagePicker.create(activity).getIntent(context)
 
 ```
 
-       
 ### Receive result
 
-
 ```java
-@Override
-if (requestCode == REQUEST_CODE_PICKER && resultCode == RESULT_OK && data != null) {
-    ArrayList<Image> images = (ArrayList<Image>) ImagePicker.getImages(data);
-}
+  @Override
+    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+			// Get a list of picked images
+			List<Image> images = ImagePicker.getImages(data)
+            // or get a single image only
+			Image image = ImagePicker.getFirstImageOrNull(data)
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 ```
 
 
