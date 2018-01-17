@@ -82,6 +82,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         /* This should not happen */
         Intent intent = getIntent();
         if (intent == null || intent.getExtras() == null) {
+            IpLogger.getInstance().e("This should not happen. Please open an issue!");
             finish();
             return;
         }
@@ -115,6 +116,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         if (config == null) {
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
+            if (bundle == null) {
+                throw new IllegalStateException("This should not happen. Please open an issue!");
+            }
             config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
         }
         return config;

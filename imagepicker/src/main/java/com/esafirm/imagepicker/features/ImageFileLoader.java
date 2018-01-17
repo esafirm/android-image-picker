@@ -87,7 +87,7 @@ public class ImageFileLoader {
 
                     File file = makeSafeFile(path);
                     if (file != null && file.exists()) {
-                        if(exlucedImages != null && exlucedImages.contains(file))
+                        if (exlucedImages != null && exlucedImages.contains(file))
                             continue;
 
                         Image image = new Image(id, name, path);
