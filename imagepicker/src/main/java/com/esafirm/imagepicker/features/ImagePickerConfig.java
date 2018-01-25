@@ -27,6 +27,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     private int theme;
 
     private boolean folderMode;
+    private boolean includeVideo;
     private boolean showCamera;
 
     private ImageLoader imageLoader;
@@ -64,6 +65,14 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     public void setShowCamera(boolean showCamera) {
         this.showCamera = showCamera;
+    }
+
+    public boolean isIncludeVideo() {
+        return includeVideo;
+    }
+
+    public void setIncludeVideo(boolean includeVideo) {
+        this.includeVideo = includeVideo;
     }
 
     public String getFolderTitle() {
@@ -159,6 +168,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         dest.writeInt(this.limit);
         dest.writeInt(this.theme);
         dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.includeVideo ? (byte) 1 : (byte) 0);
         dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
         dest.writeSerializable(this.imageLoader);
     }
@@ -180,6 +190,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         this.limit = in.readInt();
         this.theme = in.readInt();
         this.folderMode = in.readByte() != 0;
+        this.includeVideo = in.readByte() != 0;
         this.showCamera = in.readByte() != 0;
         this.imageLoader = (ImageLoader) in.readSerializable();
     }

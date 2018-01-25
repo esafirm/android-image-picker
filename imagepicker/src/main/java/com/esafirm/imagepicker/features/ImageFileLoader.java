@@ -32,8 +32,8 @@ public class ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
-    public void loadDeviceImages(final boolean isFolderMode, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, excludedImages, listener));
+    public void loadDeviceImages(final boolean isFolderMode, final boolean includeVideo, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
+        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, includeVideo, excludedImages, listener));
     }
 
     public void abortLoadImages() {
@@ -53,11 +53,13 @@ public class ImageFileLoader {
     private class ImageLoadRunnable implements Runnable {
 
         private boolean isFolderMode;
+        private boolean includeVideo;
         private ArrayList<File> exlucedImages;
         private ImageLoaderListener listener;
 
-        public ImageLoadRunnable(boolean isFolderMode, ArrayList<File> excludedImages, ImageLoaderListener listener) {
+        public ImageLoadRunnable(boolean isFolderMode, boolean includeVideo, ArrayList<File> excludedImages, ImageLoaderListener listener) {
             this.isFolderMode = isFolderMode;
+            this.includeVideo = includeVideo;
             this.exlucedImages = excludedImages;
             this.listener = listener;
         }
@@ -66,10 +68,13 @@ public class ImageFileLoader {
         public void run() {
             // Return only video and image metadata.
             String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
-                    + " OR "
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+
+            if (includeVideo) {
+                selection = selection + " OR "
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+            }
 
             Cursor cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), projection,
                     selection, null, MediaStore.Images.Media.DATE_ADDED);

@@ -150,6 +150,12 @@ public abstract class ImagePicker {
         return this;
     }
 
+
+    public ImagePicker includeVideo(boolean includeVideo) {
+        config.setIncludeVideo(includeVideo);
+        return this;
+    }
+
     public ImagePicker imageDirectory(String directory) {
         config.setImageDirectory(directory);
         return this;
