@@ -79,4 +79,13 @@ public class ImagePickerUtils {
         String extension = image.getPath().substring(image.getPath().lastIndexOf(".") + 1, image.getPath().length());
         return extension.equalsIgnoreCase("gif");
     }
+
+
+    public static boolean isVideoFormat(Image image) {
+        String extension = image.getPath().substring(image.getPath().lastIndexOf(".") + 1, image.getPath().length());
+        return (extension.equalsIgnoreCase("3gp") ||
+                extension.equalsIgnoreCase("mp4") ||
+                extension.equalsIgnoreCase("webm") ||
+                extension.equalsIgnoreCase("mkv"));
+    }
 }

@@ -60,6 +60,10 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
                 ? View.VISIBLE
                 : View.GONE);
 
+        viewHolder.videoIndicator.setVisibility(ImagePickerUtils.isVideoFormat(image)
+                ? View.VISIBLE
+                : View.GONE);
+
         viewHolder.alphaView.setAlpha(isSelected
                 ? 0.5f
                 : 0f);
@@ -146,6 +150,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         private ImageView imageView;
         private View alphaView;
         private View gifIndicator;
+        private View videoIndicator;
         private FrameLayout container;
 
         ImageViewHolder(View itemView) {
@@ -155,6 +160,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
             imageView = (ImageView) itemView.findViewById(R.id.image_view);
             alphaView = itemView.findViewById(R.id.view_alpha);
             gifIndicator = itemView.findViewById(R.id.ef_item_gif_indicator);
+            videoIndicator = itemView.findViewById(R.id.ef_item_video_indicator);
         }
     }
 

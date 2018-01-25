@@ -64,8 +64,15 @@ public class ImageFileLoader {
 
         @Override
         public void run() {
-            Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-                    null, null, MediaStore.Images.Media.DATE_ADDED);
+            // Return only video and image metadata.
+            String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
+                    + " OR "
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+
+            Cursor cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), projection,
+                    selection, null, MediaStore.Images.Media.DATE_ADDED);
 
             if (cursor == null) {
                 listener.onFailed(new NullPointerException());
