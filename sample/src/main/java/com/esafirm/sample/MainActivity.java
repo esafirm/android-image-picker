@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         final boolean isExclude = ((Switch) findViewById(R.id.ef_switch_include_exclude)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
+                .language("in") // Set image picker language
                 .theme(R.style.ImagePickerTheme)
                 .returnMode(returnAfterCapture
                         ? ReturnMode.ALL

@@ -12,6 +12,7 @@ import com.esafirm.imagepicker.features.cameraonly.ImagePickerCameraOnly;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.IpLogger;
+import com.esafirm.imagepicker.helper.LocaleManager;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
@@ -170,13 +171,19 @@ public abstract class ImagePicker {
         return this;
     }
 
-    protected ImagePickerConfig getConfig() {
-        return config;
-    }
-
     public ImagePicker enableLog(boolean isEnable) {
         IpLogger.getInstance().setEnable(isEnable);
         return this;
+    }
+
+    public ImagePicker language(String language) {
+        config.setLanguage(language);
+        return this;
+    }
+
+    protected ImagePickerConfig getConfig() {
+        LocaleManager.setLanguange(config.getLanguage());
+        return config;
     }
 
     public Intent getIntent(Context context) {

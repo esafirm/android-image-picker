@@ -31,6 +31,8 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     private ImageLoader imageLoader;
 
+    private transient String language;
+
     public ImagePickerConfig() {
     }
 
@@ -131,6 +133,14 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     public ImageLoader getImageLoader() {
         return imageLoader;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getLanguage() {
+        return language;
     }
 
     /* --------------------------------------------------- */

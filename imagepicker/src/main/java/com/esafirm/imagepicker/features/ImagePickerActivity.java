@@ -1,6 +1,7 @@
 package com.esafirm.imagepicker.features;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -38,6 +39,7 @@ import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.IpLogger;
+import com.esafirm.imagepicker.helper.LocaleManager;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.imagepicker.view.SnackBarView;
@@ -74,6 +76,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private ContentObserver observer;
 
     private boolean isCameraOnly;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.updateResources(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
