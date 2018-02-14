@@ -13,6 +13,7 @@ import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -80,12 +81,8 @@ public class ImagePickerUtils {
         return extension.equalsIgnoreCase("gif");
     }
 
-
     public static boolean isVideoFormat(Image image) {
-        String extension = image.getPath().substring(image.getPath().lastIndexOf(".") + 1, image.getPath().length());
-        return (extension.equalsIgnoreCase("3gp") ||
-                extension.equalsIgnoreCase("mp4") ||
-                extension.equalsIgnoreCase("webm") ||
-                extension.equalsIgnoreCase("mkv"));
+        String mimeType = URLConnection.guessContentTypeFromName(image.getPath());
+        return mimeType != null && mimeType.startsWith("video");
     }
 }
