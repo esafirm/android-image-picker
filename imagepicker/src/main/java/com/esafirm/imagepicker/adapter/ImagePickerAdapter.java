@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
@@ -56,11 +57,18 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
                 ImageType.GALLERY
         );
 
-        viewHolder.gifIndicator.setVisibility(ImagePickerUtils.isGifFormat(image)
-                ? View.VISIBLE
-                : View.GONE);
-
-        viewHolder.videoIndicator.setVisibility(ImagePickerUtils.isVideoFormat(image)
+        boolean showFileTypeIndicator = false;
+        String fileTypeLabel = "";
+        if(ImagePickerUtils.isGifFormat(image)) {
+            fileTypeLabel = getContext().getResources().getString(R.string.ef_gif);
+            showFileTypeIndicator = true;
+        }
+        if(ImagePickerUtils.isVideoFormat(image)) {
+            fileTypeLabel = getContext().getResources().getString(R.string.ef_video);
+            showFileTypeIndicator = true;
+        }
+        viewHolder.fileTypeIndicator.setText(fileTypeLabel);
+        viewHolder.fileTypeIndicator.setVisibility(showFileTypeIndicator
                 ? View.VISIBLE
                 : View.GONE);
 
@@ -149,18 +157,16 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
 
         private ImageView imageView;
         private View alphaView;
-        private View gifIndicator;
-        private View videoIndicator;
+        private TextView fileTypeIndicator;
         private FrameLayout container;
 
         ImageViewHolder(View itemView) {
             super(itemView);
 
             container = (FrameLayout) itemView;
-            imageView = (ImageView) itemView.findViewById(R.id.image_view);
+            imageView = itemView.findViewById(R.id.image_view);
             alphaView = itemView.findViewById(R.id.view_alpha);
-            gifIndicator = itemView.findViewById(R.id.ef_item_gif_indicator);
-            videoIndicator = itemView.findViewById(R.id.ef_item_video_indicator);
+            fileTypeIndicator = itemView.findViewById(R.id.ef_item_file_type_indicator);
         }
     }
 

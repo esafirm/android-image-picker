@@ -20,7 +20,7 @@
         android:background="@android:color/white"/>
 
     <TextView
-        android:id="@+id/ef_item_gif_indicator"
+        android:id="@+id/ef_item_file_type_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -30,23 +30,6 @@
         android:paddingRight="@dimen/ef_spacing_double"
         android:paddingTop="@dimen/ef_spacing_half"
         android:text="@string/ef_gif"
-        android:textColor="@color/ef_white"
-        android:textSize="@dimen/ef_font_small"
-        android:visibility="gone"
-        tools:visibility="visible"/>
-
-
-    <TextView
-        android:id="@+id/ef_item_video_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/ef_black_alpha_aa"
-        android:paddingBottom="@dimen/ef_spacing_half"
-        android:paddingLeft="@dimen/ef_spacing_double"
-        android:paddingRight="@dimen/ef_spacing_double"
-        android:paddingTop="@dimen/ef_spacing_half"
-        android:text="@string/ef_video"
         android:textColor="@color/ef_white"
         android:textSize="@dimen/ef_font_small"
         android:visibility="gone"
