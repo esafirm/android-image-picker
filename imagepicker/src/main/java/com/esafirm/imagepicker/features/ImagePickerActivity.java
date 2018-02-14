@@ -232,7 +232,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem menuCamera = menu.findItem(R.id.menu_camera);
         if (menuCamera != null) {
-            menuCamera.setVisible(config.isShowCamera());
+            menuCamera.setVisible(getImagePickerConfig().isShowCamera());
         }
 
         MenuItem menuDone = menu.findItem(R.id.menu_done);
@@ -294,6 +294,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     private void getData() {
+        ImagePickerConfig config = getImagePickerConfig();
         presenter.abortLoad();
         presenter.loadImages(config.isFolderMode(), config.getExcludedImages());
     }
@@ -515,7 +516,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     @Override
     public void showFetchCompleted(List<Image> images, List<Folder> folders) {
-        if (config.isFolderMode()) {
+        if (getImagePickerConfig().isFolderMode()) {
             setFolderAdapter(folders);
         } else {
             setImageAdapter(images);
