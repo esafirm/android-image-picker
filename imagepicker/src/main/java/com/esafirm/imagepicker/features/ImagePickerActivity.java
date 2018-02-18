@@ -296,7 +296,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void getData() {
         ImagePickerConfig config = getImagePickerConfig();
         presenter.abortLoad();
-        presenter.loadImages(config.isFolderMode(), config.getExcludedImages());
+        presenter.loadImages(config.isFolderMode(), config.isIncludeVideo(), config.getExcludedImages());
     }
 
     /**

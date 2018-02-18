@@ -46,12 +46,12 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         imageLoader.abortLoadImages();
     }
 
-    void loadImages(boolean isFolderMode, ArrayList<File> excludedImages) {
+    void loadImages(boolean isFolderMode, boolean includeVideo, ArrayList<File> excludedImages) {
         if (!isViewAttached()) return;
 
         runOnUiIfAvailable(() -> getView().showLoading(true));
 
-        imageLoader.loadDeviceImages(isFolderMode, excludedImages, new ImageLoaderListener() {
+        imageLoader.loadDeviceImages(isFolderMode, includeVideo, excludedImages, new ImageLoaderListener() {
             @Override
             public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
                 runOnUiIfAvailable(() -> {
