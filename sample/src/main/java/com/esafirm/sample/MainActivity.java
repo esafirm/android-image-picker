@@ -1,29 +1,24 @@
 package com.esafirm.sample;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
+import rx.Observable;
+import rx.functions.Action1;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Observable;
-import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,13 +38,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_pick_image_rx).setOnClickListener(view -> getImagePickerObservable().forEach(action));
         findViewById(R.id.button_intent).setOnClickListener(v -> startWithIntent());
         findViewById(R.id.button_camera).setOnClickListener(v -> {
-            final Activity activity = MainActivity.this;
-            final String[] permissions = new String[]{Manifest.permission.CAMERA};
-            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, permissions, RC_CAMERA);
-            } else {
-                captureImage();
-            }
+            captureImage();
         });
 
         findViewById(R.id.button_launch_fragment)

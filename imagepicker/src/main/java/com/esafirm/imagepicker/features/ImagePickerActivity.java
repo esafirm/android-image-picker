@@ -322,18 +322,25 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
-    private void requestCameraPermission() {
+    private void requestCameraPermissions() {
         logger.w("Write External permission is not granted. Requesting permission");
 
-        final String[] permissions = new String[]{Manifest.permission.CAMERA};
+        ArrayList<String> permissions = new ArrayList<>(2);
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-            ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_CAMERA);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.CAMERA);
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
+        if (checkForRationale(permissions)) {
+            ActivityCompat.requestPermissions(this, permissions.toArray(new String[permissions.size()]), RC_PERMISSION_REQUEST_CAMERA);
         } else {
             final String permission = ImagePickerPreferences.PREF_CAMERA_REQUESTED;
             if (!preferences.isPermissionRequested(permission)) {
                 preferences.setPermissionRequested(permission);
-                ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_CAMERA);
+                ActivityCompat.requestPermissions(this, permissions.toArray(new String[permissions.size()]), RC_PERMISSION_REQUEST_CAMERA);
             } else {
                 if (isCameraOnly) {
                     Toast.makeText(getApplicationContext(),
@@ -344,6 +351,15 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                 }
             }
         }
+    }
+
+    private boolean checkForRationale(List<String> permissions) {
+        for (int i = 0, size = permissions.size(); i < size; i++) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -413,12 +429,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
      */
     private void captureImageWithPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-            if (rc == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 captureImage();
             } else {
                 logger.w("Camera permission is not granted. Requesting permission");
-                requestCameraPermission();
+                requestCameraPermissions();
             }
         } else {
             captureImage();
