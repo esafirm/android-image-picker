@@ -85,6 +85,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
 
         /* This should not happen */
         Intent intent = getIntent();
@@ -367,7 +368,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         switch (requestCode) {
             case RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -388,6 +388,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                 }
                 logger.e("Permission not granted: results len = " + grantResults.length +
                         " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+                finish();
                 break;
             }
             default: {
