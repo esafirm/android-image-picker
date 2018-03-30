@@ -28,7 +28,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
@@ -279,7 +278,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        recyclerViewManager.changeOrientation(newConfig.orientation);
+        if (recyclerViewManager != null) {
+            // recyclerViewManager can be null here if we use cameraOnly mode
+            recyclerViewManager.changeOrientation(newConfig.orientation);
+        }
     }
 
     /**
