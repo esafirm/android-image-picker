@@ -422,6 +422,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             if (resultCode == RESULT_OK) {
                 presenter.finishCaptureImage(this, data, getBaseConfig());
             } else if (resultCode == RESULT_CANCELED && isCameraOnly) {
+                presenter.abortCaptureImage();
                 finish();
             }
         }
