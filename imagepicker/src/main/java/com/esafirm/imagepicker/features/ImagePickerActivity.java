@@ -99,7 +99,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         setupComponents();
 
         if (isCameraOnly) {
-            captureImageWithPermission();
+            if (savedInstanceState == null) {
+                captureImageWithPermission();
+            }
         } else {
             ImagePickerConfig config = getImagePickerConfig();
             setTheme(config.getTheme());
