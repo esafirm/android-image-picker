@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -104,10 +105,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             }
         } else {
             ImagePickerConfig config = getImagePickerConfig();
-            setTheme(config.getTheme());
-            setContentView(R.layout.ef_activity_image_picker);
-            setupView(config);
-            setupRecyclerView(config);
+            if (config != null) {
+                setTheme(config.getTheme());
+                setContentView(R.layout.ef_activity_image_picker);
+                setupView(config);
+                setupRecyclerView(config);
+            }
         }
     }
 
@@ -121,6 +124,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         return getIntent().getParcelableExtra(CameraOnlyConfig.class.getSimpleName());
     }
 
+    @Nullable
     private ImagePickerConfig getImagePickerConfig() {
         if (config == null) {
             Intent intent = getIntent();
@@ -234,7 +238,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem menuCamera = menu.findItem(R.id.menu_camera);
         if (menuCamera != null) {
-            menuCamera.setVisible(getImagePickerConfig().isShowCamera());
+            ImagePickerConfig imagePickerConfig = getImagePickerConfig();
+            if (imagePickerConfig != null) {
+                menuCamera.setVisible(imagePickerConfig.isShowCamera());
+            }
         }
 
         MenuItem menuDone = menu.findItem(R.id.menu_done);
@@ -301,7 +308,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void getData() {
         ImagePickerConfig config = getImagePickerConfig();
         presenter.abortLoad();
-        presenter.loadImages(config.isFolderMode(), config.isIncludeVideo(), config.getExcludedImages());
+        if (config != null) {
+            presenter.loadImages(config.isFolderMode(), config.isIncludeVideo(), config.getExcludedImages());
+        }
     }
 
     /**
@@ -538,7 +547,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     @Override
     public void showFetchCompleted(List<Image> images, List<Folder> folders) {
-        if (getImagePickerConfig().isFolderMode()) {
+        ImagePickerConfig config = getImagePickerConfig();
+        if (config != null && config.isFolderMode()) {
             setFolderAdapter(folders);
         } else {
             setImageAdapter(images);
