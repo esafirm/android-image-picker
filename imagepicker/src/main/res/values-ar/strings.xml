@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">عليك إعطاء التطبيق الصلاحية لاستخدام الصور</string>
+
+    <string name="ef_ok">وافق</string>
+    <string name="ef_done">انهي</string>
+    <string name="ef_camera">كاميرا</string>
+
+    <string name="ef_title_folder">دليل</string>
+    <string name="ef_title_select_image">أنقر لإختيار الصور</string>
+    <string name="ef_ltitle_permission_denied">طلب الاذن مرفوض</string>
+
+    <string name="ef_selected">إخترت %d</string>
+    <string name="ef_selected_with_limit">إخترت %1$d/%2$d</string>
+
+    <string name="ef_error_create_image_file">حدث خطأ في تسجيل الصوره</string>
+    <string name="ef_error_no_camera">لا يوجد كاميرا</string>
+    <string name="ef_error_null_cursor">عذراً، هناك خطأ ما!</string>
+
+    <string name="ef_msg_empty_images">لم يتم العثور على صور</string>
+    <string name="ef_msg_no_write_external_permission">عليك إعطاء التطبيق الصلاحية لاستخدام الصور</string>
+    <string name="ef_msg_no_camera_permission">عليك إعطاء التطبيق الصلاحية لاستخدام الكاميرا لتتمكن من التصوير</string>
+    <string name="ef_msg_limit_images">تحديد إختيار الصور</string>
+</resources>
