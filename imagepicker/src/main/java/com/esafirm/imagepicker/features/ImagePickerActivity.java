@@ -1,7 +1,6 @@
 package com.esafirm.imagepicker.features;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,7 +18,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +40,7 @@ import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
 import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.helper.LocaleManager;
+import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.imagepicker.view.SnackBarView;
@@ -139,7 +138,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         return config;
     }
 
-    @TargetApi(17)
     private void setupView(ImagePickerConfig config) {
         progressBar = findViewById(R.id.progress_bar);
         emptyTextView = findViewById(R.id.tv_empty_images);
@@ -151,15 +149,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            final int backResourceId;
-            if(Build.VERSION.SDK_INT >= 17 && getResources().getConfiguration().getLayoutDirection() == 1/* View.LAYOUT_DIRECTION_RTL */) {
-                // For right-to-left layouts, pick the drawable that points to the right (forward).
-                backResourceId = R.drawable.ef_ic_arrow_forward;
-            } else {
-                // For left-to-right layouts, pick the drawable that points to the left (back).
-                backResourceId = R.drawable.ef_ic_arrow_back;
-            }
-            final Drawable arrowDrawable = ContextCompat.getDrawable(this, backResourceId);
+
+            final Drawable arrowDrawable = ViewUtils.getArrowIcon(this);
             final int arrowColor = config.getArrowColor();
             if (arrowColor != ImagePickerConfig.NO_COLOR && arrowDrawable != null) {
                 arrowDrawable.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
