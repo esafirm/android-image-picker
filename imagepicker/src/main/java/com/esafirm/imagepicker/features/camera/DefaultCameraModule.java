@@ -74,4 +74,13 @@ public class DefaultCameraModule implements CameraModule, Serializable {
         }
     }
 
+    @Override
+    public void removeImage() {
+        if (currentImagePath != null) {
+            File file = new File(currentImagePath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
 }

@@ -16,6 +16,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -28,7 +29,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
@@ -85,6 +85,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
 
         /* This should not happen */
         Intent intent = getIntent();
@@ -99,13 +100,17 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         setupComponents();
 
         if (isCameraOnly) {
-            captureImageWithPermission();
+            if (savedInstanceState == null) {
+                captureImageWithPermission();
+            }
         } else {
             ImagePickerConfig config = getImagePickerConfig();
-            setTheme(config.getTheme());
-            setContentView(R.layout.ef_activity_image_picker);
-            setupView(config);
-            setupRecyclerView(config);
+            if (config != null) {
+                setTheme(config.getTheme());
+                setContentView(R.layout.ef_activity_image_picker);
+                setupView(config);
+                setupRecyclerView(config);
+            }
         }
     }
 
@@ -119,6 +124,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         return getIntent().getParcelableExtra(CameraOnlyConfig.class.getSimpleName());
     }
 
+    @Nullable
     private ImagePickerConfig getImagePickerConfig() {
         if (config == null) {
             Intent intent = getIntent();
@@ -232,7 +238,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem menuCamera = menu.findItem(R.id.menu_camera);
         if (menuCamera != null) {
-            menuCamera.setVisible(getImagePickerConfig().isShowCamera());
+            ImagePickerConfig imagePickerConfig = getImagePickerConfig();
+            if (imagePickerConfig != null) {
+                menuCamera.setVisible(imagePickerConfig.isShowCamera());
+            }
         }
 
         MenuItem menuDone = menu.findItem(R.id.menu_done);
@@ -278,7 +287,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        recyclerViewManager.changeOrientation(newConfig.orientation);
+        if (recyclerViewManager != null) {
+            // recyclerViewManager can be null here if we use cameraOnly mode
+            recyclerViewManager.changeOrientation(newConfig.orientation);
+        }
     }
 
     /**
@@ -296,7 +308,9 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private void getData() {
         ImagePickerConfig config = getImagePickerConfig();
         presenter.abortLoad();
-        presenter.loadImages(config.isFolderMode(), config.isIncludeVideo(), config.getExcludedImages());
+        if (config != null) {
+            presenter.loadImages(config.isFolderMode(), config.isIncludeVideo(), config.getExcludedImages());
+        }
     }
 
     /**
@@ -322,18 +336,25 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
-    private void requestCameraPermission() {
+    private void requestCameraPermissions() {
         logger.w("Write External permission is not granted. Requesting permission");
 
-        final String[] permissions = new String[]{Manifest.permission.CAMERA};
+        ArrayList<String> permissions = new ArrayList<>(2);
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-            ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_CAMERA);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.CAMERA);
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
+        if (checkForRationale(permissions)) {
+            ActivityCompat.requestPermissions(this, permissions.toArray(new String[permissions.size()]), RC_PERMISSION_REQUEST_CAMERA);
         } else {
             final String permission = ImagePickerPreferences.PREF_CAMERA_REQUESTED;
             if (!preferences.isPermissionRequested(permission)) {
                 preferences.setPermissionRequested(permission);
-                ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION_REQUEST_CAMERA);
+                ActivityCompat.requestPermissions(this, permissions.toArray(new String[permissions.size()]), RC_PERMISSION_REQUEST_CAMERA);
             } else {
                 if (isCameraOnly) {
                     Toast.makeText(getApplicationContext(),
@@ -346,12 +367,20 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         }
     }
 
+    private boolean checkForRationale(List<String> permissions) {
+        for (int i = 0, size = permissions.size(); i < size; i++) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Handle permission results
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         switch (requestCode) {
             case RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -372,6 +401,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
                 }
                 logger.e("Permission not granted: results len = " + grantResults.length +
                         " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+                finish();
                 break;
             }
             default: {
@@ -403,6 +433,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             if (resultCode == RESULT_OK) {
                 presenter.finishCaptureImage(this, data, getBaseConfig());
             } else if (resultCode == RESULT_CANCELED && isCameraOnly) {
+                presenter.abortCaptureImage();
                 finish();
             }
         }
@@ -413,12 +444,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
      */
     private void captureImageWithPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-            if (rc == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 captureImage();
             } else {
                 logger.w("Camera permission is not granted. Requesting permission");
-                requestCameraPermission();
+                requestCameraPermissions();
             }
         } else {
             captureImage();
@@ -516,7 +547,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
     @Override
     public void showFetchCompleted(List<Image> images, List<Folder> folders) {
-        if (getImagePickerConfig().isFolderMode()) {
+        ImagePickerConfig config = getImagePickerConfig();
+        if (config != null && config.isFolderMode()) {
             setFolderAdapter(folders);
         } else {
             setImageAdapter(images);
