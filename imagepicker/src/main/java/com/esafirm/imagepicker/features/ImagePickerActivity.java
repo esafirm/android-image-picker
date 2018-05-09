@@ -1,6 +1,7 @@
 package com.esafirm.imagepicker.features;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -138,6 +139,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         return config;
     }
 
+    @TargetApi(17)
     private void setupView(ImagePickerConfig config) {
         progressBar = findViewById(R.id.progress_bar);
         emptyTextView = findViewById(R.id.tv_empty_images);
@@ -149,7 +151,15 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            final Drawable arrowDrawable = ContextCompat.getDrawable(this, R.drawable.ef_ic_arrow_back);
+            final int backResourceId;
+            if(Build.VERSION.SDK_INT >= 17 && getResources().getConfiguration().getLayoutDirection() == 1/* View.LAYOUT_DIRECTION_RTL */) {
+                // For right-to-left layouts, pick the drawable that points to the right (forward).
+                backResourceId = R.drawable.ef_ic_arrow_forward;
+            } else {
+                // For left-to-right layouts, pick the drawable that points to the left (back).
+                backResourceId = R.drawable.ef_ic_arrow_back;
+            }
+            final Drawable arrowDrawable = ContextCompat.getDrawable(this, backResourceId);
             final int arrowColor = config.getArrowColor();
             if (arrowColor != ImagePickerConfig.NO_COLOR && arrowDrawable != null) {
                 arrowDrawable.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
