@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
@@ -309,7 +310,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         ImagePickerConfig config = getImagePickerConfig();
         presenter.abortLoad();
         if (config != null) {
-            presenter.loadImages(config.isFolderMode(), config.isIncludeVideo(), config.getExcludedImages());
+            presenter.loadImages(config);
         }
     }
 
@@ -444,8 +445,11 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
      */
     private void captureImageWithPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            final boolean isCameraGranted = ActivityCompat
+                    .checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+            final boolean isWriteGranted = ActivityCompat
+                    .checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+            if (isCameraGranted && isWriteGranted) {
                 captureImage();
             } else {
                 logger.w("Camera permission is not granted. Requesting permission");
