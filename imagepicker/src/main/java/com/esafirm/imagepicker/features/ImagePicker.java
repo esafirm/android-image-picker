@@ -182,6 +182,11 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker enableMediaScan(boolean enableMediaScan){
+        config.setEnableMediaScan(enableMediaScan);
+        return this;
+    }
+
     public ImagePicker language(String language) {
         config.setLanguage(language);
         return this;

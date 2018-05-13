@@ -2,7 +2,6 @@ package com.esafirm.imagepicker.features.camera;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
@@ -58,19 +57,17 @@ public class DefaultCameraModule implements CameraModule, Serializable {
 
         final Uri imageUri = Uri.parse(currentImagePath);
         if (imageUri != null) {
-            MediaScannerConnection.scanFile(context.getApplicationContext(),
-                    new String[]{imageUri.getPath()}, null, (path, uri) -> {
+            ImagePickerUtils.scanMedia(context, imageUri, (path, uri) -> {
+                IpLogger.getInstance().d("File " + path + " was scanned successfully: " + uri);
 
-                        IpLogger.getInstance().d("File " + path + " was scanned successfully: " + uri);
+                if (path == null) {
+                    IpLogger.getInstance().d("This should not happen, go back to Immediate implemenation");
+                    path = currentImagePath;
+                }
 
-                        if (path == null) {
-                            IpLogger.getInstance().d("This should not happen, go back to Immediate implemenation");
-                            path = currentImagePath;
-                        }
-
-                        imageReadyListener.onImageReady(ImageFactory.singleListFromPath(path));
-                        ImagePickerUtils.revokeAppPermission(context, imageUri);
-                    });
+                imageReadyListener.onImageReady(ImageFactory.singleListFromPath(path));
+                ImagePickerUtils.revokeAppPermission(context, imageUri);
+            });
         }
     }
 

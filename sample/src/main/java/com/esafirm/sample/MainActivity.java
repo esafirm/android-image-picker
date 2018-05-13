@@ -9,16 +9,18 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Switch;
 import android.widget.TextView;
+
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
-import rx.Observable;
-import rx.functions.Action1;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,10 +84,12 @@ public class MainActivity extends AppCompatActivity {
         final boolean folderMode = ((Switch) findViewById(R.id.ef_switch_folder_mode)).isChecked();
         final boolean includeVideo = ((Switch) findViewById(R.id.ef_switch_include_video)).isChecked();
         final boolean isExclude = ((Switch) findViewById(R.id.ef_switch_include_exclude)).isChecked();
+        final boolean enableMediaScan = ((Switch) findViewById(R.id.ef_switch_enable_scan)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
                 .language("in") // Set image picker language
                 .theme(R.style.ImagePickerTheme)
+                .enableMediaScan(enableMediaScan)
                 .returnMode(returnAfterCapture
                         ? ReturnMode.ALL
                         : ReturnMode.NONE) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker

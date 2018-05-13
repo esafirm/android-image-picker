@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.esafirm.imagepicker.features.ImagePickerSavePath;
@@ -23,6 +25,14 @@ public class ImagePickerUtils {
 
     public static boolean isStringEmpty(@Nullable String str) {
         return str == null || str.length() == 0;
+    }
+
+    public static void scanMedia(@NonNull Context context, @Nullable Uri imageUri,
+                                 @NonNull MediaScannerConnection.OnScanCompletedListener onScanCompletedListener) {
+        final String[] paths = imageUri != null
+                ? new String[]{imageUri.getPath()}
+                : new String[]{Environment.getExternalStorageDirectory().toString(), Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()};
+        MediaScannerConnection.scanFile(context.getApplicationContext(), paths, null, onScanCompletedListener);
     }
 
     public static File createImageFile(ImagePickerSavePath savePath) {

@@ -3,8 +3,10 @@ package com.esafirm.imagepicker.features;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
+import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 
@@ -32,8 +34,19 @@ public class ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
-    public void loadDeviceImages(final boolean isFolderMode, final boolean includeVideo, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, includeVideo, excludedImages, listener));
+    public void loadDeviceImages(@NonNull final ImagePickerConfig config,
+                                 @NonNull final ImageLoaderListener listener) {
+
+        boolean isFolderMode = config.isFolderMode();
+        boolean includeVideo = config.isIncludeVideo();
+        ArrayList<File> excludedImages = config.getExcludedImages();
+
+        ImageLoadRunnable task = new ImageLoadRunnable(isFolderMode, includeVideo, excludedImages, listener);
+        if (config.isEnableMediaScan()) {
+            ImagePickerUtils.scanMedia(context, null, (path, uri) -> getExecutorService().execute(task));
+        } else {
+            getExecutorService().execute(task);
+        }
     }
 
     public void abortLoadImages() {
