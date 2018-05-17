@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 .includeVideo(includeVideo) // include video (false by default)
                 .toolbarArrowColor(Color.RED) // set toolbar arrow up color
                 .toolbarFolderTitle("Folder") // folder selection title
-                .toolbarImageTitle("Tap to select"); // image selection title
+                .toolbarImageTitle("Tap to select") // image selection title
+                .toolbarDoneButtonText("DONE"); // done button text
 
         if (useCustomImageLoader) {
             imagePicker.imageLoader(new GrayscaleImageLoader());

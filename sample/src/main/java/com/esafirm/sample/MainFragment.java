@@ -39,6 +39,7 @@ public class MainFragment extends Fragment {
                             .single()
                             .toolbarFolderTitle("Folder") // folder selection title
                             .toolbarImageTitle("Tap to select")
+                            .toolbarDoneButtonText("DONE") // done button text
                             .start(0); // image selection title
                 });
 
