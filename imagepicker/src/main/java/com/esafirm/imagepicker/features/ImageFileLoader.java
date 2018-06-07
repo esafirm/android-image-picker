@@ -99,7 +99,7 @@ public class ImageFileLoader {
                     String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
 
                     File file = makeSafeFile(path);
-                    if (file != null && file.exists()) {
+                    if (file != null) {
                         if (exlucedImages != null && exlucedImages.contains(file))
                             continue;
 
