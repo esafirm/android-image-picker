@@ -20,6 +20,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     private String folderTitle;
     private String imageTitle;
+    private String doneButtonText;
     private int arrowColor = NO_COLOR;
 
     private int mode;
@@ -91,6 +92,14 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     public void setImageTitle(String imageTitle) {
         this.imageTitle = imageTitle;
+    }
+
+    public String getDoneButtonText() {
+        return doneButtonText;
+    }
+
+    public void setDoneButtonText(String doneButtonText) {
+        this.doneButtonText = doneButtonText;
     }
 
     public ArrayList<Image> getSelectedImages() {
@@ -173,6 +182,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
+        dest.writeString(this.doneButtonText);
         dest.writeInt(this.arrowColor);
         dest.writeInt(this.mode);
         dest.writeInt(this.limit);
@@ -195,6 +205,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
+        this.doneButtonText = in.readString();
         this.arrowColor = in.readInt();
         this.mode = in.readInt();
         this.limit = in.readInt();
