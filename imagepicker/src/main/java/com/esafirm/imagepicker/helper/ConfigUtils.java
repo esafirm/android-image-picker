@@ -50,4 +50,11 @@ public class ConfigUtils {
                 ? context.getString(R.string.ef_title_select_image)
                 : configImageTitle;
     }
+
+    public static String getDoneButtonText(Context context, ImagePickerConfig config) {
+        final String doneButtonText = config.getDoneButtonText();
+        return ImagePickerUtils.isStringEmpty(doneButtonText)
+                ? context.getString(R.string.ef_done)
+                : doneButtonText;
+    }
 }
