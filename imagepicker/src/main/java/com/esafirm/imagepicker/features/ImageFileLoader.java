@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.features;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
 import com.esafirm.imagepicker.model.Folder;
@@ -130,6 +131,7 @@ public class ImageFileLoader {
         }
     }
 
+    @Nullable
     private static File makeSafeFile(String path) {
         if (path == null || path.isEmpty()) {
             return null;
