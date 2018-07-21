@@ -41,7 +41,9 @@ Will improve this image loader compatibility issue in ImagePicker v2!
 
 ## Usage
 
-For full example, please refer to `sample`
+For full example, please refer to the `sample` app. 
+
+Also you can browse the issue labeled as question [here](https://github.com/esafirm/android-image-picker/issues?utf8=%E2%9C%93&q=label%3Aquestion+)
 
 ### Start image picker activity
 
@@ -124,6 +126,21 @@ There's 4 mode available:
 
 You can define your selected mode with `setReturnMode()` method. 
 
+### Set Save Location
+
+By default, ImagePicker will try to save the image generated from camera to `Environment.DIRECTORY_PICTURES` with directory name `"Camera"`. 
+
+You can change the directory name only by using
+
+```java
+ImagePicker.imageDiretory(String dirName)
+``` 
+
+Or you can change the full path of the save location by using
+
+```java
+ImagePicker.imageFullDirectory(String fullPath)
+```
 
 ## Modification License
 
