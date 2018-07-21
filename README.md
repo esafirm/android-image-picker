@@ -61,6 +61,7 @@ ImagePicker.create(this)
 	.toolbarFolderTitle("Folder") // folder selection title
 	.toolbarImageTitle("Tap to select") // image selection title
 	.toolbarArrowColor(Color.BLACK) // Toolbar 'up' arrow color
+	.includeVideo(true) // Show video on image picker 
 	.single() // single mode
 	.multi() // multi mode (default mode)
 	.limit(10) // max images can be selected (99 by default)
@@ -108,6 +109,20 @@ ImagePicker.cameraOnly().getIntent(context)
 ```
 
 You also still can use the `DefaultCameraModule` but discouraged to do it. 
+
+### Return Mode
+
+There's 4 mode available:
+
+1. `ReturnMode.NONE` -> When image is picked, ImagePickerActivity will not dismissed even in Single Mode
+
+2. `ReturnMode.ALL` -> When image is picked dismiss then deliver result
+
+3. `ReturnMode.CAMERA_ONLY` -> When image is picked with Camera, dismiss then deliver the result
+
+4. `ReturnMode.GALLERY_ONLY` -> Same as CAMERA_ONLY but with Gallery
+
+You can define your selected mode with `setReturnMode()` method. 
 
 
 ## Modification License
