@@ -37,14 +37,14 @@ dependencies {
 
     final glideVersion = '4.5.0'
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
 
     /* Development */
     implementation project(':rximagepicker')
     implementation project(':imagepicker')
 
     /* Release Check */
-//    final imagePickerVersion = '1.11.0-0'
+//    final imagePickerVersion = '1.13.1'
 //    compile "com.github.esafirm.android-image-picker:imagepicker:${imagePickerVersion}"
 //    compile "com.github.esafirm.android-image-picker:rximagepicker:${imagePickerVersion}"
 }
