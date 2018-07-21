@@ -1,10 +1,10 @@
-## ImagePicker
+# ImagePicker
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/4618)
 
 A simple library to select images from the gallery and camera.
 
-## Screenshot
+# Screenshot
 
 <img src="https://raw.githubusercontent.com/esafirm/android-image-picker/master/art/ss.gif" height="460" width="284"/>
 
@@ -39,13 +39,13 @@ change `x.y.z` to version in the [release page](https://github.com/esafirm/andro
 If you're not using custom image loader and have Glide v3 in your classpath, please using version `1.8.0` below! 
 Will improve this image loader compatibility issue in ImagePicker v2! 
 
-## Usage
+# Usage
 
 For full example, please refer to the `sample` app. 
 
 Also you can browse the issue labeled as question [here](https://github.com/esafirm/android-image-picker/issues?utf8=%E2%9C%93&q=label%3Aquestion+)
 
-### Start image picker activity
+## Start image picker activity
 
 The simplest way to start 
 
@@ -85,7 +85,7 @@ ImagePicker.create(activity).getIntent(context)
 
 ```
 
-### Receive result
+## Receive result
 
 ```java
   @Override
@@ -101,7 +101,7 @@ ImagePicker.create(activity).getIntent(context)
 ```
 
 
-### Camera Only
+## Camera Only
 
 ```java
 ImagePicker.cameraOnly().start(activity) // Could be Activity, Fragment, Support Fragment 
@@ -126,23 +126,44 @@ There's 4 mode available:
 
 You can define your selected mode with `setReturnMode()` method. 
 
-### Set Save Location
+## Set Save Location
 
 By default, ImagePicker will try to save the image generated from camera to `Environment.DIRECTORY_PICTURES` with directory name `"Camera"`. 
 
-You can change the directory name only by using
+You can change the directory name only by using:
 
 ```java
-ImagePicker.imageDiretory(String dirName)
+ImagePicker.create(activity).imageDiretory(String dirName)
 ``` 
 
-Or you can change the full path of the save location by using
+Or you can change the full path of the save location by using:
 
 ```java
-ImagePicker.imageFullDirectory(String fullPath)
+ImagePicker.create(activity).imageFullDirectory(String fullPath)
 ```
 
-## Modification License
+## Using Another Image Loader Library 
+
+By default, Image picker is using [Glide](https://github.com/bumptech/glide) as its image loader library. 
+
+You can change this by using:
+
+```java
+ImagePicker.create(activity).imageLoader(ImageLoader customImageLoader)
+```
+
+Next thing you wanna do is excluding Glide library from ImagePicker. You can achieve this with Gradle. Ex: 
+
+```groovy
+implementation("com.github.esafirm.android-image-picker:imagepicker:x.y.z", {
+    exclude group: 'com.github.bumptech.glide', module: 'glide'
+})
+``` 
+
+You can find more about this in [here](https://github.com/esafirm/android-image-picker/issues/105). Thanks to [Galaxer](https://github.com/Galaxer) 🙏
+
+
+# Modification License
 
 ```
 Copyright (c) 2016 Esa Firman
@@ -154,7 +175,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-## Original License
+# Original License
 
 [The Original Image Picker](https://github.com/nguyenhoanglam/ImagePicker)
 
