@@ -112,7 +112,7 @@ ImagePicker.cameraOnly().getIntent(context)
 
 You also still can use the `DefaultCameraModule` but discouraged to do it. 
 
-### Return Mode
+## Return Mode
 
 There's 4 mode available:
 
