@@ -48,6 +48,7 @@ import com.esafirm.imagepicker.view.SnackBarView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.esafirm.imagepicker.features.ImagePickerConfig.NO_COLOR;
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
 public class ImagePickerActivity extends AppCompatActivity implements ImagePickerView {
@@ -152,7 +153,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
             final Drawable arrowDrawable = ViewUtils.getArrowIcon(this);
             final int arrowColor = config.getArrowColor();
-            if (arrowColor != ImagePickerConfig.NO_COLOR && arrowDrawable != null) {
+            if (arrowColor != NO_COLOR && arrowDrawable != null) {
                 arrowDrawable.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
             }
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -233,6 +234,19 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ef_image_picker_menu_main, menu);
+        for (int i = 0; i < menu.size(); i++) {
+            Drawable drawable = menu.getItem(i).getIcon();
+            if (drawable != null) {
+                drawable.mutate();
+                final int cameraColor = config.getCameraColor();
+                if (cameraColor != NO_COLOR) {
+                    drawable.setColorFilter(
+                            cameraColor,
+                            PorterDuff.Mode.SRC_ATOP
+                    );
+                }
+            }
+        }
         return true;
     }
 

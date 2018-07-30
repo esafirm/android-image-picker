@@ -22,6 +22,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     private String imageTitle;
     private String doneButtonText;
     private int arrowColor = NO_COLOR;
+    private int cameraColor = NO_COLOR;
 
     private int mode;
     private int limit;
@@ -44,6 +45,14 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     public void setArrowColor(int arrowColor) {
         this.arrowColor = arrowColor;
+    }
+
+    public int getCameraColor() {
+        return cameraColor;
+    }
+
+    public void setCameraColor(int cameraColor) {
+        this.cameraColor = cameraColor;
     }
 
     public int getMode() {
@@ -184,6 +193,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         dest.writeString(this.imageTitle);
         dest.writeString(this.doneButtonText);
         dest.writeInt(this.arrowColor);
+        dest.writeInt(this.cameraColor);
         dest.writeInt(this.mode);
         dest.writeInt(this.limit);
         dest.writeInt(this.theme);
@@ -207,6 +217,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         this.imageTitle = in.readString();
         this.doneButtonText = in.readString();
         this.arrowColor = in.readInt();
+        this.cameraColor = in.readInt();
         this.mode = in.readInt();
         this.limit = in.readInt();
         this.theme = in.readInt();

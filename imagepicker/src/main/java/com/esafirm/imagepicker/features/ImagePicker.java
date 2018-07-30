@@ -121,6 +121,11 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker toolbarCameraColor(@ColorInt int color) {
+        config.setCameraColor(color);
+        return this;
+    }
+
     public ImagePicker toolbarFolderTitle(String title) {
         config.setFolderTitle(title);
         return this;
