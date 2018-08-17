@@ -1,4 +1,6 @@
-# ImagePicker
+# ImagePicker 
+
+<img align="left" src="https://github.com/esafirm/android-image-picker/blob/master/art/logo.png?raw=true" width="200" height="200"/>
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/4618)
 
@@ -6,7 +8,10 @@ A simple library to select images from the gallery and camera.
 
 # Screenshot
 
+<details>
+	<summary>Click to see how image picker looks…</summary>
 <img src="https://raw.githubusercontent.com/esafirm/android-image-picker/master/art/ss.gif" height="460" width="284"/>
+</details>
 
 ## Download [![](https://jitpack.io/v/esafirm/android-image-picker.svg)](https://jitpack.io/#esafirm/android-image-picker)
 
