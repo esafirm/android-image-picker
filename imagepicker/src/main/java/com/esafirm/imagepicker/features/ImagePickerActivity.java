@@ -541,6 +541,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     public void finishPickImages(List<Image> images) {
         Intent data = new Intent();
+        data.putExtras(getIntent());
         data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, (ArrayList<? extends Parcelable>) images);
         setResult(RESULT_OK, data);
         finish();
