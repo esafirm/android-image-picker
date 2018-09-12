@@ -97,13 +97,13 @@ public class RecyclerViewManager {
         layoutManager.setSpanCount(columns);
     }
 
-    public void handleBack(OnBackAction action) {
+    // Returns true if a back action was handled by going back a folder; false otherwise.
+    public boolean handleBack() {
         if (config.isFolderMode() && !isDisplayingFolderView()) {
             setFolderAdapter(null);
-            action.onBackToFolder();
-            return;
+            return true;
         }
-        action.onFinishImagePicker();
+        return false;
     }
 
     private boolean isDisplayingFolderView() {
