@@ -33,8 +33,11 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+      # Prepare
+      - run: ./setup.sh
+
       # Build
-      - run: ./gradlew assembleDebug
+      - run: ./gradlew build
 
 
 
