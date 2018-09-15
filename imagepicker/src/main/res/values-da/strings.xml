@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Giv adgang til ekstern hukommelse, for at vælge billeder</string>
+
+    <string name="ef_ok">Ok</string>
+    <string name="ef_done">Færdig</string>
+    <string name="ef_camera">Kamera</string>
+
+    <string name="ef_title_folder">Mappe</string>
+    <string name="ef_title_select_image">Tryk for at vælge billeder</string>
+    <string name="ef_ltitle_permission_denied">Adgang nægtet</string>
+
+    <string name="ef_selected">%d valgt</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d valgt</string>
+
+    <string name="ef_error_create_image_file">Fejl, kunne ikke oprette billedfilen</string>
+    <string name="ef_error_no_camera">Kamera blev ikke fundet</string>
+    <string name="ef_error_null_cursor">Beklager, der er sket en fejl!</string>
+
+    <string name="ef_msg_empty_images">Ingen billeder fundet</string>
+    <string name="ef_msg_no_write_external_permission">Giv tilladelse til at vælge billeder fra telefon hukkommelsen</string>
+    <string name="ef_msg_no_camera_permission">Giv tilladelse til kamera til at tage billeder</string>
+    <string name="ef_msg_limit_images">Der kan ikke vælges flere billeder</string>
+
+    <!--Don't Translate-->
+    <string name="ef_gif" translatable="false">GIF</string>
+    <string name="ef_video" translatable="false">Video</string>
+    <string name="ef_content_desc_folder" translatable="false">Folder</string>
+    <string name="ef_content_desc_image" translatable="false">Image</string>
+
+</resources>
