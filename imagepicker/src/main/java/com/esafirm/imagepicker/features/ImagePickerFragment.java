@@ -48,6 +48,8 @@ import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_E
 
 public class ImagePickerFragment extends Fragment implements ImagePickerView {
     private static final String STATE_KEY_CAMERA_MODULE = "Key.CameraModule";
+    private static final String STATE_KEY_RECYCLER = "Key.Recycler";
+    private static final String STATE_KEY_SELECTED_IMAGES = "Key.SelectedImages";
 
     private static final int RC_CAPTURE = 2000;
 
@@ -115,7 +117,13 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                 // inflate the layout using the cloned inflater, not default inflater
                 View result = localInflater.inflate(R.layout.ef_fragment_image_picker, container, false);
                 setupView(result);
-                setupRecyclerView(config);
+                if (savedInstanceState == null) {
+                    setupRecyclerView(config, config.getSelectedImages());
+                } else {
+                    setupRecyclerView(config, savedInstanceState.getParcelableArrayList(STATE_KEY_SELECTED_IMAGES));
+                    recyclerViewManager.onRestoreState(savedInstanceState.getParcelable(STATE_KEY_RECYCLER));
+                }
+                interactionListener.selectionChanged(recyclerViewManager.getSelectedImages());
                 return result;
             }
         }
@@ -133,14 +141,14 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         snackBarView = rootView.findViewById(R.id.ef_snackbar);
     }
 
-    private void setupRecyclerView(ImagePickerConfig config) {
+    private void setupRecyclerView(ImagePickerConfig config, ArrayList<Image> selectedImages) {
         recyclerViewManager = new RecyclerViewManager(
                 recyclerView,
                 config,
                 getResources().getConfiguration().orientation
         );
 
-        recyclerViewManager.setupAdapters((isSelected) -> recyclerViewManager.selectImage(isSelected)
+        recyclerViewManager.setupAdapters(selectedImages, (isSelected) -> recyclerViewManager.selectImage(isSelected)
                 , bucket -> setImageAdapter(bucket.getImages()));
 
         recyclerViewManager.setImageSelectedListener(selectedImage -> {
@@ -171,6 +179,8 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(STATE_KEY_CAMERA_MODULE, presenter.getCameraModule());
+        outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager.getRecyclerState());
+        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager.getSelectedImages());
     }
 
     /**

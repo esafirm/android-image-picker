@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.features.recyclers;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Parcelable;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Toast;
@@ -53,6 +54,14 @@ public class RecyclerViewManager {
         changeOrientation(orientation);
     }
 
+    public void onRestoreState(Parcelable recyclerState) {
+        layoutManager.onRestoreInstanceState(recyclerState);
+    }
+
+    public Parcelable getRecyclerState() {
+        return layoutManager.onSaveInstanceState();
+    }
+
     /**
      * Set item size, column size base on the screen orientation
      */
@@ -68,12 +77,10 @@ public class RecyclerViewManager {
         setItemDecoration(columns);
     }
 
-    public void setupAdapters(OnImageClickListener onImageClickListener, OnFolderClickListener onFolderClickListener) {
-        ArrayList<Image> selectedImages = null;
-        if (config.getMode() == MODE_MULTIPLE && !config.getSelectedImages().isEmpty()) {
-            selectedImages = config.getSelectedImages();
+    public void setupAdapters(ArrayList<Image> selectedImages, OnImageClickListener onImageClickListener, OnFolderClickListener onFolderClickListener) {
+        if (config.getMode() == MODE_SINGLE && selectedImages != null && selectedImages.size() > 1) {
+            selectedImages = null;
         }
-
         /* Init folder and image adapter */
         final ImageLoader imageLoader = config.getImageLoader();
         imageAdapter = new ImagePickerAdapter(context, imageLoader, selectedImages, onImageClickListener);
@@ -157,7 +164,7 @@ public class RecyclerViewManager {
         }
     }
 
-    public List<Image> getSelectedImages() {
+    public ArrayList<Image> getSelectedImages() {
         checkAdapterIsInitialized();
         return imageAdapter.getSelectedImages();
     }

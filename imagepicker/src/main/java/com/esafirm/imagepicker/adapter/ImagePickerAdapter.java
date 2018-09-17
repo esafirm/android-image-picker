@@ -23,7 +23,7 @@ import java.util.List;
 public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.ImageViewHolder> {
 
     private List<Image> images = new ArrayList<>();
-    private List<Image> selectedImages = new ArrayList<>();
+    private ArrayList<Image> selectedImages = new ArrayList<>();
 
     private OnImageClickListener itemClickListener;
     private OnImageSelectedListener imageSelectedListener;
@@ -149,7 +149,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         return images.get(position);
     }
 
-    public List<Image> getSelectedImages() {
+    public ArrayList<Image> getSelectedImages() {
         return selectedImages;
     }
 

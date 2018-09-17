@@ -12,8 +12,10 @@ public interface ImagePickerInteractionListener {
     // Get this callback by calling an ImagePickerFragment's finishPickImages() method. It
     // removes Images whose files no longer exist.
     void finishPickImages(Intent result);
-    // May include Images whose files no longer exist. This is called every time the selection
-    // changes. Doing this is technically O(N^2), but since N is the number of times a user tapped
-    // individual photos, it isn't going to get too slow.
+
+    /**
+     * Called when the user selects or deselects sn image. Also called in onCreateView.
+     * May include Images whose files no longer exist.
+     */
     void selectionChanged(List<Image> imageList);
 }
