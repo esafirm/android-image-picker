@@ -30,7 +30,7 @@ import java.util.List;
  * This custom UI for ImagePicker puts the picker in the bottom half of the screen, and a preview of
  * the last selected image in the top half.
  */
-public class CustomUIActivity extends AppCompatActivity implements ImagePickerInteractionListener {
+public class CustomUIActivity extends AppCompatActivity {
 
     private ActionBar actionBar;
     private ImageView photoPreview;
@@ -66,6 +66,10 @@ public class CustomUIActivity extends AppCompatActivity implements ImagePickerIn
             ft.replace(R.id.ef_imagepicker_fragment_placeholder, imagePickerFragment);
             ft.commit();
         }
+        // For demonstration purposes, we're using a custom ImagePickerInteractionListener. Instead
+        // of calling setInteractionListener, though, we could simply implement
+        // ImagePickerInteractionListener in this class.
+        imagePickerFragment.setInteractionListener(new CustomInteractionListener());
     }
 
     /**
@@ -148,33 +152,32 @@ public class CustomUIActivity extends AppCompatActivity implements ImagePickerIn
         photoPreview = findViewById(R.id.photo_preview);
     }
 
-    /* --------------------------------------------------- */
-    /* > ImagePickerInteractionListener Methods */
-    /* --------------------------------------------------- */
-
-    @Override
-    public void setTitle(String title) {
-        actionBar.setTitle(title);
-    }
-
-    @Override
-    public void cancel() {
-        finish();
-    }
-
-    @Override
-    public void selectionChanged(List<Image> imageList) {
-        if (imageList.isEmpty()) {
-            photoPreview.setImageDrawable(null);
-        } else {
-            photoPreview.setImageBitmap(BitmapFactory.decodeFile(imageList.get(imageList.size() - 1).getPath()));
-
+    class CustomInteractionListener implements ImagePickerInteractionListener {
+        @Override
+        public void setTitle(String title) {
+            actionBar.setTitle(title);
+            supportInvalidateOptionsMenu();
         }
-    }
 
-    @Override
-    public void finishPickImages(Intent result) {
-        setResult(RESULT_OK, result);
-        finish();
+        @Override
+        public void cancel() {
+            finish();
+        }
+
+        @Override
+        public void selectionChanged(List<Image> imageList) {
+            if (imageList.isEmpty()) {
+                photoPreview.setImageDrawable(null);
+            } else {
+                photoPreview.setImageBitmap(BitmapFactory.decodeFile(imageList.get(imageList.size() - 1).getPath()));
+
+            }
+        }
+
+        @Override
+        public void finishPickImages(Intent result) {
+            setResult(RESULT_OK, result);
+            finish();
+        }
     }
 }

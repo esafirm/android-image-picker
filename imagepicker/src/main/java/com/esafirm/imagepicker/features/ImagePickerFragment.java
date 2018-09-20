@@ -101,6 +101,13 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
         setupComponents();
 
+        if (interactionListener == null) {
+            throw new RuntimeException("ImagePickerFragment needs an " +
+                    "ImagePickerInteractionListener. This will be set automatically if the " +
+                    "activity implements ImagePickerInteractionListener, and can be set manually " +
+                    "with fragment.setInteractionListener(listener).");
+        }
+
         if (savedInstanceState != null) {
             presenter.setCameraModule((DefaultCameraModule) savedInstanceState.getSerializable(STATE_KEY_CAMERA_MODULE));
         }
@@ -200,7 +207,6 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     }
 
     private void updateTitle() {
-        getActivity().invalidateOptionsMenu();
         interactionListener.setTitle(recyclerViewManager.getTitle());
     }
 
@@ -466,12 +472,12 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         super.onAttach(context);
         if (context instanceof ImagePickerInteractionListener) {
             interactionListener = (ImagePickerInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnImagePickerInteractionListener");
         }
     }
 
+    public void setInteractionListener(ImagePickerInteractionListener listener) {
+        interactionListener = listener;
+    }
 
     /* --------------------------------------------------- */
     /* > View Methods */
