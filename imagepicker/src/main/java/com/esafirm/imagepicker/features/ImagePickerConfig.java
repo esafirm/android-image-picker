@@ -6,6 +6,7 @@ import android.support.annotation.StyleRes;
 
 import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
+import com.esafirm.imagepicker.helper.ExcludedMediaSingleton;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
@@ -16,7 +17,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     static final int NO_COLOR = -1;
 
     private ArrayList<Image> selectedImages;
-    private ArrayList<File> excludedImages;
+
 
     private String folderTitle;
     private String imageTitle;
@@ -36,6 +37,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     private transient String language;
 
     public ImagePickerConfig() {
+        ExcludedMediaSingleton.getInstance().resetExclusions();
     }
 
     public int getArrowColor() {
@@ -111,22 +113,15 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     }
 
     public ArrayList<File> getExcludedImages() {
-        return excludedImages;
+        return ExcludedMediaSingleton.getInstance().getExcludedImages();
     }
 
     public void setExcludedImages(ArrayList<Image> excludedImages) {
-        if (excludedImages != null && !excludedImages.isEmpty()) {
-            this.excludedImages = new ArrayList<>();
-            for (Image image : excludedImages) {
-                this.excludedImages.add(new File(image.getPath()));
-            }
-        } else {
-            this.excludedImages = null;
-        }
+        ExcludedMediaSingleton.getInstance().setExcludedImages(excludedImages);
     }
 
     public void setExcludedImageFiles(ArrayList<File> excludedImages) {
-        this.excludedImages = excludedImages;
+        ExcludedMediaSingleton.getInstance().setExcludedImageFiles(excludedImages);
     }
 
     public boolean isFolderMode() {
@@ -175,10 +170,8 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeTypedList(this.selectedImages);
 
-        dest.writeByte((byte) (excludedImages != null ? 1 : 0));
-        if (excludedImages != null) {
-            dest.writeList(this.excludedImages);
-        }
+        dest.writeByte((byte) ((ExcludedMediaSingleton.getInstance().getExcludedImages() == null ||
+                ExcludedMediaSingleton.getInstance().getExcludedImages().size() == 0)? 0 : 1));
 
         dest.writeString(this.folderTitle);
         dest.writeString(this.imageTitle);
@@ -198,10 +191,10 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         this.selectedImages = in.createTypedArrayList(Image.CREATOR);
 
         boolean isPresent = in.readByte() != 0;
-        if (isPresent) {
-            this.excludedImages = new ArrayList<>();
-            in.readList(this.excludedImages, File.class.getClassLoader());
-        }
+//        if (isPresent) {
+//            this.excludedImages = new ArrayList<>();
+//            in.readList(this.excludedImages, File.class.getClassLoader());
+//        }
 
         this.folderTitle = in.readString();
         this.imageTitle = in.readString();
