@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.esafirm.imagepicker.features.ImagePickerSavePath;
 import com.esafirm.imagepicker.model.Image;

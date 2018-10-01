@@ -5,7 +5,6 @@ android {
     final sdk = rootProject.ext.sdk
 
     compileSdkVersion sdk.compileSdk
-    buildToolsVersion sdk.buildTools
 
     defaultConfig {
         minSdkVersion sdk.minSdk

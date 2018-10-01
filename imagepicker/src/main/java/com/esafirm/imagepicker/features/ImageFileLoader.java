@@ -3,7 +3,7 @@ package com.esafirm.imagepicker.features;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
 import com.esafirm.imagepicker.model.Folder;
