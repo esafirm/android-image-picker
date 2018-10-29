@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 .folderMode(folderMode) // set folder mode (false by default)
                 .includeVideo(includeVideo) // include video (false by default)
                 .toolbarArrowColor(Color.RED) // set toolbar arrow up color
+                .toolbarCameraColor(Color.BLUE) // set toolbar camera color
                 .toolbarFolderTitle("Folder") // folder selection title
                 .toolbarImageTitle("Tap to select") // image selection title
                 .toolbarDoneButtonText("DONE"); // done button text
