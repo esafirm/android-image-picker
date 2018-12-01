@@ -193,7 +193,7 @@ public abstract class ImagePicker {
         return this;
     }
 
-    protected ImagePickerConfig getConfig() {
+    public ImagePickerConfig getConfig() {
         LocaleManager.setLanguange(config.getLanguage());
         return config;
     }

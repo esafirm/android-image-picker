@@ -122,13 +122,19 @@
                 android:id="@+id/button_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CAMERA ONLY"/>
+                android:text="Camera"/>
 
             <Button
                 android:id="@+id/button_intent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Get Intent"/>
+                android:text="Intent"/>
+
+            <Button
+                android:id="@+id/button_custom_ui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Custom UI"/>
 
         </LinearLayout>
 

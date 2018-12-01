@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_empty_images"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/ef_spacing_double"
+        android:text="@string/ef_msg_empty_images"
+        android:textSize="@dimen/ef_font_medium"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <com.esafirm.imagepicker.view.SnackBarView
+        android:id="@+id/ef_snackbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignBottom="@+id/recyclerView"
+        android:layout_alignParentBottom="true"
+        android:background="@color/ef_black_alpha_aa"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>

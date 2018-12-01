@@ -10,8 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Switch;
 import android.widget.TextView;
 import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePickerActivity;
+import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
 import rx.Observable;
@@ -37,9 +40,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_pick_image).setOnClickListener(view -> start());
         findViewById(R.id.button_pick_image_rx).setOnClickListener(view -> getImagePickerObservable().forEach(action));
         findViewById(R.id.button_intent).setOnClickListener(v -> startWithIntent());
-        findViewById(R.id.button_camera).setOnClickListener(v -> {
-            captureImage();
-        });
+        findViewById(R.id.button_camera).setOnClickListener(v -> captureImage());
+        findViewById(R.id.button_custom_ui).setOnClickListener(v -> startCustomUI());
 
         findViewById(R.id.button_launch_fragment)
                 .setOnClickListener(view -> getSupportFragmentManager().beginTransaction()
@@ -68,14 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 .start(this, ImagePicker.create(this));
     }
 
-    private void startWithIntent() {
-        startActivityForResult(ImagePicker.create(this)
-                .single()
-                .returnMode(ReturnMode.ALL)
-                .getIntent(this), IpCons.RC_IMAGE_PICKER);
-    }
-
-    public void start() {
+    private ImagePicker getImagePicker() {
         final boolean returnAfterCapture = ((Switch) findViewById(R.id.ef_switch_return_after_capture)).isChecked();
         final boolean isSingleMode = ((Switch) findViewById(R.id.ef_switch_single)).isChecked();
         final boolean useCustomImageLoader = ((Switch) findViewById(R.id.ef_switch_imageloader)).isChecked();
@@ -112,11 +107,25 @@ public class MainActivity extends AppCompatActivity {
             imagePicker.origin(images); // original selected images, used in multi mode
         }
 
-        imagePicker.limit(10) // max images can be selected (99 by default)
+        return imagePicker.limit(10) // max images can be selected (99 by default)
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
-                .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()) // can be full path
-                .start(); // start image picker activity with request code
+                .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()); // can be full path
+    }
+
+    private void startWithIntent() {
+        startActivityForResult(getImagePicker().getIntent(this), IpCons.RC_IMAGE_PICKER);
+    }
+
+    private void start() {
+        getImagePicker().start(); // start image picker activity with request code
+    }
+
+    private void startCustomUI() {
+        ImagePickerConfig config = ConfigUtils.checkConfig(getImagePicker().getConfig());
+        Intent intent = new Intent(this, CustomUIActivity.class);
+        intent.putExtra(ImagePickerConfig.class.getSimpleName(), config);
+        startActivityForResult(intent, IpCons.RC_IMAGE_PICKER);
     }
 
     @Override
