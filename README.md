@@ -1,5 +1,6 @@
 # ImagePicker 
 
+[![CircleCI](https://circleci.com/gh/esafirm/android-image-picker.svg?style=svg)](https://circleci.com/gh/esafirm/android-image-picker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/4618)
 
 <img  src="https://github.com/esafirm/android-image-picker/blob/master/art/logo.png?raw=true" width="180" height="180"/> 
