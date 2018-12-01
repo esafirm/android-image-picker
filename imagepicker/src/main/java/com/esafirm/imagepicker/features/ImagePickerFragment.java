@@ -28,6 +28,7 @@ import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
+import com.esafirm.imagepicker.helper.IpCrasher;
 import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
@@ -69,7 +70,6 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     private ImagePickerPresenter presenter;
     private ImagePickerPreferences preferences;
     private ImagePickerConfig config;
-    private CameraOnlyConfig cameraOnlyConfig;
     private ImagePickerInteractionListener interactionListener;
 
     private Handler handler;
@@ -82,10 +82,13 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         // Required empty public constructor.
     }
 
-    public static ImagePickerFragment newInstance(ImagePickerConfig config, @Nullable CameraOnlyConfig cameraOnlyConfig) {
+    public static ImagePickerFragment newInstance(@Nullable ImagePickerConfig config,
+                                                  @Nullable CameraOnlyConfig cameraOnlyConfig) {
         ImagePickerFragment fragment = new ImagePickerFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ImagePickerConfig.class.getSimpleName(), config);
+        if (config != null) {
+            args.putParcelable(ImagePickerConfig.class.getSimpleName(), config);
+        }
         if (cameraOnlyConfig != null) {
             args.putParcelable(CameraOnlyConfig.class.getSimpleName(), cameraOnlyConfig);
         }
@@ -96,9 +99,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        config = getArguments().getParcelable(ImagePickerConfig.class.getSimpleName());
-        cameraOnlyConfig = getArguments().getParcelable(CameraOnlyConfig.class.getSimpleName());
-        isCameraOnly = cameraOnlyConfig != null;
+        isCameraOnly = getArguments().containsKey(CameraOnlyConfig.class.getSimpleName());
 
         setupComponents();
 
@@ -118,28 +119,54 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                 captureImageWithPermission();
             }
         } else {
-            if (config != null) {
-                // clone the inflater using the ContextThemeWrapper
-                LayoutInflater localInflater = inflater.cloneInContext(new ContextThemeWrapper(getActivity(), config.getTheme()));
-
-                // inflate the layout using the cloned inflater, not default inflater
-                View result = localInflater.inflate(R.layout.ef_fragment_image_picker, container, false);
-                setupView(result);
-                if (savedInstanceState == null) {
-                    setupRecyclerView(config, config.getSelectedImages());
-                } else {
-                    setupRecyclerView(config, savedInstanceState.getParcelableArrayList(STATE_KEY_SELECTED_IMAGES));
-                    recyclerViewManager.onRestoreState(savedInstanceState.getParcelable(STATE_KEY_RECYCLER));
-                }
-                interactionListener.selectionChanged(recyclerViewManager.getSelectedImages());
-                return result;
+            ImagePickerConfig config = getImagePickerConfig();
+            if (config == null) {
+                IpCrasher.openIssue();
             }
+            // clone the inflater using the ContextThemeWrapper
+            LayoutInflater localInflater = inflater.cloneInContext(new ContextThemeWrapper(getActivity(), config.getTheme()));
+
+            // inflate the layout using the cloned inflater, not default inflater
+            View result = localInflater.inflate(R.layout.ef_fragment_image_picker, container, false);
+            setupView(result);
+            if (savedInstanceState == null) {
+                setupRecyclerView(config, config.getSelectedImages());
+            } else {
+                setupRecyclerView(config, savedInstanceState.getParcelableArrayList(STATE_KEY_SELECTED_IMAGES));
+                recyclerViewManager.onRestoreState(savedInstanceState.getParcelable(STATE_KEY_RECYCLER));
+            }
+            interactionListener.selectionChanged(recyclerViewManager.getSelectedImages());
+            return result;
         }
         return null;
     }
 
     private BaseConfig getBaseConfig() {
-        return isCameraOnly ? cameraOnlyConfig : config;
+        return isCameraOnly
+                ? getCameraOnlyConfig()
+                : getImagePickerConfig();
+    }
+
+    @Nullable
+    private ImagePickerConfig getImagePickerConfig() {
+        if (config == null) {
+            Bundle bundle = getArguments();
+            if (bundle == null) {
+                IpCrasher.openIssue();
+            }
+            boolean hasImagePickerConfig = bundle.containsKey(ImagePickerConfig.class.getSimpleName());
+            boolean hasCameraOnlyConfig = bundle.containsKey(ImagePickerConfig.class.getSimpleName());
+
+            if (!hasCameraOnlyConfig && !hasImagePickerConfig) {
+                IpCrasher.openIssue();
+            }
+            config = bundle.getParcelable(ImagePickerConfig.class.getSimpleName());
+        }
+        return config;
+    }
+
+    private CameraOnlyConfig getCameraOnlyConfig() {
+        return getArguments().getParcelable(CameraOnlyConfig.class.getSimpleName());
     }
 
     private void setupView(View rootView) {
@@ -187,9 +214,12 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(STATE_KEY_CAMERA_MODULE, presenter.getCameraModule());
-        outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager.getRecyclerState());
-        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, (ArrayList<? extends Parcelable>)
-                recyclerViewManager.getSelectedImages());
+
+        if (!isCameraOnly) {
+            outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager.getRecyclerState());
+            outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, (ArrayList<? extends Parcelable>)
+                    recyclerViewManager.getSelectedImages());
+        }
     }
 
     /**
@@ -246,6 +276,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
     private void getData() {
         presenter.abortLoad();
+        ImagePickerConfig config = getImagePickerConfig();
         if (config != null) {
             presenter.loadImages(config);
         }
@@ -499,6 +530,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
     @Override
     public void showFetchCompleted(List<Image> images, List<Folder> folders) {
+        ImagePickerConfig config = getImagePickerConfig();
         if (config != null && config.isFolderMode()) {
             setFolderAdapter(folders);
         } else {

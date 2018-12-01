@@ -5,23 +5,9 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
@@ -34,12 +20,16 @@ import com.esafirm.imagepicker.model.Image;
 
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
+
 public class ImagePickerActivity extends AppCompatActivity implements ImagePickerInteractionListener, ImagePickerView {
 
     private ActionBar actionBar;
     private ImagePickerFragment imagePickerFragment;
 
-    private CameraOnlyConfig cameraOnlyConfig;
     private ImagePickerConfig config;
 
     @Override
@@ -61,11 +51,18 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             return;
         }
         config = getIntent().getExtras().getParcelable(ImagePickerConfig.class.getSimpleName());
-        cameraOnlyConfig = getIntent().getExtras().getParcelable(CameraOnlyConfig.class.getSimpleName());
+        CameraOnlyConfig cameraOnlyConfig = getIntent().getExtras().getParcelable(CameraOnlyConfig.class.getSimpleName());
 
-        setTheme(config.getTheme());
-        setContentView(R.layout.ef_activity_image_picker);
-        setupView();
+        boolean isCameraOnly = cameraOnlyConfig != null;
+
+        // TODO extract camera only function so we don't have to rely to Fragment
+        if (!isCameraOnly) {
+            setTheme(config.getTheme());
+            setContentView(R.layout.ef_activity_image_picker);
+            setupView();
+        } else {
+            setContentView(createCameraLayout());
+        }
 
         if (savedInstanceState != null) {
             // The fragment has been restored.
@@ -76,6 +73,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             ft.replace(R.id.ef_imagepicker_fragment_placeholder, imagePickerFragment);
             ft.commit();
         }
+    }
+
+    private FrameLayout createCameraLayout() {
+        FrameLayout frameLayout = new FrameLayout(this);
+        frameLayout.setId(R.id.ef_imagepicker_fragment_placeholder);
+        return frameLayout;
     }
 
     /**
