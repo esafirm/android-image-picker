@@ -1,8 +1,6 @@
 package com.esafirm.imagepicker.adapter;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -20,10 +18,13 @@ import com.esafirm.imagepicker.model.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.ImageViewHolder> {
 
     private List<Image> images = new ArrayList<>();
-    private ArrayList<Image> selectedImages = new ArrayList<>();
+    private List<Image> selectedImages = new ArrayList<>();
 
     private OnImageClickListener itemClickListener;
     private OnImageSelectedListener imageSelectedListener;
@@ -149,7 +150,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         return images.get(position);
     }
 
-    public ArrayList<Image> getSelectedImages() {
+    public List<Image> getSelectedImages() {
         return selectedImages;
     }
 

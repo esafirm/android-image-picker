@@ -13,12 +13,6 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +35,13 @@ import com.esafirm.imagepicker.view.SnackBarView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -187,7 +188,8 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         super.onSaveInstanceState(outState);
         outState.putSerializable(STATE_KEY_CAMERA_MODULE, presenter.getCameraModule());
         outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager.getRecyclerState());
-        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager.getSelectedImages());
+        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, (ArrayList<? extends Parcelable>)
+                recyclerViewManager.getSelectedImages());
     }
 
     /**
