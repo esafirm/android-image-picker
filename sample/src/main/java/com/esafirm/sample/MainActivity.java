@@ -5,23 +5,23 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Switch;
 import android.widget.TextView;
+
 import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ImagePickerActivity;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
-import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
-import rx.Observable;
-import rx.functions.Action1;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import rx.Observable;
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startCustomUI() {
-        ImagePickerConfig config = ConfigUtils.checkConfig(getImagePicker().getConfig());
+        ImagePickerConfig config = getImagePicker().getConfig();
         Intent intent = new Intent(this, CustomUIActivity.class);
         intent.putExtra(ImagePickerConfig.class.getSimpleName(), config);
         startActivityForResult(intent, IpCons.RC_IMAGE_PICKER);

@@ -195,11 +195,11 @@ public abstract class ImagePicker {
 
     public ImagePickerConfig getConfig() {
         LocaleManager.setLanguange(config.getLanguage());
-        return config;
+        return ConfigUtils.checkConfig(config);
     }
 
     public Intent getIntent(Context context) {
-        ImagePickerConfig config = ConfigUtils.checkConfig(getConfig());
+        ImagePickerConfig config = getConfig();
         Intent intent = new Intent(context, ImagePickerActivity.class);
         intent.putExtra(ImagePickerConfig.class.getSimpleName(), config);
         return intent;
