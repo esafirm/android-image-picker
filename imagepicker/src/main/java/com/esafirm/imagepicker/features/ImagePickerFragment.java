@@ -99,8 +99,6 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        isCameraOnly = getArguments().containsKey(CameraOnlyConfig.class.getSimpleName());
-
         setupComponents();
 
         if (interactionListener == null) {
@@ -139,6 +137,13 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
             return result;
         }
         return null;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isCameraOnly = getArguments().containsKey(CameraOnlyConfig.class.getSimpleName());
+        startContentObserver();
     }
 
     private BaseConfig getBaseConfig() {
@@ -439,15 +444,10 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         presenter.captureImage(this, getBaseConfig(), RC_CAPTURE);
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+    private void startContentObserver() {
         if (isCameraOnly) {
             return;
         }
-
         if (handler == null) {
             handler = new Handler();
         }
@@ -457,8 +457,11 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                 getData();
             }
         };
-        getActivity().getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
+
+        getActivity().getContentResolver()
+                .registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, observer);
     }
+
 
     @Override
     public void onDestroy() {
