@@ -6,7 +6,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Environment;
-import androidx.annotation.Nullable;
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import com.esafirm.imagepicker.features.ImagePickerSavePath;
 import com.esafirm.imagepicker.model.Image;
@@ -18,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.annotation.Nullable;
 
 public class ImagePickerUtils {
 
@@ -77,12 +80,28 @@ public class ImagePickerUtils {
     }
 
     public static boolean isGifFormat(Image image) {
-        String extension = image.getPath().substring(image.getPath().lastIndexOf(".") + 1, image.getPath().length());
+        String extension = getExtension(image.getPath());
         return extension.equalsIgnoreCase("gif");
     }
 
     public static boolean isVideoFormat(Image image) {
-        String mimeType = URLConnection.guessContentTypeFromName(image.getPath());
+        String extension = getExtension(image.getPath());
+        String mimeType = TextUtils.isEmpty(extension)
+                ? URLConnection.guessContentTypeFromName(image.getPath())
+                : MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         return mimeType != null && mimeType.startsWith("video");
+
+    }
+
+    private static String getExtension(String path) {
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+        if (!TextUtils.isEmpty(extension)) {
+            return extension;
+        }
+        if (path.contains(".")) {
+            return path.substring(path.lastIndexOf(".") + 1, path.length());
+        } else {
+            return "";
+        }
     }
 }
