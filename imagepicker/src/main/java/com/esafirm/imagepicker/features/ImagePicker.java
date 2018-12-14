@@ -163,6 +163,11 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker includeAnimation(boolean includeAnimation) {
+        config.setIncludeAnimation(includeAnimation);
+        return this;
+    }
+
     public ImagePicker imageDirectory(String directory) {
         config.setImageDirectory(directory);
         return this;
