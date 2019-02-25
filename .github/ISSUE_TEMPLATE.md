@@ -12,6 +12,6 @@
 
 ## Specifications
 
-  - Version:
-  - Platform:
-  - Subsystem:
+  - Image Picker Version:
+  - Android OS:
+  - Phone:
