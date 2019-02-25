@@ -22,10 +22,4 @@
     <string name="ef_msg_no_camera_permission">Por favor dê permissão à câmera para tirar fotos</string>
     <string name="ef_msg_limit_images">Limite de imagens atingido</string>
 
-    <!--Don't Translate-->
-    <string name="ef_gif" translatable="false">GIF</string>
-    <string name="ef_video" translatable="false">Video</string>
-    <string name="ef_content_desc_folder" translatable="false">Folder</string>
-    <string name="ef_content_desc_image" translatable="false">Image</string>
-
 </resources>
