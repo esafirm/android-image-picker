@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-28-alpha
 
     environment:
       # Customize the JVM maximum heap limit

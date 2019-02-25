@@ -13,8 +13,8 @@ public class DefaultImageLoader implements ImageLoader {
     public void loadImage(String path, ImageView imageView, ImageType imageType) {
         Glide.with(imageView.getContext())
                 .load(path)
-                .apply(new RequestOptions()
-                        .placeholder(imageType == ImageType.FOLDER
+                .apply(RequestOptions
+                        .placeholderOf(imageType == ImageType.FOLDER
                                 ? R.drawable.ef_folder_placeholder
                                 : R.drawable.ef_image_placeholder)
                         .error(imageType == ImageType.FOLDER
