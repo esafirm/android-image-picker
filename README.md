@@ -162,7 +162,7 @@ ImagePicker.create(activity).imageLoader(ImageLoader customImageLoader)
 Next thing you wanna do is excluding Glide library from ImagePicker. You can achieve this with Gradle. Ex: 
 
 ```groovy
-implementation("com.github.esafirm.android-image-picker:imagepicker:x.y.z", {
+implementation("com.github.esafirm.android-image-picker:imagepicker:x.y.z") {
     exclude group: 'com.github.bumptech.glide', module: 'glide'
 })
 ``` 
