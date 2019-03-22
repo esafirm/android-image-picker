@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class ImagePickerSavePath implements Parcelable {
 
-    public static final ImagePickerSavePath DEFAULT = new ImagePickerSavePath("Camera", false);
+    public static final ImagePickerSavePath DEFAULT = new ImagePickerSavePath(null, false);
 
     private final String path;
     private final boolean isFullPath;
