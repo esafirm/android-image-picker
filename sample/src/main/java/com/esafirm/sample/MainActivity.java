@@ -146,5 +146,6 @@ public class MainActivity extends AppCompatActivity {
             stringBuffer.append(images.get(i).getPath()).append("\n");
         }
         textView.setText(stringBuffer.toString());
+        textView.setOnClickListener(v -> ImageViewerActivity.start(MainActivity.this, images));
     }
 }
