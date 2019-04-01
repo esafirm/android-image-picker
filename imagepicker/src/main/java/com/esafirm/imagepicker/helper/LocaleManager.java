@@ -4,14 +4,13 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-
 import java.util.Locale;
 
 public class LocaleManager {
 
     private static String language;
 
-    public static void setLanguange(String newLanguage) {
+    public static void setLanguage(String newLanguage) {
         language = newLanguage;
     }
 
@@ -22,7 +21,9 @@ public class LocaleManager {
     }
 
     public static Context updateResources(Context context) {
+
         Locale locale = new Locale(getLanguage());
+        locale = zhCheck(locale);
         Locale.setDefault(locale);
 
         Resources res = context.getResources();
@@ -35,5 +36,31 @@ public class LocaleManager {
             res.updateConfiguration(config, res.getDisplayMetrics());
         }
         return context;
+    }
+
+    private static Locale zhCheck(Locale newLocaleLanguage) {
+        final String ZH = "zh";
+        final String TW = "TW";
+        final String CN = "CN";
+
+        Locale mLocale;
+        String mNewLocaleLanguage = String.valueOf(newLocaleLanguage);
+
+        if (mNewLocaleLanguage.length() == 5) {
+            mLocale = new Locale(
+                    mNewLocaleLanguage.substring(0, 2),
+                    mNewLocaleLanguage.substring(3, 5).toUpperCase()
+            );
+            return mLocale;
+        } else if (mNewLocaleLanguage.equals(ZH)) {
+            if (Locale.getDefault().getCountry().equals(TW)) {
+                mLocale = new Locale(ZH, TW);
+            } else {
+                mLocale = new Locale(ZH, CN);
+            }
+            return mLocale;
+        } else {
+            return newLocaleLanguage;
+        }
     }
 }
