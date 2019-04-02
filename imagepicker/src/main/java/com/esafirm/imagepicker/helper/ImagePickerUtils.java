@@ -44,7 +44,13 @@ public class ImagePickerUtils {
 
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(new Date());
-        return new File(mediaStorageDir, "IMG_" + timeStamp + ".jpg");
+        File result = new File(mediaStorageDir, "IMG_" + timeStamp + ".jpg");
+        int counter = 0;
+        while (result.exists()) {
+            counter++;
+            result = new File(mediaStorageDir, "IMG_" + timeStamp + "(" + counter + ").jpg");
+        }
+        return result;
     }
 
     public static String getNameFromFilePath(String path) {
