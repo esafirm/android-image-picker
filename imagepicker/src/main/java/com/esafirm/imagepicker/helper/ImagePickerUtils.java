@@ -13,7 +13,6 @@ import com.esafirm.imagepicker.features.ImagePickerSavePath;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,16 +43,8 @@ public class ImagePickerUtils {
         }
 
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "IMG_" + timeStamp;
-
-        File imageFile = null;
-        try {
-            imageFile = File.createTempFile(imageFileName, ".jpg", mediaStorageDir);
-        } catch (IOException e) {
-            IpLogger.getInstance().d("Oops! Failed create " + imageFileName + " file");
-        }
-        return imageFile;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(new Date());
+        return new File(mediaStorageDir, "IMG_" + timeStamp + ".jpg");
     }
 
     public static String getNameFromFilePath(String path) {
