@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.Fragment;
+
 import com.esafirm.imagepicker.features.cameraonly.ImagePickerCameraOnly;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.helper.ConfigUtils;
@@ -14,11 +19,6 @@ import com.esafirm.imagepicker.model.Image;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.annotation.StyleRes;
-import androidx.fragment.app.Fragment;
 
 public abstract class ImagePicker {
 
@@ -160,6 +160,11 @@ public abstract class ImagePicker {
 
     public ImagePicker includeVideo(boolean includeVideo) {
         config.setIncludeVideo(includeVideo);
+        return this;
+    }
+
+    public ImagePicker onlyVideo(boolean onlyVideo) {
+        config.setOnlyVideo(onlyVideo);
         return this;
     }
 
