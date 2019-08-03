@@ -1,5 +1,19 @@
 ## Changelog
 
+**2.1.0**
+- Support video only picker 
+- Fix 0 bytes image | `369ba31`
+- AGP 3.4.2
+
+**2.0.0**
+- ImagePicker is now in `Fragment` and you can use it in custom UI (please see sample)
+- Remove Retrolambda
+- Compatibility with Glide 4.9.0
+- Add Option to exclude GIF from image picker
+- Bug fixes and improvements
+
+Also, we integrate our repo with CircleCi and add issue templating, because we want to improve our development experience in general
+
 **1.12.0 - New Return Mode API** 
 
 > BREAKING CHANGES!!! 
