@@ -20,6 +20,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         final boolean useCustomImageLoader = ((Switch) findViewById(R.id.ef_switch_imageloader)).isChecked();
         final boolean folderMode = ((Switch) findViewById(R.id.ef_switch_folder_mode)).isChecked();
         final boolean includeVideo = ((Switch) findViewById(R.id.ef_switch_include_video)).isChecked();
+        final boolean onlyVideo = ((Switch) findViewById(R.id.ef_switch_only_video)).isChecked();
         final boolean isExclude = ((Switch) findViewById(R.id.ef_switch_include_exclude)).isChecked();
 
         ImagePicker imagePicker = ImagePicker.create(this)
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                         : ReturnMode.NONE) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
                 .folderMode(folderMode) // set folder mode (false by default)
                 .includeVideo(includeVideo) // include video (false by default)
+                .onlyVideo(onlyVideo) // include video (false by default)
                 .toolbarArrowColor(Color.RED) // set toolbar arrow up color
                 .toolbarFolderTitle("Folder") // folder selection title
                 .toolbarImageTitle("Tap to select") // image selection title

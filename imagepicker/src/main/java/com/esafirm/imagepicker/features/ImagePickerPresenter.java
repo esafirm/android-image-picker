@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.fragment.app.Fragment;
+
 import android.widget.Toast;
 
 import com.esafirm.imagepicker.R;
@@ -51,12 +53,13 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
         boolean isFolder = config.isFolderMode();
         boolean includeVideo = config.isIncludeVideo();
+        boolean onlyVideo = config.isOnlyVideo();
         boolean includeAnimation = config.isIncludeAnimation();
         ArrayList<File> excludedImages = config.getExcludedImages();
 
         runOnUiIfAvailable(() -> getView().showLoading(true));
 
-        imageLoader.loadDeviceImages(isFolder, includeVideo, includeAnimation, excludedImages, new ImageLoaderListener() {
+        imageLoader.loadDeviceImages(isFolder, onlyVideo, includeVideo, includeAnimation, excludedImages, new ImageLoaderListener() {
             @Override
             public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
                 runOnUiIfAvailable(() -> {

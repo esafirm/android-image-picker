@@ -2,6 +2,7 @@ package com.esafirm.imagepicker.features;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.StyleRes;
 
 import com.esafirm.imagepicker.features.common.BaseConfig;
@@ -29,6 +30,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     private boolean folderMode;
     private boolean includeVideo;
+    private boolean onlyVideo;
     private boolean includeAnimation;
     private boolean showCamera;
 
@@ -77,6 +79,14 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     public void setIncludeVideo(boolean includeVideo) {
         this.includeVideo = includeVideo;
+    }
+
+    public boolean isOnlyVideo() {
+        return onlyVideo;
+    }
+
+    public void setOnlyVideo(boolean onlyVideo) {
+        this.onlyVideo = onlyVideo;
     }
 
     public boolean isIncludeAnimation() {
@@ -198,7 +208,8 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         dest.writeInt(this.theme);
         dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.includeVideo ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.includeAnimation ? (byte) 1: (byte) 0);
+        dest.writeByte(this.onlyVideo ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.includeAnimation ? (byte) 1 : (byte) 0);
         dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
         dest.writeSerializable(this.imageLoader);
     }
@@ -222,6 +233,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         this.theme = in.readInt();
         this.folderMode = in.readByte() != 0;
         this.includeVideo = in.readByte() != 0;
+        this.onlyVideo = in.readByte() != 0;
         this.includeAnimation = in.readByte() != 0;
         this.showCamera = in.readByte() != 0;
         this.imageLoader = (ImageLoader) in.readSerializable();

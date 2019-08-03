@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.features;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+
 import androidx.annotation.Nullable;
 
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
@@ -34,8 +35,8 @@ public class ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
-    public void loadDeviceImages(final boolean isFolderMode, final boolean includeVideo, final boolean includeAnimation, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, includeVideo, includeAnimation, excludedImages, listener));
+    public void loadDeviceImages(final boolean isFolderMode, final boolean onlyVideo, final boolean includeVideo, final boolean includeAnimation, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
+        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, onlyVideo, includeVideo, includeAnimation, excludedImages, listener));
     }
 
     public void abortLoadImages() {
@@ -56,14 +57,16 @@ public class ImageFileLoader {
 
         private boolean isFolderMode;
         private boolean includeVideo;
+        private boolean onlyVideo;
         private boolean includeAnimation;
         private ArrayList<File> exlucedImages;
         private ImageLoaderListener listener;
 
-        public ImageLoadRunnable(boolean isFolderMode, boolean includeVideo, boolean includeAnimation, ArrayList<File> excludedImages, ImageLoaderListener listener) {
+        public ImageLoadRunnable(boolean isFolderMode, boolean onlyVideo, boolean includeVideo, boolean includeAnimation, ArrayList<File> excludedImages, ImageLoaderListener listener) {
             this.isFolderMode = isFolderMode;
             this.includeVideo = includeVideo;
             this.includeAnimation = includeAnimation;
+            this.onlyVideo = onlyVideo;
             this.exlucedImages = excludedImages;
             this.listener = listener;
         }
@@ -71,7 +74,13 @@ public class ImageFileLoader {
         @Override
         public void run() {
             Cursor cursor;
-            if (includeVideo) {
+            if (onlyVideo) {
+                String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+
+                cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), projection,
+                        selection, null, MediaStore.Images.Media.DATE_ADDED);
+            } else if (includeVideo) {
                 String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                         + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + " OR "
                         + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
