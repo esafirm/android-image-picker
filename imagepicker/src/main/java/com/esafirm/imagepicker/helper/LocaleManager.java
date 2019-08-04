@@ -23,7 +23,7 @@ public class LocaleManager {
     public static Context updateResources(Context context) {
 
         Locale locale = new Locale(getLanguage());
-        locale = zhCheck(locale);
+        locale = normalizeLocale(locale);
         Locale.setDefault(locale);
 
         Resources res = context.getResources();
@@ -38,29 +38,29 @@ public class LocaleManager {
         return context;
     }
 
-    private static Locale zhCheck(Locale newLocaleLanguage) {
+    private static Locale normalizeLocale(Locale localeLanguage) {
         final String ZH = "zh";
         final String TW = "TW";
         final String CN = "CN";
 
-        Locale mLocale;
-        String mNewLocaleLanguage = String.valueOf(newLocaleLanguage);
+        Locale locale;
+        String newLocaleLanguage = String.valueOf(localeLanguage);
 
-        if (mNewLocaleLanguage.length() == 5) {
-            mLocale = new Locale(
-                    mNewLocaleLanguage.substring(0, 2),
-                    mNewLocaleLanguage.substring(3, 5).toUpperCase()
+        if (newLocaleLanguage.length() == 5) {
+            locale = new Locale(
+                    newLocaleLanguage.substring(0, 2),
+                    newLocaleLanguage.substring(3, 5).toUpperCase()
             );
-            return mLocale;
-        } else if (mNewLocaleLanguage.equals(ZH)) {
+            return locale;
+        } else if (newLocaleLanguage.equals(ZH)) {
             if (Locale.getDefault().getCountry().equals(TW)) {
-                mLocale = new Locale(ZH, TW);
+                locale = new Locale(ZH, TW);
             } else {
-                mLocale = new Locale(ZH, CN);
+                locale = new Locale(ZH, CN);
             }
-            return mLocale;
+            return locale;
         } else {
-            return newLocaleLanguage;
+            return localeLanguage;
         }
     }
 }
