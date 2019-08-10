@@ -169,6 +169,19 @@ implementation("com.github.esafirm.android-image-picker:imagepicker:x.y.z") {
 
 You can find more about this in [here](https://github.com/esafirm/android-image-picker/issues/105). Thanks to [Galaxer](https://github.com/Galaxer) 🙏
 
+# AndroidX and version 2.0.0 above
+
+As version 2.0.0 above, we already use AndroidX artifact in our library. 
+If you have any trouble adding this version to your current project like [this](https://github.com/esafirm/android-image-picker/issues/226)
+
+Please add this to your `gradle.properties` :
+
+```
+android.useAndroidX=true
+android.enableJetifier=true
+```
+
+
 # Credits
 
 - AIP Logo by [anaufalm](https://github.com/anaufalm)
