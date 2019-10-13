@@ -1,4 +1,4 @@
-package com.esafirm.imagepicker.features;
+package com.esafirm.imagepicker.features.fileloader;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +12,7 @@ import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +20,12 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ImageFileLoader {
+public class DefaultImageFileLoader implements ImageFileLoader {
 
     private Context context;
     private ExecutorService executorService;
 
-    public ImageFileLoader(Context context) {
+    public DefaultImageFileLoader(Context context) {
         this.context = context;
     }
 
@@ -35,10 +36,27 @@ public class ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
-    public void loadDeviceImages(final boolean isFolderMode, final boolean onlyVideo, final boolean includeVideo, final boolean includeAnimation, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, onlyVideo, includeVideo, includeAnimation, excludedImages, listener));
+    @Override
+    public void loadDeviceImages(
+            final boolean isFolderMode,
+            final boolean onlyVideo,
+            final boolean includeVideo,
+            final boolean includeAnimation,
+            final ArrayList<File> excludedImages,
+            final ImageLoaderListener listener
+    ) {
+        getExecutorService().execute(
+                new ImageLoadRunnable(
+                        isFolderMode,
+                        onlyVideo,
+                        includeVideo,
+                        includeAnimation,
+                        excludedImages,
+                        listener
+                ));
     }
 
+    @Override
     public void abortLoadImages() {
         if (executorService != null) {
             executorService.shutdown();
@@ -62,7 +80,14 @@ public class ImageFileLoader {
         private ArrayList<File> exlucedImages;
         private ImageLoaderListener listener;
 
-        public ImageLoadRunnable(boolean isFolderMode, boolean onlyVideo, boolean includeVideo, boolean includeAnimation, ArrayList<File> excludedImages, ImageLoaderListener listener) {
+        public ImageLoadRunnable(
+                boolean isFolderMode,
+                boolean onlyVideo,
+                boolean includeVideo,
+                boolean includeAnimation,
+                ArrayList<File> excludedImages,
+                ImageLoaderListener listener
+        ) {
             this.isFolderMode = isFolderMode;
             this.includeVideo = includeVideo;
             this.includeAnimation = includeAnimation;

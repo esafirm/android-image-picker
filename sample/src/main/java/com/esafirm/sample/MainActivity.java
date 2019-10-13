@@ -8,18 +8,20 @@ import android.os.Environment;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePickerComponentHolder;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.rximagepicker.RxImagePicker;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import rx.Observable;
 import rx.functions.Action1;
@@ -94,9 +96,10 @@ public class MainActivity extends AppCompatActivity {
                 .toolbarImageTitle("Tap to select") // image selection title
                 .toolbarDoneButtonText("DONE"); // done button text
 
-        if (useCustomImageLoader) {
-            imagePicker.imageLoader(new GrayscaleImageLoader());
-        }
+        ImagePickerComponentHolder.getInstance()
+                .setImageLoader(useCustomImageLoader
+                        ? new GrayscaleImageLoader()
+                        : new DefaultImageLoader());
 
         if (isSingleMode) {
             imagePicker.single();

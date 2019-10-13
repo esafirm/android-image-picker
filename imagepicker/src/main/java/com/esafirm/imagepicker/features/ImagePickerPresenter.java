@@ -14,6 +14,7 @@ import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
 import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.common.BasePresenter;
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
+import com.esafirm.imagepicker.features.fileloader.DefaultImageFileLoader;
 import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
@@ -24,11 +25,11 @@ import java.util.List;
 
 class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
-    private ImageFileLoader imageLoader;
+    private DefaultImageFileLoader imageLoader;
     private DefaultCameraModule cameraModule;
     private Handler main = new Handler(Looper.getMainLooper());
 
-    ImagePickerPresenter(ImageFileLoader imageLoader) {
+    ImagePickerPresenter(DefaultImageFileLoader imageLoader) {
         this.imageLoader = imageLoader;
     }
 

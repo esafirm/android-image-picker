@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.StyleRes;
 
 import com.esafirm.imagepicker.features.common.BaseConfig;
+import com.esafirm.imagepicker.features.fileloader.ImageFileLoader;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.model.Image;
 
@@ -33,8 +34,6 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     private boolean onlyVideo;
     private boolean includeAnimation;
     private boolean showCamera;
-
-    private ImageLoader imageLoader;
 
     private transient String language;
 
@@ -164,14 +163,6 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         return theme;
     }
 
-    public void setImageLoader(ImageLoader imageLoader) {
-        this.imageLoader = imageLoader;
-    }
-
-    public ImageLoader getImageLoader() {
-        return imageLoader;
-    }
-
     public void setLanguage(String language) {
         this.language = language;
     }
@@ -211,7 +202,6 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         dest.writeByte(this.onlyVideo ? (byte) 1 : (byte) 0);
         dest.writeByte(this.includeAnimation ? (byte) 1 : (byte) 0);
         dest.writeByte(this.showCamera ? (byte) 1 : (byte) 0);
-        dest.writeSerializable(this.imageLoader);
     }
 
     protected ImagePickerConfig(Parcel in) {
@@ -236,7 +226,6 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         this.onlyVideo = in.readByte() != 0;
         this.includeAnimation = in.readByte() != 0;
         this.showCamera = in.readByte() != 0;
-        this.imageLoader = (ImageLoader) in.readSerializable();
     }
 
     public static final Creator<ImagePickerConfig> CREATOR = new Creator<ImagePickerConfig>() {
