@@ -25,7 +25,7 @@ public class DefaultImageFileLoader implements ImageFileLoader {
     private ExecutorService executorService;
 
     public DefaultImageFileLoader(Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     private final String[] projection = new String[]{
