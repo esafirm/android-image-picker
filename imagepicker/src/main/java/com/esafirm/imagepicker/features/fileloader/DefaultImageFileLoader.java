@@ -12,7 +12,6 @@ import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,33 +130,38 @@ public class DefaultImageFileLoader implements ImageFileLoader {
 
             if (cursor.moveToLast()) {
                 do {
-                    long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
-                    String name = cursor.getString(cursor.getColumnIndex(projection[1]));
                     String path = cursor.getString(cursor.getColumnIndex(projection[2]));
-                    String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
 
                     File file = makeSafeFile(path);
-                    if (file != null) {
-                        if (exlucedImages != null && exlucedImages.contains(file))
+                    if (file == null) {
+                        continue;
+                    }
+
+                    if (exlucedImages != null && exlucedImages.contains(file))
+                        continue;
+
+                    // Exclude GIF when we don't want it
+                    if (!includeAnimation) {
+                        if (ImagePickerUtils.isGifFormat(path)) {
                             continue;
-
-                        Image image = new Image(id, name, path);
-
-                        if (!includeAnimation) {
-                            if (ImagePickerUtils.isGifFormat(image))
-                                continue;
                         }
+                    }
 
-                        temp.add(image);
+                    long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
+                    String name = cursor.getString(cursor.getColumnIndex(projection[1]));
+                    String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
 
-                        if (folderMap != null) {
-                            Folder folder = folderMap.get(bucket);
-                            if (folder == null) {
-                                folder = new Folder(bucket);
-                                folderMap.put(bucket, folder);
-                            }
-                            folder.getImages().add(image);
+                    Image image = new Image(id, name, path);
+
+                    temp.add(image);
+
+                    if (folderMap != null) {
+                        Folder folder = folderMap.get(bucket);
+                        if (folder == null) {
+                            folder = new Folder(bucket);
+                            folderMap.put(bucket, folder);
                         }
+                        folder.getImages().add(image);
                     }
 
                 } while (cursor.moveToPrevious());

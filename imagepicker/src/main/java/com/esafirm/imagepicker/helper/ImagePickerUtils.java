@@ -77,7 +77,11 @@ public class ImagePickerUtils {
     }
 
     public static boolean isGifFormat(Image image) {
-        String extension = getExtension(image.getPath());
+        return isGifFormat(image.getPath());
+    }
+
+    public static boolean isGifFormat(String path) {
+        String extension = getExtension(path);
         return extension.equalsIgnoreCase("gif");
     }
 
