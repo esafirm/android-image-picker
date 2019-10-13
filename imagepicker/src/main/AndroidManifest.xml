@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.esafirm.imagepicker">
+    package="com.esafirm.imagepicker">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application>
         <activity
             android:name="com.esafirm.imagepicker.features.ImagePickerActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/ef_AppTheme"/>
+            android:theme="@style/ef_AppTheme" />
 
         <provider
             android:name=".helper.ImagePickerFileProvider"
@@ -19,10 +19,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/image_picker_provider_paths"/>
+                android:resource="@xml/image_picker_provider_paths" />
         </provider>
-
-
 
     </application>
 
