@@ -3,8 +3,6 @@ package com.esafirm.imagepicker.features;
 import android.content.Context;
 
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
-import com.esafirm.imagepicker.features.fileloader.DefaultImageFileLoader;
-import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader;
 
 import java.util.ArrayList;
 
