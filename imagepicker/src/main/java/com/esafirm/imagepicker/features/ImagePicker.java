@@ -34,7 +34,7 @@ public abstract class ImagePicker {
 
         public ImagePickerWithActivity(Activity activity) {
             this.activity = activity;
-            init();
+            init(activity);
         }
 
         @Override
@@ -54,7 +54,7 @@ public abstract class ImagePicker {
 
         public ImagePickerWithFragment(Fragment fragment) {
             this.fragment = fragment;
-            init();
+            init(fragment.requireContext());
         }
 
         @Override
@@ -72,8 +72,8 @@ public abstract class ImagePicker {
     /* > Stater */
     /* --------------------------------------------------- */
 
-    public void init() {
-        config = ImagePickerConfigFactory.createDefault();
+    public void init(Context context) {
+        config = ImagePickerConfigFactory.createDefault(context);
     }
 
     public static ImagePickerWithActivity create(Activity activity) {
@@ -185,11 +185,6 @@ public abstract class ImagePicker {
 
     public ImagePicker theme(@StyleRes int theme) {
         config.setTheme(theme);
-        return this;
-    }
-
-    public ImagePicker imageLoader(ImageLoader imageLoader) {
-        config.setImageLoader(imageLoader);
         return this;
     }
 

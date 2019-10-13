@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
+import com.esafirm.imagepicker.features.ImagePickerComponentHolder;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
@@ -82,7 +83,7 @@ public class RecyclerViewManager {
             selectedImages = null;
         }
         /* Init folder and image adapter */
-        final ImageLoader imageLoader = config.getImageLoader();
+        final ImageLoader imageLoader = ImagePickerComponentHolder.getInstance().getImageLoader();
         imageAdapter = new ImagePickerAdapter(context, imageLoader, selectedImages, onImageClickListener);
         folderAdapter = new FolderPickerAdapter(context, imageLoader, bucket -> {
             foldersState = recyclerView.getLayoutManager().onSaveInstanceState();

@@ -1,4 +1,4 @@
-package com.esafirm.imagepicker.features;
+package com.esafirm.imagepicker.features.fileloader;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -19,13 +19,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ImageFileLoader {
+public class DefaultImageFileLoader implements ImageFileLoader {
 
     private Context context;
     private ExecutorService executorService;
 
-    public ImageFileLoader(Context context) {
-        this.context = context;
+    public DefaultImageFileLoader(Context context) {
+        this.context = context.getApplicationContext();
     }
 
     private final String[] projection = new String[]{
@@ -35,10 +35,27 @@ public class ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
-    public void loadDeviceImages(final boolean isFolderMode, final boolean onlyVideo, final boolean includeVideo, final boolean includeAnimation, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, onlyVideo, includeVideo, includeAnimation, excludedImages, listener));
+    @Override
+    public void loadDeviceImages(
+            final boolean isFolderMode,
+            final boolean onlyVideo,
+            final boolean includeVideo,
+            final boolean includeAnimation,
+            final ArrayList<File> excludedImages,
+            final ImageLoaderListener listener
+    ) {
+        getExecutorService().execute(
+                new ImageLoadRunnable(
+                        isFolderMode,
+                        onlyVideo,
+                        includeVideo,
+                        includeAnimation,
+                        excludedImages,
+                        listener
+                ));
     }
 
+    @Override
     public void abortLoadImages() {
         if (executorService != null) {
             executorService.shutdown();
@@ -62,7 +79,14 @@ public class ImageFileLoader {
         private ArrayList<File> exlucedImages;
         private ImageLoaderListener listener;
 
-        public ImageLoadRunnable(boolean isFolderMode, boolean onlyVideo, boolean includeVideo, boolean includeAnimation, ArrayList<File> excludedImages, ImageLoaderListener listener) {
+        public ImageLoadRunnable(
+                boolean isFolderMode,
+                boolean onlyVideo,
+                boolean includeVideo,
+                boolean includeAnimation,
+                ArrayList<File> excludedImages,
+                ImageLoaderListener listener
+        ) {
             this.isFolderMode = isFolderMode;
             this.includeVideo = includeVideo;
             this.includeAnimation = includeAnimation;
@@ -106,33 +130,38 @@ public class ImageFileLoader {
 
             if (cursor.moveToLast()) {
                 do {
-                    long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
-                    String name = cursor.getString(cursor.getColumnIndex(projection[1]));
                     String path = cursor.getString(cursor.getColumnIndex(projection[2]));
-                    String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
 
                     File file = makeSafeFile(path);
-                    if (file != null) {
-                        if (exlucedImages != null && exlucedImages.contains(file))
+                    if (file == null) {
+                        continue;
+                    }
+
+                    if (exlucedImages != null && exlucedImages.contains(file))
+                        continue;
+
+                    // Exclude GIF when we don't want it
+                    if (!includeAnimation) {
+                        if (ImagePickerUtils.isGifFormat(path)) {
                             continue;
-
-                        Image image = new Image(id, name, path);
-
-                        if (!includeAnimation) {
-                            if (ImagePickerUtils.isGifFormat(image))
-                                continue;
                         }
+                    }
 
-                        temp.add(image);
+                    long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
+                    String name = cursor.getString(cursor.getColumnIndex(projection[1]));
+                    String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
 
-                        if (folderMap != null) {
-                            Folder folder = folderMap.get(bucket);
-                            if (folder == null) {
-                                folder = new Folder(bucket);
-                                folderMap.put(bucket, folder);
-                            }
-                            folder.getImages().add(image);
+                    Image image = new Image(id, name, path);
+
+                    temp.add(image);
+
+                    if (folderMap != null) {
+                        Folder folder = folderMap.get(bucket);
+                        if (folder == null) {
+                            folder = new Folder(bucket);
+                            folderMap.put(bucket, folder);
                         }
+                        folder.getImages().add(image);
                     }
 
                 } while (cursor.moveToPrevious());

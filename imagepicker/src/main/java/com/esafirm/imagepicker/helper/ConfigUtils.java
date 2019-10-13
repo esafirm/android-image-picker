@@ -21,10 +21,6 @@ public class ConfigUtils {
                 || config.getReturnMode() == ReturnMode.ALL)) {
             throw new IllegalStateException("ReturnMode.GALLERY_ONLY and ReturnMode.ALL is only applicable in Single Mode!");
         }
-        if (config.getImageLoader() != null && !(config.getImageLoader() instanceof Serializable)) {
-            throw new IllegalStateException("Custom image loader must be a class that implement ImageLoader." +
-                    " This limitation due to Serializeable");
-        }
         return config;
     }
 

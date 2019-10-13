@@ -25,6 +25,7 @@ import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
 import com.esafirm.imagepicker.features.common.BaseConfig;
+import com.esafirm.imagepicker.features.fileloader.DefaultImageFileLoader;
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.ImagePickerPreferences;
@@ -203,7 +204,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
     private void setupComponents() {
         preferences = new ImagePickerPreferences(getActivity());
-        presenter = new ImagePickerPresenter(new ImageFileLoader(getActivity()));
+        presenter = new ImagePickerPresenter(new DefaultImageFileLoader(getActivity()));
         presenter.attachView(this);
     }
 
