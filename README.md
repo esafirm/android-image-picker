@@ -81,9 +81,17 @@ ImagePicker.create(this)
 	.excludeFiles(files) // same as exclude but using ArrayList<File>
 	.theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
 	.enableLog(false) // disabling log
-	.imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
 	.start(); // start image picker activity with request code
 ```                
+
+You also can change how to process the image and how to get the image files through `ImageLoader` and `ImageFileLoader`
+To change this, simply set it on `ImagePickerComponentHolder`
+
+```java
+ImagePickerCompomnentHolder.getInstance()
+	.setImageLoader(new GrayScaleImageLoader())
+	.setImageFileLoader(new WebpImageFileLoader())
+```	
 
 If you want to call it outside `Activity` or `Fragment`, you can simply get the `Intent` from the builder
 
