@@ -13,6 +13,7 @@ import com.esafirm.imagepicker.features.ImagePickerSavePath;
 import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,15 +43,20 @@ public class ImagePickerUtils {
             }
         }
 
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(new Date());
-        File result = new File(mediaStorageDir, "IMG_" + timeStamp + ".jpg");
+        // Create a media file
+        File result = new File(mediaStorageDir, getFileName(0));
         int counter = 0;
         while (result.exists()) {
             counter++;
-            result = new File(mediaStorageDir, "IMG_" + timeStamp + "(" + counter + ").jpg");
+            result = new File(mediaStorageDir, getFileName(counter));
         }
         return result;
+    }
+
+    public static String getFileName(int counter) {
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(new Date());
+        return "IMG_" + timeStamp + (counter == 0 ? "" : "("+counter+")") + ".jpg";
     }
 
     public static String getNameFromFilePath(String path) {

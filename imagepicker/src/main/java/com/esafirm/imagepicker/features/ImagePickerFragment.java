@@ -110,7 +110,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         }
 
         if (savedInstanceState != null) {
-            presenter.setCameraModule((DefaultCameraModule) savedInstanceState.getSerializable(STATE_KEY_CAMERA_MODULE));
+            presenter.setCameraModule((DefaultCameraModule) savedInstanceState.getParcelable(STATE_KEY_CAMERA_MODULE));
         }
 
         if (isCameraOnly) {
@@ -219,7 +219,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(STATE_KEY_CAMERA_MODULE, presenter.getCameraModule());
+        outState.putParcelable(STATE_KEY_CAMERA_MODULE, presenter.getCameraModule());
 
         if (!isCameraOnly) {
             outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager.getRecyclerState());

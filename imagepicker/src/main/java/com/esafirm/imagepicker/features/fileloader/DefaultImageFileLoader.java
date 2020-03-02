@@ -1,8 +1,11 @@
 package com.esafirm.imagepicker.features.fileloader;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -150,8 +153,9 @@ public class DefaultImageFileLoader implements ImageFileLoader {
                     long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
                     String name = cursor.getString(cursor.getColumnIndex(projection[1]));
                     String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
+                    Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,id);
 
-                    Image image = new Image(id, name, path);
+                    Image image = new Image(id, name, path, uri);
 
                     temp.add(image);
 

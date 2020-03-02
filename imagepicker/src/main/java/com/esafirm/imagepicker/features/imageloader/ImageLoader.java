@@ -1,7 +1,8 @@
 package com.esafirm.imagepicker.features.imageloader;
 
+import android.net.Uri;
 import android.widget.ImageView;
 
 public interface ImageLoader {
-    void loadImage(String path, ImageView imageView, ImageType imageType);
+    void loadImage(Uri contentUri, ImageView imageView, ImageType imageType);
 }

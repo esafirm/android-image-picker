@@ -53,7 +53,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         final boolean isSelected = isSelected(image);
 
         getImageLoader().loadImage(
-                image.getPath(),
+                image.getUri(),
                 viewHolder.imageView,
                 ImageType.GALLERY
         );

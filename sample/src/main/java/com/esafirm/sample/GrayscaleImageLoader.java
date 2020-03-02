@@ -1,5 +1,6 @@
 package com.esafirm.sample;
 
+import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -13,10 +14,10 @@ public class GrayscaleImageLoader implements ImageLoader {
     private static final RequestOptions REQUEST_OPTIONS = new RequestOptions().transform(new GrayscaleTransformation());
 
     @Override
-    public void loadImage(String path, ImageView imageView, ImageType imageType) {
+    public void loadImage(Uri contentUri, ImageView imageView, ImageType imageType) {
         Glide.with(imageView)
                 .asBitmap()
-                .load(path)
+                .load(contentUri)
                 .transition(BitmapTransitionOptions.withCrossFade())
                 .apply(REQUEST_OPTIONS)
                 .into(imageView);

@@ -1,5 +1,6 @@
 package com.esafirm.imagepicker.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,11 +9,13 @@ public class Image implements Parcelable {
     private long id;
     private String name;
     private String path;
+    private Uri uri;
 
-    public Image(long id, String name, String path) {
+    public Image(long id, String name, String path, Uri uri) {
         this.id = id;
         this.name = name;
         this.path = path;
+        this.uri = uri;
     }
 
     public long getId() {
@@ -39,6 +42,14 @@ public class Image implements Parcelable {
         this.path = path;
     }
 
+    public Uri getUri() {
+        return uri;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,12 +73,14 @@ public class Image implements Parcelable {
         dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeString(this.path);
+        dest.writeParcelable(uri, flags);
     }
 
     protected Image(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
         this.path = in.readString();
+        this.uri = in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Creator<Image> CREATOR = new Creator<Image>() {

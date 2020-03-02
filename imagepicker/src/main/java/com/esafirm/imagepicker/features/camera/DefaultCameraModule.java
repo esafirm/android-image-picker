@@ -1,9 +1,11 @@
 package com.esafirm.imagepicker.features.camera;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 
 import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
@@ -13,14 +15,28 @@ import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.model.ImageFactory;
 
 import java.io.File;
-import java.io.Serializable;
-import java.util.Locale;
+import java.util.Calendar;
 
-import androidx.core.content.FileProvider;
+public class DefaultCameraModule implements CameraModule, Parcelable {
 
-public class DefaultCameraModule implements CameraModule, Serializable {
-
+    private Uri uri;
     private String currentImagePath;
+
+    public DefaultCameraModule() {
+
+    }
+
+    public static final Creator<DefaultCameraModule> CREATOR = new Creator<DefaultCameraModule>() {
+        @Override
+        public DefaultCameraModule createFromParcel(Parcel in) {
+            return new DefaultCameraModule(in);
+        }
+
+        @Override
+        public DefaultCameraModule[] newArray(int size) {
+            return new DefaultCameraModule[size];
+        }
+    };
 
     public Intent getCameraIntent(Context context) {
         return getCameraIntent(context, ImagePickerConfigFactory.createDefault(context));
@@ -28,17 +44,19 @@ public class DefaultCameraModule implements CameraModule, Serializable {
 
     @Override
     public Intent getCameraIntent(Context context, BaseConfig config) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File imageFile = ImagePickerUtils.createImageFile(config.getImageDirectory());
-        if (imageFile != null) {
-            Context appContext = context.getApplicationContext();
-            String providerName = String.format(Locale.ENGLISH, "%s%s", appContext.getPackageName(), ".imagepicker.provider");
-            Uri uri = FileProvider.getUriForFile(appContext, providerName, imageFile);
-            currentImagePath = "file:" + imageFile.getAbsolutePath();
+        ContentValues values = new ContentValues(3);
+        String displayName = ImagePickerUtils.getFileName(0);
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, displayName);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.Media.DATE_TAKEN, Calendar.getInstance().getTimeInMillis());
+        values.put(MediaStore.Images.Media.DATE_ADDED, Calendar.getInstance().getTimeInMillis());
+
+        uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        if(uri != null) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
             ImagePickerUtils.grantAppPermission(context, intent, uri);
-
             return intent;
         }
         return null;
@@ -57,22 +75,8 @@ public class DefaultCameraModule implements CameraModule, Serializable {
             return;
         }
 
-        final Uri imageUri = Uri.parse(currentImagePath);
-        if (imageUri != null) {
-            MediaScannerConnection.scanFile(context.getApplicationContext(),
-                    new String[]{imageUri.getPath()}, null, (path, uri) -> {
-
-                        IpLogger.getInstance().d("File " + path + " was scanned successfully: " + uri);
-
-                        if (path == null) {
-                            IpLogger.getInstance().d("This should not happen, go back to Immediate implemenation");
-                            path = currentImagePath;
-                        }
-
-                        imageReadyListener.onImageReady(ImageFactory.singleListFromPath(path));
-                        ImagePickerUtils.revokeAppPermission(context, imageUri);
-                    });
-        }
+        imageReadyListener.onImageReady(ImageFactory.singleListFromPath(uri));
+        ImagePickerUtils.revokeAppPermission(context, uri);
     }
 
     @Override
@@ -83,5 +87,21 @@ public class DefaultCameraModule implements CameraModule, Serializable {
                 file.delete();
             }
         }
+    }
+
+    private DefaultCameraModule(Parcel in) {
+        uri = in.readParcelable(Uri.class.getClassLoader());
+        currentImagePath = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(uri, flags);
+        dest.writeString(currentImagePath);
     }
 }

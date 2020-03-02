@@ -14,10 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.esafirm.imagepicker.features.ImagePickerComponentHolder;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.ImagePickerFragment;
 import com.esafirm.imagepicker.features.ImagePickerInteractionListener;
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
+import com.esafirm.imagepicker.features.imageloader.ImageType;
 import com.esafirm.imagepicker.helper.ConfigUtils;
 import com.esafirm.imagepicker.helper.IpLogger;
 import com.esafirm.imagepicker.helper.LocaleManager;
@@ -169,7 +171,7 @@ public class CustomUIActivity extends AppCompatActivity {
             if (imageList.isEmpty()) {
                 photoPreview.setImageDrawable(null);
             } else {
-                photoPreview.setImageBitmap(BitmapFactory.decodeFile(imageList.get(imageList.size() - 1).getPath()));
+                ImagePickerComponentHolder.getInstance().getImageLoader().loadImage(imageList.get(imageList.size() - 1).getUri(), photoPreview, ImageType.GALLERY);
 
             }
         }

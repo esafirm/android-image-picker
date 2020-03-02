@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         return imagePicker.limit(10) // max images can be selected (99 by default)
                 .showCamera(true) // show camera or not (true by default)
                 .imageDirectory("Camera")   // captured image directory name ("Camera" folder by default)
-                .imageFullDirectory(Environment.getExternalStorageDirectory().getPath()); // can be full path
+                .imageFullDirectory(getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath()); // can be full path
     }
 
     private void startWithIntent() {
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
         StringBuilder stringBuffer = new StringBuilder();
         for (int i = 0, l = images.size(); i < l; i++) {
-            stringBuffer.append(images.get(i).getPath()).append("\n");
+            stringBuffer.append(images.get(i).getUri()).append("\n");
         }
         textView.setText(stringBuffer.toString());
         textView.setOnClickListener(v -> ImageViewerActivity.start(MainActivity.this, images));
