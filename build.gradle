@@ -4,15 +4,15 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.android.tools.build:gradle:3.6.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
     }
 }
 
 ext {
     sdk = [
-            compileSdk: 28,
-            targetSdk : 28,
+            compileSdk: 29,
+            targetSdk : 29,
             minSdk    : 14
     ]
 }
