@@ -20,16 +20,16 @@
         android:layout_centerInParent="true"
         android:visibility="gone"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <com.esafirm.imagepicker.view.SnackBarView
         android:id="@+id/ef_snackbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignBottom="@+id/recyclerView"
-        android:layout_alignParentBottom="true"
-        android:background="@color/ef_black_alpha_aa"/>
+        android:layout_alignParentBottom="true"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 </RelativeLayout>

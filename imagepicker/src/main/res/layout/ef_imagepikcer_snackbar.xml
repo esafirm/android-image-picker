@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/ef_height_snackbar"
+    android:background="@color/ef_black_alpha_aa"
+    android:paddingStart="@dimen/ef_spacing_double"
+    android:paddingEnd="@dimen/ef_spacing_double"
     tools:parentTag="RelativeLayout">
 
     <TextView
@@ -27,4 +29,5 @@
         android:background="?selectableItemBackground"
         android:textColor="?colorAccent"
         tools:text="@string/ef_ok"/>
-</merge>
+
+</RelativeLayout>
