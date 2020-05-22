@@ -41,11 +41,6 @@ dependencies {
 
 change `x.y.z` to version in the [release page](https://github.com/esafirm/android-image-picker/releases)
 
-**Breaking changes**
-
-If you're not using custom image loader and have Glide v3 in your classpath, please using version `1.8.0` below! 
-Will improve this image loader compatibility issue in ImagePicker v2! 
-
 # Usage
 
 For full example, please refer to the `sample` app. 
@@ -83,16 +78,6 @@ ImagePicker.create(this)
 	.enableLog(false) // disabling log
 	.start(); // start image picker activity with request code
 ```                
-
-You also can change how to process the image and how to get the image files through `ImageLoader` and `ImageFileLoader`
-To change this, simply set it on `ImagePickerComponentHolder`
-
-```java
-ImagePickerCompomnentHolder.getInstance()
-	.setImageLoader(new GrayScaleImageLoader())
-	.setImageFileLoader(new WebpImageFileLoader())
-```	
-
 If you want to call it outside `Activity` or `Fragment`, you can simply get the `Intent` from the builder
 
 ```java
@@ -127,55 +112,13 @@ ImagePicker.cameraOnly().getIntent(context)
 
 You also still can use the `DefaultCameraModule` but discouraged to do it. 
 
-## Return Mode
+# Wiki
 
-There's 4 mode available:
+- [Custom components](https://github.com/esafirm/android-image-picker/blob/master/docs/custom_components.md)
+- [Using another image library](https://github.com/esafirm/android-image-picker/blob/master/docs/another_image_library.md)
+- [Return mode](https://github.com/esafirm/android-image-picker/blob/master/docs/return_mode.md)
+- [Save location](https://github.com/esafirm/android-image-picker/blob/master/docs/save_location.md)
 
-1. `ReturnMode.NONE` -> When image is picked, ImagePickerActivity will not dismissed even in Single Mode
-
-2. `ReturnMode.ALL` -> When image is picked dismiss then deliver result
-
-3. `ReturnMode.CAMERA_ONLY` -> When image is picked with Camera, dismiss then deliver the result
-
-4. `ReturnMode.GALLERY_ONLY` -> Same as CAMERA_ONLY but with Gallery
-
-You can define your selected mode with `setReturnMode()` method. 
-
-## Set Save Location
-
-By default, ImagePicker will try to save the image generated from camera to `Environment.DIRECTORY_PICTURES` with directory name `"Camera"`. 
-
-You can change the directory name only by using:
-
-```java
-ImagePicker.create(activity).imageDiretory(String dirName)
-``` 
-
-Or you can change the full path of the save location by using:
-
-```java
-ImagePicker.create(activity).imageFullDirectory(String fullPath)
-```
-
-## Using Another Image Loader Library 
-
-By default, Image picker is using [Glide](https://github.com/bumptech/glide) as its image loader library. 
-
-You can change this by using:
-
-```java
-ImagePicker.create(activity).imageLoader(ImageLoader customImageLoader)
-```
-
-Next thing you wanna do is excluding Glide library from ImagePicker. You can achieve this with Gradle. Ex: 
-
-```groovy
-implementation("com.github.esafirm.android-image-picker:imagepicker:x.y.z") {
-    exclude group: 'com.github.bumptech.glide', module: 'glide'
-})
-``` 
-
-You can find more about this in [here](https://github.com/esafirm/android-image-picker/issues/105). Thanks to [Galaxer](https://github.com/Galaxer) 🙏
 
 # AndroidX and version 2.0.0 above
 
@@ -188,7 +131,6 @@ Please add this to your `gradle.properties` :
 android.useAndroidX=true
 android.enableJetifier=true
 ```
-
 
 # Credits
 
