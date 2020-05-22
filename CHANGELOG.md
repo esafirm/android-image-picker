@@ -1,5 +1,16 @@
 ## Changelog
 
+**2.3.0**
+- Fix failed to create image file [#262](https://github.com/esafirm/android-image-picker/pull/262)
+- Handle external scoped [Glide issue](https://github.com/bumptech/glide/issues/3896)
+- Bump target SDK to Q
+- Bump Glide to 4.11.0
+
+**2.2.0**
+- Configurable ImageFileLoader
+- New approach on how to set custom ImageLoader
+- Fix and improvements
+
 **2.1.0**
 - Support video only picker 
 - Fix 0 bytes image | `369ba31`
