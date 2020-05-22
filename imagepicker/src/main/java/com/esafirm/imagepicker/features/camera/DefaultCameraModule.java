@@ -29,7 +29,7 @@ public class DefaultCameraModule implements CameraModule, Serializable {
     @Override
     public Intent getCameraIntent(Context context, BaseConfig config) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File imageFile = ImagePickerUtils.createImageFile(config.getImageDirectory());
+        File imageFile = ImagePickerUtils.createImageFile(config.getImageDirectory(), context);
         if (imageFile != null) {
             Context appContext = context.getApplicationContext();
             String providerName = String.format(Locale.ENGLISH, "%s%s", appContext.getPackageName(), ".imagepicker.provider");

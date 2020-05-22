@@ -1,7 +1,5 @@
 package com.esafirm.imagepicker.features.fileloader;
 
-import android.content.Context;
-
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
 
 import java.io.File;
