@@ -20,6 +20,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
@@ -37,13 +44,6 @@ import com.esafirm.imagepicker.view.SnackBarView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;

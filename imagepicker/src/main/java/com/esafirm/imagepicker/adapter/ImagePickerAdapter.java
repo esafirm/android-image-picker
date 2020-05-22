@@ -7,6 +7,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.features.imageloader.ImageType;
@@ -17,9 +21,6 @@ import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.ImageViewHolder> {
 
@@ -39,8 +40,9 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         }
     }
 
+    @NonNull
     @Override
-    public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ImageViewHolder(
                 getInflater().inflate(R.layout.ef_imagepicker_item_image, parent, false)
         );
@@ -53,18 +55,18 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         final boolean isSelected = isSelected(image);
 
         getImageLoader().loadImage(
-                image.getPath(),
+                image,
                 viewHolder.imageView,
                 ImageType.GALLERY
         );
 
         boolean showFileTypeIndicator = false;
         String fileTypeLabel = "";
-        if(ImagePickerUtils.isGifFormat(image)) {
+        if (ImagePickerUtils.isGifFormat(image)) {
             fileTypeLabel = getContext().getResources().getString(R.string.ef_gif);
             showFileTypeIndicator = true;
         }
-        if(ImagePickerUtils.isVideoFormat(image)) {
+        if (ImagePickerUtils.isVideoFormat(image)) {
             fileTypeLabel = getContext().getResources().getString(R.string.ef_video);
             showFileTypeIndicator = true;
         }

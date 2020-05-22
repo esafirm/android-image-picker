@@ -2,6 +2,7 @@ package com.esafirm.imagepicker.features.fileloader;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.Nullable;
@@ -79,7 +80,7 @@ public class DefaultImageFileLoader implements ImageFileLoader {
         private ArrayList<File> exlucedImages;
         private ImageLoaderListener listener;
 
-        public ImageLoadRunnable(
+        ImageLoadRunnable(
                 boolean isFolderMode,
                 boolean onlyVideo,
                 boolean includeVideo,
@@ -95,27 +96,31 @@ public class DefaultImageFileLoader implements ImageFileLoader {
             this.listener = listener;
         }
 
-        @Override
-        public void run() {
-            Cursor cursor;
+        private String getQuerySelection() {
             if (onlyVideo) {
-                String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                return MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                         + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
-
-                cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), projection,
-                        selection, null, MediaStore.Images.Media.DATE_ADDED);
-            } else if (includeVideo) {
-                String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+            }
+            if (includeVideo) {
+                return MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                         + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + " OR "
                         + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                         + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
-
-                cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), projection,
-                        selection, null, MediaStore.Images.Media.DATE_ADDED);
-            } else {
-                cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection,
-                        null, null, MediaStore.Images.Media.DATE_ADDED);
             }
+            return null;
+        }
+
+        private Uri getSourceUri() {
+            if (onlyVideo || includeVideo) {
+                return MediaStore.Files.getContentUri("external");
+            }
+            return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        }
+
+        @Override
+        public void run() {
+            Cursor cursor = context.getContentResolver().query(getSourceUri(), projection,
+                    getQuerySelection(), null, MediaStore.Images.Media.DATE_ADDED);
 
             if (cursor == null) {
                 listener.onFailed(new NullPointerException());
