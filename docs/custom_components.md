@@ -4,7 +4,7 @@ You also can change how to process the image and how to get the image files thro
 To change this, simply set it on `ImagePickerComponentHolder`
 
 ```java
-ImagePickerCompomnentHolder.getInstance()
+ImagePickerComponentHolder.getInstance()
 	.setImageLoader(new GrayScaleImageLoader())
 	.setImageFileLoader(new WebpImageFileLoader())
 ```	
