@@ -65,7 +65,8 @@ ImagePicker.create(this)
 	.toolbarFolderTitle("Folder") // folder selection title
 	.toolbarImageTitle("Tap to select") // image selection title
 	.toolbarArrowColor(Color.BLACK) // Toolbar 'up' arrow color
-	.includeVideo(true) // Show video on image picker 
+	.includeVideo(true) // Show video on image picker
+	.onlyVideo(onlyVideo) // include video (false by default)
 	.single() // single mode
 	.multi() // multi mode (default mode)
 	.limit(10) // max images can be selected (99 by default)
