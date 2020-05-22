@@ -1,15 +1,16 @@
 package com.esafirm.imagepicker.view;
 
 import android.content.Context;
-import androidx.annotation.StringRes;
-import androidx.core.view.ViewCompat;
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.StringRes;
+import androidx.core.view.ViewCompat;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 
 import com.esafirm.imagepicker.R;
 
@@ -37,18 +38,19 @@ public class SnackBarView extends RelativeLayout {
 
     private void init() {
         View.inflate(getContext(), R.layout.ef_imagepikcer_snackbar, this);
-        if (isInEditMode()) {
-            return;
-        }
-        int height = getContext().getResources().getDimensionPixelSize(R.dimen.ef_height_snackbar);
-        ViewCompat.setTranslationY(this, height);
-        ViewCompat.setAlpha(this, 0f);
 
         int padding = getContext().getResources().getDimensionPixelSize(R.dimen.ef_spacing_double);
         setPadding(padding, 0, padding, 0);
 
-        txtCaption = (TextView) findViewById(R.id.ef_snackbar_txt_bottom_caption);
-        btnAction = (Button) findViewById(R.id.ef_snackbar_btn_action);
+        if (isInEditMode()) {
+            return;
+        }
+        int height = getContext().getResources().getDimensionPixelSize(R.dimen.ef_height_snackbar);
+        setTranslationY(height);
+        setAlpha(0f);
+
+        txtCaption = findViewById(R.id.ef_snackbar_txt_bottom_caption);
+        btnAction = findViewById(R.id.ef_snackbar_btn_action);
     }
 
     public void setText(@StringRes int textResId) {
@@ -61,17 +63,7 @@ public class SnackBarView extends RelativeLayout {
         }
 
         btnAction.setText(textId);
-        btnAction.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                hide(new Runnable() {
-                    @Override
-                    public void run() {
-                        onClickListener.onClick(v);
-                    }
-                });
-            }
-        });
+        btnAction.setOnClickListener(v -> hide(() -> onClickListener.onClick(v)));
     }
 
     public void show(@StringRes int textResId, OnClickListener onClickListener) {

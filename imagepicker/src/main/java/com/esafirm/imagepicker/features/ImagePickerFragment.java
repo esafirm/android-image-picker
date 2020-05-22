@@ -392,7 +392,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
      */
     private void openAppSettings() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.fromParts("package", getActivity().getPackageName(), null));
+                Uri.fromParts("package", requireActivity().getPackageName(), null));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -543,9 +543,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     }
 
     @Override
-    public void showError(Throwable throwable) {
+    public void showError(@Nullable Throwable throwable) {
         String message = "Unknown Error";
-        if (throwable != null && throwable instanceof NullPointerException) {
+        if (throwable instanceof NullPointerException) {
             message = "Images do not exist";
         }
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();

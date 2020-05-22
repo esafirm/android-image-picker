@@ -1,5 +1,8 @@
 ## Changelog
 
+**2.3.1**
+- Fix un-clickable Snackbar button
+
 **2.3.0**
 - Fix failed to create image file [#262](https://github.com/esafirm/android-image-picker/pull/262)
 - Handle external scoped [Glide issue](https://github.com/bumptech/glide/issues/3896)
