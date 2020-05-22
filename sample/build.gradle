@@ -34,8 +34,8 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation "com.github.bumptech.glide:glide:4.9.0"
-    implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation "com.github.bumptech.glide:glide:4.10.0"
+    implementation "androidx.appcompat:appcompat:1.1.0"
 
     /* Development */
     implementation project(':rximagepicker')

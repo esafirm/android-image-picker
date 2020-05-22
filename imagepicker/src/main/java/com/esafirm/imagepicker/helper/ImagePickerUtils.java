@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+
+import androidx.annotation.Nullable;
 
 import com.esafirm.imagepicker.features.ImagePickerSavePath;
 import com.esafirm.imagepicker.model.Image;
@@ -19,20 +22,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.Nullable;
-
 public class ImagePickerUtils {
 
     public static boolean isStringEmpty(@Nullable String str) {
         return str == null || str.length() == 0;
     }
 
-    public static File createImageFile(ImagePickerSavePath savePath) {
+    private static File createFileInDirectory(ImagePickerSavePath savePath, Context context) {
         // External sdcard location
         final String path = savePath.getPath();
-        File mediaStorageDir = savePath.isFullPath()
-                ? new File(path)
-                : new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), path);
+
+        File mediaStorageDir;
+        if (savePath.isFullPath()) {
+            mediaStorageDir = new File(path);
+        } else {
+            File parent = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                    ? context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    : Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            mediaStorageDir = new File(parent, path);
+        }
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -41,6 +49,13 @@ public class ImagePickerUtils {
                 return null;
             }
         }
+
+        return mediaStorageDir;
+    }
+
+    public static File createImageFile(ImagePickerSavePath savePath, Context context) {
+        final File mediaStorageDir = createFileInDirectory(savePath, context);
+        if (mediaStorageDir == null) return null;
 
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(new Date());
