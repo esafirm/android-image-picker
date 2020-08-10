@@ -1,6 +1,5 @@
 package com.esafirm.imagepicker.features.fileloader;
 
-import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
