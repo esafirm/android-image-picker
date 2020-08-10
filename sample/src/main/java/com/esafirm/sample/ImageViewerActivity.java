@@ -7,14 +7,14 @@ import android.os.Parcelable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.esafirm.imagepicker.model.Image;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class ImageViewerActivity extends AppCompatActivity {
     @Override
@@ -28,7 +28,7 @@ public class ImageViewerActivity extends AppCompatActivity {
         for (Image image : images) {
             ImageView imageView = new ImageView(this);
             Glide.with(imageView)
-                    .load(image.getPath())
+                    .load(image.getUri())
                     .into(imageView);
 
             linearLayout.addView(imageView);
