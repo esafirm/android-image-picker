@@ -1,7 +1,10 @@
 package com.esafirm.imagepicker.model;
 
+import android.content.ContentUris;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 
 public class Image implements Parcelable {
 
@@ -25,6 +28,10 @@ public class Image implements Parcelable {
 
     public String getPath() {
         return path;
+    }
+
+    public Uri getUri() {
+        return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
     }
 
     @Override
