@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -106,7 +107,21 @@ public class ImagePickerUtils {
                 ? URLConnection.guessContentTypeFromName(image.getPath())
                 : MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         return mimeType != null && mimeType.startsWith("video");
+    }
 
+    public static String getVideoDurationLabel(Context context, File file) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(context, Uri.fromFile(file));
+        Long duration = Long.parseLong(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+        retriever.release();
+        long second = (duration / 1000) % 60;
+        long minute = (duration / (1000 * 60)) % 60;
+        long hour = (duration / (1000 * 60 * 60)) % 24;
+        if (hour > 0) {
+            return String.format("%02d:%02d:%02d", hour, minute, second);
+        } else {
+            return String.format("%02d:%02d", minute, second);
+        }
     }
 
     private static String getExtension(String path) {

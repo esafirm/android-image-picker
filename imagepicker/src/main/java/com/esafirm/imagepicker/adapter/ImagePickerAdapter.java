@@ -19,7 +19,9 @@ import com.esafirm.imagepicker.listeners.OnImageClickListener;
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener;
 import com.esafirm.imagepicker.model.Image;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.ImageViewHolder> {
@@ -29,6 +31,8 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
 
     private OnImageClickListener itemClickListener;
     private OnImageSelectedListener imageSelectedListener;
+
+    private HashMap<Long, String> videoDurationHolder = new HashMap<>();
 
     public ImagePickerAdapter(Context context, ImageLoader imageLoader,
                               List<Image> selectedImages, OnImageClickListener itemClickListener) {
@@ -67,7 +71,12 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
             showFileTypeIndicator = true;
         }
         if (ImagePickerUtils.isVideoFormat(image)) {
-            fileTypeLabel = getContext().getResources().getString(R.string.ef_video);
+            if (videoDurationHolder.containsKey(image.getId())) {
+                fileTypeLabel = videoDurationHolder.get(image.getId());
+            } else {
+                fileTypeLabel = ImagePickerUtils.getVideoDurationLabel(getContext(), new File(image.getPath()));
+                videoDurationHolder.put(image.getId(), fileTypeLabel);
+            }
             showFileTypeIndicator = true;
         }
         viewHolder.fileTypeIndicator.setText(fileTypeLabel);
