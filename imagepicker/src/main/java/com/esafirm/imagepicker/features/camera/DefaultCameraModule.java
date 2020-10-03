@@ -1,9 +1,12 @@
 package com.esafirm.imagepicker.features.camera;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 
 import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
@@ -30,18 +33,31 @@ public class DefaultCameraModule implements CameraModule, Serializable {
     public Intent getCameraIntent(Context context, BaseConfig config) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File imageFile = ImagePickerUtils.createImageFile(config.getImageDirectory(), context);
-        if (imageFile != null) {
-            Context appContext = context.getApplicationContext();
-            String providerName = String.format(Locale.ENGLISH, "%s%s", appContext.getPackageName(), ".imagepicker.provider");
-            Uri uri = FileProvider.getUriForFile(appContext, providerName, imageFile);
-            currentImagePath = "file:" + imageFile.getAbsolutePath();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, imageFile.getName());
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            ContentResolver resolver = context.getContentResolver();
+            Uri collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+            Uri uri = resolver.insert(collection,values);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-
-            ImagePickerUtils.grantAppPermission(context, intent, uri);
-
             return intent;
+        }else{
+            if (imageFile != null) {
+                Context appContext = context.getApplicationContext();
+                String providerName = String.format(Locale.ENGLISH, "%s%s", appContext.getPackageName(), ".imagepicker.provider");
+                Uri uri = FileProvider.getUriForFile(appContext, providerName, imageFile);
+                currentImagePath = "file:" + imageFile.getAbsolutePath();
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+                ImagePickerUtils.grantAppPermission(context, intent, uri);
+
+                return intent;
+            }
+
+            return null;
         }
-        return null;
     }
 
     @Override

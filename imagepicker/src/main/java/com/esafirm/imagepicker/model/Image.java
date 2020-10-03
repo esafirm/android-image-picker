@@ -1,13 +1,20 @@
 package com.esafirm.imagepicker.model;
 
+import android.content.ContentUris;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
+
+import com.esafirm.imagepicker.helper.ImagePickerUtils;
 
 public class Image implements Parcelable {
 
-    private long id;
-    private String name;
-    private String path;
+    private final long id;
+    private final String name;
+    private final String path;
+
+    private Uri uriHolder;
 
     public Image(long id, String name, String path) {
         this.id = id;
@@ -25,6 +32,16 @@ public class Image implements Parcelable {
 
     public String getPath() {
         return path;
+    }
+
+    public Uri getUri() {
+        if (uriHolder == null) {
+            Uri contentUri = ImagePickerUtils.isVideoFormat(this)
+                    ? MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    : MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            uriHolder = ContentUris.withAppendedId(contentUri, id);
+        }
+        return uriHolder;
     }
 
     @Override

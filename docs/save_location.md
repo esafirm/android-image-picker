@@ -5,7 +5,7 @@ By default, ImagePicker will try to save the image generated from camera to `Env
 You can change the directory name only by using:
 
 ```java
-ImagePicker.create(activity).imageDiretory(String dirName)
+ImagePicker.create(activity).imageDirectory(String dirName)
 ``` 
 
 Or you can change the full path of the save location by using:

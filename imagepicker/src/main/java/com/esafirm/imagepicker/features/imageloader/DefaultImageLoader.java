@@ -1,8 +1,5 @@
 package com.esafirm.imagepicker.features.imageloader;
 
-import android.content.ContentUris;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -16,13 +13,8 @@ public class DefaultImageLoader implements ImageLoader {
 
     @Override
     public void loadImage(Image image, ImageView imageView, ImageType imageType) {
-        Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, image.getId());
-
-        if (ImagePickerUtils.isVideoFormat(image))
-        uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, image.getId());
-
         Glide.with(imageView.getContext())
-                .load(uri)
+                .load(image.getUri())
                 .apply(RequestOptions
                         .placeholderOf(imageType == ImageType.FOLDER
                                 ? R.drawable.ef_folder_placeholder
