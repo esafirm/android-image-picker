@@ -18,7 +18,7 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Build with Gradle
+      - name: Cache Gradle
         env:
           cache-name: gradle
         with:
@@ -28,4 +28,5 @@ jobs:
             gradle-${{ hashFiles('build.gradle') }}
             gradle-
 
+      - name: Build with Gradle
         run: ./gradlew build
