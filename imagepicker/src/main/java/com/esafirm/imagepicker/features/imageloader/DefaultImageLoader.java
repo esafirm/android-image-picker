@@ -6,7 +6,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.R;
-import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.model.Image;
 
 public class DefaultImageLoader implements ImageLoader {
