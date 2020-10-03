@@ -2,14 +2,17 @@ package com.esafirm.sample
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.ImagePickerFragment
 import com.esafirm.imagepicker.features.ImagePickerInteractionListener
@@ -157,7 +160,13 @@ class CustomUIActivity : AppCompatActivity() {
             if (imageList.isEmpty()) {
                 photo_preview.setImageDrawable(null)
             } else {
-                photo_preview.setImageBitmap(BitmapFactory.decodeFile(imageList[imageList.size - 1].path))
+                val imageUri = imageList[imageList.size - 1].uri
+                val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, imageUri))
+                } else {
+                    MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+                }
+                photo_preview.setImageBitmap(bitmap)
             }
         }
 
