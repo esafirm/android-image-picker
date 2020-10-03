@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
+import androidx.core.content.FileProvider;
+
 import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
 import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.helper.ImagePickerUtils;
@@ -18,8 +20,6 @@ import com.esafirm.imagepicker.model.ImageFactory;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Locale;
-
-import androidx.core.content.FileProvider;
 
 public class DefaultCameraModule implements CameraModule, Serializable {
 
