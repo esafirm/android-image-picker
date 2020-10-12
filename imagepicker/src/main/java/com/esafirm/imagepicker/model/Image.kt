@@ -29,7 +29,7 @@ open class Image : Parcelable {
                 } else {
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 }
-                
+
                 ContentUris.withAppendedId(contentUri, id).also {
                     uriHolder = it
                 }
