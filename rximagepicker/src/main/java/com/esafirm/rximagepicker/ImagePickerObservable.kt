@@ -12,7 +12,7 @@ import rx.subscriptions.Subscriptions
 
 class ImagePickerObservable(
     context: Context,
-    private val imagePicker: ImagePicker
+    private val builder: ImagePicker
 ) : Observable.OnSubscribe<List<Image?>?> {
 
     private val context: Context = context.applicationContext
@@ -35,7 +35,7 @@ class ImagePickerObservable(
     }
 
     private fun startImagePicker() {
-        val bundle = imagePicker.getIntent(context).extras
+        val bundle = builder.getIntent(context).extras
         val intent = getStartIntent(context, bundle).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)

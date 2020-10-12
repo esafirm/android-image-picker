@@ -29,7 +29,7 @@ class ShadowActivity : Activity() {
         /* > Stater */
         /* --------------------------------------------------- */
         @JvmStatic
-        fun getStartIntent(context: Context?, bundle: Bundle?): Intent {
+        fun getStartIntent(context: Context, bundle: Bundle?): Intent {
             return Intent(context, ShadowActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
                 bundle?.let { putExtras(it) }
