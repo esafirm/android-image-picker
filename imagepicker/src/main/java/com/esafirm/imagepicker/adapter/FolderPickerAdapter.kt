@@ -32,14 +32,14 @@ class FolderPickerAdapter(
     }
 
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
-        folders.getOrNull(position)?.let { folder ->
-            imageLoader.loadImage(folder.images.first(), holder.image, ImageType.FOLDER)
+        val folder = folders.getOrNull(position) ?: return
 
-            holder.apply {
-                name.text = folder.folderName
-                number.text = folder.images.size.toString()
-                itemView.setOnClickListener { folderClickListener?.onFolderClick(folder) }
-            }
+        imageLoader.loadImage(folder.images.first(), holder.image, ImageType.FOLDER)
+
+        holder.apply {
+            name.text = folder.folderName
+            number.text = folder.images.size.toString()
+            itemView.setOnClickListener { folderClickListener?.onFolderClick(folder) }
         }
     }
 

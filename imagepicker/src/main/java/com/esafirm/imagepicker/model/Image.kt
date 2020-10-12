@@ -10,12 +10,12 @@ import com.esafirm.imagepicker.helper.ImagePickerUtils
 
 open class Image : Parcelable {
     val id: Long
-    val name: String?
-    val path: String?
+    val name: String
+    val path: String
 
     private var uriHolder: Uri? = null
 
-    constructor(id: Long, name: String?, path: String?) {
+    constructor(id: Long, name: String, path: String) {
         this.id = id
         this.name = name
         this.path = path
@@ -50,10 +50,10 @@ open class Image : Parcelable {
     /* --------------------------------------------------- */
     /* > Parcelable */
     /* --------------------------------------------------- */
-    protected constructor(`in`: Parcel) {
-        id = `in`.readLong()
-        name = `in`.readString()
-        path = `in`.readString()
+    protected constructor(inParcel: Parcel) {
+        id = inParcel.readLong()
+        name = inParcel.readString() ?: ""
+        path = inParcel.readString() ?: ""
     }
 
     override fun describeContents() = 0
