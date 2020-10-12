@@ -2,6 +2,7 @@ package com.esafirm.imagepicker.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Interpolator
@@ -20,8 +21,8 @@ class SnackBarView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : RelativeLayout(context, attrs, defStyle) {
 
-    private var txtCaption: TextView? = null
-    private var btnAction: Button? = null
+    private val txtCaption get() = ef_snackbar_txt_bottom_caption
+    private val btnAction get() = ef_snackbar_btn_action
 
     init {
         inflate(context, R.layout.ef_imagepikcer_snackbar, this)
@@ -32,8 +33,6 @@ class SnackBarView @JvmOverloads constructor(
             val height = context.resources.getDimensionPixelSize(R.dimen.ef_height_snackbar)
             translationY = height.toFloat()
             alpha = 0f
-            txtCaption = ef_snackbar_txt_bottom_caption
-            btnAction = ef_snackbar_btn_action
         }
     }
 
@@ -49,7 +48,6 @@ class SnackBarView @JvmOverloads constructor(
         }
     }
 
-    @SuppressLint("Recycle")
     fun show(@StringRes textResId: Int, onClickListener: OnClickListener) {
         setText(textResId)
         setOnActionClickListener(0, onClickListener)
@@ -64,7 +62,6 @@ class SnackBarView @JvmOverloads constructor(
         hide(null)
     }
 
-    @SuppressLint("Recycle")
     private fun hide(runnable: Runnable?) {
         ViewCompat.animate(this)
             .translationY(height.toFloat())

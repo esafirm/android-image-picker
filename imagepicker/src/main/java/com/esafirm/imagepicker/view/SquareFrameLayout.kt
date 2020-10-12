@@ -4,9 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 
-/**
- * Created by hoanglam on 9/5/16.
- */
 class SquareFrameLayout(
     context: Context,
     attrs: AttributeSet? = null,
