@@ -2,24 +2,21 @@ package com.esafirm.imagepicker.model
 
 import android.content.ContentUris
 import android.net.Uri
-import android.os.Parcel
 import android.os.Parcelable
-import android.os.Parcelable.Creator
 import android.provider.MediaStore
 import com.esafirm.imagepicker.helper.ImagePickerUtils
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
-open class Image : Parcelable {
-    val id: Long
-    val name: String
-    val path: String
+@Parcelize
+open class Image(
+    val id: Long,
+    val name: String,
+    val path: String,
+) : Parcelable {
 
+    @IgnoredOnParcel
     private var uriHolder: Uri? = null
-
-    constructor(id: Long, name: String, path: String) {
-        this.id = id
-        this.name = name
-        this.path = path
-    }
 
     val uri: Uri
         get() {
@@ -43,38 +40,6 @@ open class Image : Parcelable {
             else -> {
                 val image = o as Image
                 image.path.equals(path, ignoreCase = true)
-            }
-        }
-    }
-
-    /* --------------------------------------------------- */
-    /* > Parcelable */
-    /* --------------------------------------------------- */
-    protected constructor(inParcel: Parcel) {
-        id = inParcel.readLong()
-        name = inParcel.readString() ?: ""
-        path = inParcel.readString() ?: ""
-    }
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.apply {
-            writeLong(id)
-            writeString(name)
-            writeString(path)
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Creator<Image?> = object : Creator<Image?> {
-            override fun createFromParcel(source: Parcel): Image? {
-                return Image(source)
-            }
-
-            override fun newArray(size: Int): Array<Image?> {
-                return arrayOfNulls(size)
             }
         }
     }
