@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private val action = { images: List<Image>? -> printImages(images) }
     private val imagePickerObservable: Observable<List<Image>>
-        get() = RxImagePicker.getInstance()
+        get() = RxImagePicker.instance
             .start(this, ImagePicker.create(this))// max images can be selected (99 by default)
 
     private val imagePicker: ImagePicker

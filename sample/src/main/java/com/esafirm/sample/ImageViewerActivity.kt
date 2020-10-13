@@ -18,9 +18,9 @@ class ImageViewerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_image_viewer)
 
         val linearLayout = findViewById<LinearLayout>(R.id.container)
-        val images: List<Image> = intent.getParcelableArrayListExtra("images")
+        val images: List<Image>? = intent.getParcelableArrayListExtra("images")
 
-        images.forEach {
+        images?.forEach {
             val imageView = ImageView(this)
             Glide.with(imageView)
                 .load(it.uri)
