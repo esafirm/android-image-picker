@@ -31,3 +31,13 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: LS-ing
+        run: ls
+
+      - name: Run tests on Firebase Test Lab
+        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+        with:
+          arg-spec: 'tests.yml:android-pixel-4'
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
