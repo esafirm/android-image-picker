@@ -1,0 +1,9 @@
+android-pixel-4:
+  type: instrumentation
+  app: sample/build/outputs/apk/debug/sample-debug.apk
+  test: sample/build/outputs/apk/androidTest/debug/sample-debug-androidTest.apk
+  device:
+    - model: flame
+      version: 29
+      locale: 'en'
+      orientation: portrait
