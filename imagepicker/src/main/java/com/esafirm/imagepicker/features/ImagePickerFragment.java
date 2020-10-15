@@ -523,7 +523,8 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     @Override
     public void finishPickImages(List<Image> images) {
         Intent data = new Intent();
-        data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, (ArrayList<? extends Parcelable>) images);
+        ArrayList<Image> imageArrayList = new ArrayList<>(images);
+        data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, imageArrayList);
         interactionListener.finishPickImages(data);
     }
 
