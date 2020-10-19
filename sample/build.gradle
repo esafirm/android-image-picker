@@ -53,4 +53,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test:rules:$runnerVersion"
+    androidTestImplementation('com.schibsted.spain:barista:3.7.0') {
+        exclude group: 'org.jetbrains.kotlin'
+    }
 }
