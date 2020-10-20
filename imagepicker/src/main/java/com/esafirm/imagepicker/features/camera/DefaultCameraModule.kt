@@ -19,6 +19,7 @@ import java.io.Serializable
 class DefaultCameraModule : CameraModule, Serializable {
 
     private var currentImagePath: String? = null
+    private var currentUri: String? = null
 
     /**
      * Helper function to get camera Intent without config
@@ -28,6 +29,8 @@ class DefaultCameraModule : CameraModule, Serializable {
     }
 
     override fun getCameraIntent(context: Context, config: BaseConfig): Intent? {
+        prepareForNewIntent()
+
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val imageFile = ImagePickerUtils.createImageFile(config.imageDirectory, context)
 
@@ -36,9 +39,15 @@ class DefaultCameraModule : CameraModule, Serializable {
             val uri = createCameraUri(appContext, imageFile)
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
             ImagePickerUtils.grantAppPermission(context, intent, uri)
+            currentUri = uri.toString()
             return intent
         }
         return null
+    }
+
+    private fun prepareForNewIntent() {
+        currentImagePath = null
+        currentUri = null
     }
 
     private fun createCameraUri(appContext: Context, imageFile: File): Uri? {
@@ -67,14 +76,19 @@ class DefaultCameraModule : CameraModule, Serializable {
 
         val imageUri = Uri.parse(currentImagePath)
         if (imageUri != null) {
-            MediaScannerConnection.scanFile(context.applicationContext, arrayOf(imageUri.path), null) { path: String?, uri: Uri ->
+            MediaScannerConnection.scanFile(context.applicationContext, arrayOf(imageUri.path), null) { path: String?, uri: Uri? ->
                 IpLogger.getInstance().d("File $path was scanned successfully: $uri")
 
                 if (path == null) {
                     IpLogger.getInstance().d("This should not happen, go back to Immediate implementation")
                 }
+                if (uri == null) {
+                    IpLogger.getInstance().d("scanFile is failed. Uri is null")
+                }
+
                 val finalPath = path ?: currentImagePath!!
-                imageReadyListener.onImageReady(ImageFactory.singleImage(uri, finalPath))
+                val finalUri = uri ?: Uri.parse(currentUri)
+                imageReadyListener.onImageReady(ImageFactory.singleImage(finalUri, finalPath))
                 ImagePickerUtils.revokeAppPermission(context, imageUri)
             }
         }
