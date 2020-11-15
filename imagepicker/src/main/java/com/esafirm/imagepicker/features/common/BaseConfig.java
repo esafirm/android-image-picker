@@ -10,6 +10,7 @@ public class BaseConfig implements Parcelable {
 
     private ImagePickerSavePath savePath;
     private ReturnMode returnMode;
+    private boolean saveImage;
 
     public ReturnMode getReturnMode() {
         return returnMode;
@@ -35,6 +36,14 @@ public class BaseConfig implements Parcelable {
         this.returnMode = returnMode;
     }
 
+    public boolean isSaveImage() {
+        return saveImage;
+    }
+
+    public void setSaveImage(boolean saveImage) {
+        this.saveImage = saveImage;
+    }
+
     public BaseConfig() {
     }
 
@@ -47,12 +56,14 @@ public class BaseConfig implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.savePath, flags);
         dest.writeInt(this.returnMode == null ? -1 : this.returnMode.ordinal());
+        dest.writeByte(this.saveImage ? (byte) 1 : (byte) 0);
     }
 
     protected BaseConfig(Parcel in) {
         this.savePath = in.readParcelable(ImagePickerSavePath.class.getClassLoader());
         int tmpReturnMode = in.readInt();
         this.returnMode = tmpReturnMode == -1 ? null : ReturnMode.values()[tmpReturnMode];
+        this.saveImage = in.readByte() != 0;
     }
 
     public static final Creator<BaseConfig> CREATOR = new Creator<BaseConfig>() {
