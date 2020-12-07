@@ -30,30 +30,30 @@ public class DefaultImageFileLoader implements ImageFileLoader {
     }
 
     private final String[] projection = new String[]{
-        MediaStore.Images.Media._ID,
-        MediaStore.Images.Media.DISPLAY_NAME,
-        MediaStore.Images.Media.DATA,
-        MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
     @Override
     public void loadDeviceImages(
-        final boolean isFolderMode,
-        final boolean onlyVideo,
-        final boolean includeVideo,
-        final boolean includeAnimation,
-        final ArrayList<File> excludedImages,
-        final ImageLoaderListener listener
+            final boolean isFolderMode,
+            final boolean onlyVideo,
+            final boolean includeVideo,
+            final boolean includeAnimation,
+            final ArrayList<File> excludedImages,
+            final ImageLoaderListener listener
     ) {
         getExecutorService().execute(
-            new ImageLoadRunnable(
-                isFolderMode,
-                onlyVideo,
-                includeVideo,
-                includeAnimation,
-                excludedImages,
-                listener
-            ));
+                new ImageLoadRunnable(
+                        isFolderMode,
+                        onlyVideo,
+                        includeVideo,
+                        includeAnimation,
+                        excludedImages,
+                        listener
+                ));
     }
 
     @Override
@@ -81,12 +81,12 @@ public class DefaultImageFileLoader implements ImageFileLoader {
         private ImageLoaderListener listener;
 
         ImageLoadRunnable(
-            boolean isFolderMode,
-            boolean onlyVideo,
-            boolean includeVideo,
-            boolean includeAnimation,
-            ArrayList<File> excludedImages,
-            ImageLoaderListener listener
+                boolean isFolderMode,
+                boolean onlyVideo,
+                boolean includeVideo,
+                boolean includeAnimation,
+                ArrayList<File> excludedImages,
+                ImageLoaderListener listener
         ) {
             this.isFolderMode = isFolderMode;
             this.includeVideo = includeVideo;
@@ -99,13 +99,13 @@ public class DefaultImageFileLoader implements ImageFileLoader {
         private String getQuerySelection() {
             if (onlyVideo) {
                 return MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
             }
             if (includeVideo) {
                 return MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + " OR "
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + " OR "
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
             }
             return null;
         }
@@ -120,7 +120,7 @@ public class DefaultImageFileLoader implements ImageFileLoader {
         @Override
         public void run() {
             Cursor cursor = context.getContentResolver().query(getSourceUri(), projection,
-                getQuerySelection(), null, MediaStore.Images.Media.DATE_ADDED);
+                    getQuerySelection(), null, MediaStore.Images.Media.DATE_ADDED);
 
             if (cursor == null) {
                 listener.onFailed(new NullPointerException());
