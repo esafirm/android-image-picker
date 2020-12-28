@@ -10,6 +10,13 @@
         tools:ignore="AlwaysShowAction"/>
 
     <item
+        android:id="@+id/menu_camcorder"
+        android:icon="@drawable/ef_ic_camcorder"
+        android:title="@string/ef_camera"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
+
+    <item
         android:id="@+id/menu_done"
         android:title="@string/ef_done"
         app:showAsAction="always"/>

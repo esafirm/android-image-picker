@@ -111,6 +111,16 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         fragment.startActivityForResult(intent, requestCode);
     }
 
+    void captureVideo(Fragment fragment, BaseConfig config, int requestCode) {
+        Context context = fragment.getActivity().getApplicationContext();
+        Intent intent = getCameraModule().getCamcorderIntent(fragment.getActivity(), config);
+        if (intent == null) {
+            Toast.makeText(context, context.getString(R.string.ef_error_create_image_file), Toast.LENGTH_LONG).show();
+            return;
+        }
+        fragment.startActivityForResult(intent, requestCode);
+    }
+
     void finishCaptureImage(Context context, Intent data, final BaseConfig config) {
         getCameraModule().getImage(context, data, images -> {
             if (ConfigUtils.shouldReturn(config, true)) {

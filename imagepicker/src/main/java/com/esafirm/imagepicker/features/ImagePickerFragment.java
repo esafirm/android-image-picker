@@ -435,6 +435,26 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     }
 
     /**
+     * Request for camcorder permission
+     */
+    public void captureVideoWithPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            final boolean isCameraGranted = ActivityCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+            final boolean isWriteGranted = ActivityCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+            if (isCameraGranted && isWriteGranted) {
+                captureVideo();
+            } else {
+                logger.w("Camera permission is not granted. Requesting permission");
+                requestCameraPermissions();
+            }
+        } else {
+            captureVideo();
+        }
+    }
+
+    /**
      * Start camera intent
      * Create a temporary file and pass file Uri to camera intent
      */
@@ -443,6 +463,17 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
             return;
         }
         presenter.captureImage(this, getBaseConfig(), RC_CAPTURE);
+    }
+
+    /**
+     * Start camcorder intent
+     * Create a temporary file and pass file Uri to camcorder intent
+     */
+    private void captureVideo() {
+        if (!CameraHelper.checkCameraAvailability(getActivity())) {
+            return;
+        }
+        presenter.captureVideo(this, getBaseConfig(), RC_CAPTURE);
     }
 
     private void startContentObserver() {

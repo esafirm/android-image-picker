@@ -10,6 +10,7 @@
     <string name="ef_selected">%d обрано</string>
     <string name="ef_selected_with_limit">%1$d/%2$d обрано</string>
     <string name="ef_error_create_image_file">Не вдалося створити файл</string>
+    <string name="ef_error_create_video_file">Не вдалося створити відеофайл</string>
     <string name="ef_error_no_camera">Камера недоступна</string>
     <string name="ef_error_null_cursor">Ой! Щось пішло не так!</string>
     <string name="ef_msg_empty_images">Зображень не знайдено</string>
