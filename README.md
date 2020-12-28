@@ -1,5 +1,7 @@
 # ImagePicker 
 
+Forked from: https://github.com/esafirm/android-image-picker
+
 [![CircleCI](https://circleci.com/gh/esafirm/android-image-picker.svg?style=svg)](https://circleci.com/gh/esafirm/android-image-picker)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/4618)
 
@@ -23,7 +25,7 @@ Would you help me achieving this goals?
 src="https://raw.githubusercontent.com/esafirm/android-image-picker/master/art/ss.gif" height="460" width="284"/>
 </details>
 
-## Download [![](https://jitpack.io/v/esafirm/android-image-picker.svg)](https://jitpack.io/#esafirm/android-image-picker)
+## Download [![](https://jitpack.io/v/esafirm/android-image-picker.svg)](https://jitpack.io/#AhmedDroid/android-image-picker)
 
 Add this to your project's `build.gradle`
 
@@ -39,7 +41,7 @@ And add this to your module's `build.gradle`
 
 ```groovy
 dependencies {
-	implementation 'com.github.esafirm.android-image-picker:imagepicker:x.y.z'
+	implementation 'com.github.AhmedDroid:android-image-picker:x.y.z'
 	// for experimental rx picker
 	implementation 'com.github.esafirm.android-image-picker:rximagepicker:x.y.z'
 	// If you have a problem with Glide, please use the same Glide version or simply open an issue
