@@ -49,7 +49,7 @@ dependencies {
 }
 ```
 
-change `x.y.z` to version in the [release page](https://github.com/esafirm/android-image-picker/releases)
+change `x.y.z` to version in the [release page](https://github.com/AhmedDroid/android-image-picker/releases/)
 
 # Usage
 
