@@ -25,7 +25,7 @@ Would you help me achieving this goals?
 src="https://raw.githubusercontent.com/esafirm/android-image-picker/master/art/ss.gif" height="460" width="284"/>
 </details>
 
-## Download [![](https://jitpack.io/v/esafirm/android-image-picker.svg)](https://jitpack.io/#AhmedDroid/android-image-picker)
+## Download [![](https://jitpack.io/v/AhmedDroid/android-image-picker.svg)](https://jitpack.io/#AhmedDroid/android-image-picker)
 
 Add this to your project's `build.gradle`
 
