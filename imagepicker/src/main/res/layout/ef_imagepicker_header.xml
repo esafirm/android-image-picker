@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:layout_width="match_parent"
+    android:id="@+id/header_text_view"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/ef_margin_medium"
+    android:textAllCaps="true"
+    android:textStyle="bold"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.esafirm.rximagepicker">
+          package="com.rickb.rximagepicker">
 
     <application>
         <activity
-            android:name="ShadowActivity"
+            android:name="com.rickb.rximagepicker.ShadowActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

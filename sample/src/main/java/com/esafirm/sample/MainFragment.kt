@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.esafirm.imagepicker.features.ImagePicker
-import com.esafirm.imagepicker.features.ReturnMode
+import com.rickb.imagepicker.features.ImagePicker
+import com.rickb.imagepicker.features.ReturnMode
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
