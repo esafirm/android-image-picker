@@ -102,7 +102,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         MenuItem menuDone = menu.findItem(R.id.menu_done);
         if (menuDone != null) {
             menuDone.setTitle(ConfigUtils.getDoneButtonText(this, config));
-            menuDone.setVisible(imagePickerFragment.isShowDoneButton());
+            menuDone.setEnabled(imagePickerFragment.isShowDoneButton());
         }
         return super.onPrepareOptionsMenu(menu);
     }

@@ -14,7 +14,7 @@
 
     <style name="ef_CustomToolbarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/ef_colorTextPrimary</item>
-        <item name="actionMenuTextColor">@color/ef_colorTextPrimary</item>
+        <item name="actionMenuTextColor">@color/ef_selector_done_button</item>
     </style>
 
 </resources>

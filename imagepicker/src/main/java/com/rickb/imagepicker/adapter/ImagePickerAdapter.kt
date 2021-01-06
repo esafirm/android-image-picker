@@ -30,6 +30,7 @@ class ImagePickerAdapter(
         selectedImages: List<Image>,
         private val itemClickListener: OnImageClickListener,
         private val maxTotalSizeLimit: Double?,
+        private val maxTotalSelectionsLimit: Int?,
 ) : BaseListAdapter<ImagePickerAdapter.BaseImagePickerViewHolder>(context, imageLoader) {
 
     private val items: MutableList<PickerItem> = mutableListOf()
@@ -40,6 +41,7 @@ class ImagePickerAdapter(
     private val videoDurationHolder = HashMap<Long, String?>()
 
     private var wasTotalSizeLimitReached = false
+    private var wasTotalSelectionLimitReached = false
 
     init {
         if (selectedImages.isNotEmpty()) {
@@ -131,7 +133,7 @@ class ImagePickerAdapter(
 
             val backgroundColorResId = if (isSelected) R.color.ef_black else R.color.ef_white
             alphaView.setBackgroundColor(ResourcesCompat.getColor(context.resources, backgroundColorResId, null))
-            alphaView.alpha = if (isSelected || isMaxTotalSizeReached()) 0.5f else 0f
+            alphaView.alpha = if (isSelected || isMaxTotalSizeReached() || isMaxTotalSelectionsReached()) 0.5f else 0f
 
             itemView.setOnClickListener {
                 val shouldSelect = itemClickListener.onImageClick(isSelected)
@@ -200,9 +202,6 @@ class ImagePickerAdapter(
 
     private fun addSelected(image: Image, position: Int) {
         mutateSelection {
-            if (isMaxTotalSizeReached()) {
-                return@mutateSelection
-            }
             selectedImages.add(image)
             notifyItemChanged(position)
         }
@@ -234,11 +233,18 @@ class ImagePickerAdapter(
             wasTotalSizeLimitReached = isMaxTotalSizeReached()
             notifyDataSetChanged()
         }
+        if (wasTotalSelectionLimitReached xor isMaxTotalSelectionsReached()) {
+            wasTotalSelectionLimitReached = isMaxTotalSelectionsReached()
+            notifyDataSetChanged()
+        }
     }
 
-    private fun isMaxTotalSizeReached() =
+    fun isMaxTotalSizeReached() =
             getTotalSelectedFileSize() > (maxTotalSizeLimit
                     ?: Double.MAX_VALUE) * MB_TO_BYTES_CONVERSION_MULTIPLIER
+
+    fun isMaxTotalSelectionsReached() =
+            selectedImages.size >= (maxTotalSelectionsLimit ?: Integer.MAX_VALUE)
 
     /**
      * @return the file size in bytes of all selected media together.

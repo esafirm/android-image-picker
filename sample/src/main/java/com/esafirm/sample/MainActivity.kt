@@ -61,10 +61,10 @@ class MainActivity : AppCompatActivity() {
             val isExclude = ef_switch_include_exclude.isChecked
 
             val imagePicker = ImagePicker.create(this)
-                    .language("in") // Set image picker language
+                    .language("en") // Set image picker language
                     .theme(R.style.ImagePickerTheme)
                     .showSelectionLimitBottomView(true)
-                    .totalSizeLimit(2.0)
+                    .totalSizeLimit(3.0)
                     .returnMode(if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
                     .folderMode(folderMode) // set folder mode (false by default)
                     .includeVideo(includeVideo) // include video (false by default)
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 imagePicker.origin(images) // original selected images, used in multi mode
             }
-            return imagePicker.limit(10) // max images can be selected (99 by default)
+            return imagePicker.limit(4) // max images can be selected (99 by default)
                     .showCamera(true) // show camera or not (true by default)
                     .imageDirectory("Camera") // captured image directory name ("Camera" folder by default)
                     .imageFullDirectory(Environment.getExternalStorageDirectory().path) // can be full path

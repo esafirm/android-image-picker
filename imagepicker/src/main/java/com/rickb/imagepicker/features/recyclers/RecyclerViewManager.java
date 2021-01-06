@@ -102,7 +102,7 @@ public class RecyclerViewManager {
 
         /* Init folder and image adapter */
         final ImageLoader imageLoader = ImagePickerComponentHolder.getInstance().getImageLoader();
-        imageAdapter = new ImagePickerAdapter(context, imageLoader, selectedImages, onImageClickListener, config.totalSizeLimit());
+        imageAdapter = new ImagePickerAdapter(context, imageLoader, selectedImages, onImageClickListener, config.totalSizeLimit(), config.getLimit());
         folderAdapter = new FolderPickerAdapter(context, imageLoader, bucket -> {
             foldersState = recyclerView.getLayoutManager().onSaveInstanceState();
             onFolderClickListener.onFolderClick(bucket);
@@ -151,9 +151,7 @@ public class RecyclerViewManager {
         if (useDefaultTitle) {
             return ConfigUtils.getImageTitle(context, config);
         }
-        return config.getLimit() == MAX_LIMIT
-                ? String.format(context.getString(R.string.ef_selected), imageSize)
-                : String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.getLimit());
+        return String.format(context.getString(R.string.ef_selected), imageSize);
     }
 
     /**
@@ -213,8 +211,9 @@ public class RecyclerViewManager {
 
     public boolean selectImage(boolean isSelected) {
         if (config.getMode() == MODE_MULTIPLE) {
-            if (imageAdapter.getSelectedImages().size() >= config.getLimit() && !isSelected) {
-                Toast.makeText(context, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
+            boolean isSelectionAmountLimitReached = imageAdapter.getSelectedImages().size() >= config.getLimit() && !isSelected;
+            boolean shouldBlockSelection = imageAdapter.isMaxTotalSizeReached() || isSelectionAmountLimitReached;
+            if (shouldBlockSelection) {
                 return false;
             }
         } else if (config.getMode() == MODE_SINGLE) {

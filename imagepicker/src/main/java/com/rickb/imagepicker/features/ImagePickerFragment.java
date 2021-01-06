@@ -216,6 +216,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
         recyclerViewManager.setTotalSizeLimitReachedListener(() -> {
             attachmentLimitMessage.setVisibility(View.VISIBLE);
+            updateTitle();
 
             // Cancel the amount selected toast so that they don't overlap.
             if (lastAmountSelectedToast != null) {
