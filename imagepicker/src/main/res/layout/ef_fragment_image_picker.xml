@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/tv_empty_images"
@@ -25,10 +26,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.esafirm.imagepicker.view.SnackBarView
+    <com.rickb.imagepicker.view.SnackBarView
         android:id="@+id/ef_snackbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ef_height_snackbar"
         android:layout_alignParentBottom="true"
         android:background="@color/ef_black_alpha_aa" />
+
+    <TextView
+        android:id="@+id/tv_attachment_limit"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ef_bg_black_rounded"
+        android:drawableStart="@drawable/ic_attention_white"
+        android:drawableLeft="@drawable/ic_attention_white"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/ef_margin_medium"
+        android:drawablePadding="@dimen/ef_margin_large"
+        android:layout_margin="@dimen/ef_margin_large"
+        android:textColor="@color/ef_white"
+        tools:text="@string/ef_attachment_size_limit_exceeded"/>
 </RelativeLayout>

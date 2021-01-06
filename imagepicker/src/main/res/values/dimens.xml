@@ -18,4 +18,6 @@
     <dimen name="ef_height_snackbar">80dp</dimen>
 
     <dimen name="ef_toolbar_elevation">6dp</dimen>
+
+    <dimen name="ef_corner_rounding_default">9dp</dimen>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.esafirm.imagepicker">
+    package="com.rickb.imagepicker">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -8,12 +8,12 @@
 
     <application>
         <activity
-            android:name="com.esafirm.imagepicker.features.ImagePickerActivity"
+            android:name="com.rickb.imagepicker.features.ImagePickerActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ef_AppTheme" />
 
         <provider
-            android:name=".helper.ImagePickerFileProvider"
+            android:name="com.rickb.imagepicker.helper.ImagePickerFileProvider"
             android:authorities="${applicationId}.imagepicker.provider"
             android:exported="false"
             android:grantUriPermissions="true">

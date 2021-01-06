@@ -6,10 +6,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
-import com.esafirm.imagepicker.features.*
-import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader
-import com.esafirm.imagepicker.model.Image
-import com.esafirm.rximagepicker.RxImagePicker
+import com.rickb.imagepicker.features.*
+import com.rickb.imagepicker.features.imageloader.DefaultImageLoader
+import com.rickb.imagepicker.model.Image
+import com.rickb.rximagepicker.RxImagePicker
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.Observable
 
@@ -25,11 +25,10 @@ class MainActivity : AppCompatActivity() {
         button_pick_image_rx.setOnClickListener { imagePickerObservable.forEach(action) }
         button_intent.setOnClickListener { startWithIntent() }
         button_camera.setOnClickListener { captureImage() }
-        button_custom_ui.setOnClickListener { startCustomUI() }
         button_launch_fragment.setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, MainFragment())
-                .commitAllowingStateLoss()
+                    .replace(R.id.fragment_container, MainFragment())
+                    .commitAllowingStateLoss()
         }
     }
 
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private val action = { images: List<Image>? -> printImages(images) }
     private val imagePickerObservable: Observable<List<Image>>
         get() = RxImagePicker.instance
-            .start(this, ImagePicker.create(this))// max images can be selected (99 by default)
+                .start(this, ImagePicker.create(this))// max images can be selected (99 by default)
 
     private val imagePicker: ImagePicker
         get() {
@@ -62,22 +61,20 @@ class MainActivity : AppCompatActivity() {
             val isExclude = ef_switch_include_exclude.isChecked
 
             val imagePicker = ImagePicker.create(this)
-                .language("in") // Set image picker language
-                .theme(R.style.ImagePickerTheme)
-                .returnMode(if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
-                .folderMode(folderMode) // set folder mode (false by default)
-                .includeVideo(includeVideo) // include video (false by default)
-                .onlyVideo(onlyVideo) // include video (false by default)
-                .toolbarArrowColor(Color.RED) // set toolbar arrow up color
-                .toolbarFolderTitle("Folder") // folder selection title
-                .toolbarImageTitle("Tap to select") // image selection title
-                .toolbarDoneButtonText("DONE") // done button text
+                    .language("in") // Set image picker language
+                    .theme(R.style.ImagePickerTheme)
+                    .showSelectionLimitBottomView(true)
+                    .totalSizeLimit(2.0)
+                    .returnMode(if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
+                    .folderMode(folderMode) // set folder mode (false by default)
+                    .includeVideo(includeVideo) // include video (false by default)
+                    .onlyVideo(onlyVideo) // include video (false by default)
+                    .toolbarArrowColor(Color.RED) // set toolbar arrow up color
+                    .toolbarFolderTitle("Folder") // folder selection title
+                    .toolbarImageTitle("Tap to select") // image selection title
+                    .toolbarDoneButtonText("DONE") // done button text
 
-            ImagePickerComponentHolder.getInstance().imageLoader = if (useCustomImageLoader) {
-                GrayscaleImageLoader()
-            } else {
-                DefaultImageLoader()
-            }
+            ImagePickerComponentHolder.getInstance().imageLoader = DefaultImageLoader()
 
             if (isSingleMode) {
                 imagePicker.single()
@@ -90,9 +87,9 @@ class MainActivity : AppCompatActivity() {
                 imagePicker.origin(images) // original selected images, used in multi mode
             }
             return imagePicker.limit(10) // max images can be selected (99 by default)
-                .showCamera(true) // show camera or not (true by default)
-                .imageDirectory("Camera") // captured image directory name ("Camera" folder by default)
-                .imageFullDirectory(Environment.getExternalStorageDirectory().path) // can be full path
+                    .showCamera(true) // show camera or not (true by default)
+                    .imageDirectory("Camera") // captured image directory name ("Camera" folder by default)
+                    .imageFullDirectory(Environment.getExternalStorageDirectory().path) // can be full path
         }
 
     private fun startWithIntent() {
@@ -101,13 +98,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun start() {
         imagePicker.start() // start image picker activity with request code
-    }
-
-    private fun startCustomUI() {
-        val config = imagePicker.config
-        val intent = Intent(this, CustomUIActivity::class.java)
-        intent.putExtra(ImagePickerConfig::class.java.simpleName, config)
-        startActivityForResult(intent, IpCons.RC_IMAGE_PICKER)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
