@@ -2,6 +2,7 @@ package com.rickb.imagepicker.adapter
 
 import android.content.Context
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -9,8 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.rickb.imagepicker.R
+import com.rickb.imagepicker.extension.debounceClicks
 import com.rickb.imagepicker.features.imageloader.ImageLoader
 import com.rickb.imagepicker.features.imageloader.ImageType
 import com.rickb.imagepicker.helper.ImagePickerUtils
@@ -18,6 +21,8 @@ import com.rickb.imagepicker.listeners.OnImageClickListener
 import com.rickb.imagepicker.listeners.OnImageSelectedListener
 import com.rickb.imagepicker.listeners.OnTotalSizeLimitReachedListener
 import com.rickb.imagepicker.model.Image
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.ef_imagepicker_header.view.*
 import kotlinx.android.synthetic.main.ef_imagepicker_item_image.view.*
@@ -32,6 +37,10 @@ class ImagePickerAdapter(
         private val maxTotalSizeLimit: Double?,
         private val maxTotalSelectionsLimit: Int?,
 ) : BaseListAdapter<ImagePickerAdapter.BaseImagePickerViewHolder>(context, imageLoader) {
+    /**
+     * Disposables that will be disposed of during [.onDestroy]
+     */
+    protected var disposables = CompositeDisposable()
 
     private val items: MutableList<PickerItem> = mutableListOf()
     val selectedImages: MutableList<Image> = mutableListOf()
@@ -41,12 +50,22 @@ class ImagePickerAdapter(
     private val videoDurationHolder = HashMap<Long, String?>()
 
     private var wasTotalSizeLimitReached = false
-    private var wasTotalSelectionLimitReached = false
+    var wasTotalSelectionLimitReached = false
 
     init {
         if (selectedImages.isNotEmpty()) {
             this.selectedImages.addAll(selectedImages)
         }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        disposables = CompositeDisposable()
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        disposables.dispose()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseImagePickerViewHolder {
@@ -135,7 +154,7 @@ class ImagePickerAdapter(
             alphaView.setBackgroundColor(ResourcesCompat.getColor(context.resources, backgroundColorResId, null))
             alphaView.alpha = if (isSelected || isMaxTotalSizeReached() || isMaxTotalSelectionsReached()) 0.5f else 0f
 
-            itemView.setOnClickListener {
+            itemView.debounceClicks().observe {
                 val shouldSelect = itemClickListener.onImageClick(isSelected)
 
                 if (isSelected) {
@@ -228,7 +247,7 @@ class ImagePickerAdapter(
         } else {
             onTotalSizeLimitReachedListener?.onTotalSizeLimitReached()
         }
-        // Update all items after a selection change, only if the total limit was reached and not is not anymore OR the total limit was not reached but now is.
+        // Update all items after a selection change, only if the total limit was reached and now is not anymore OR the total limit was not reached but now is.
         if (wasTotalSizeLimitReached xor isMaxTotalSizeReached()) {
             wasTotalSizeLimitReached = isMaxTotalSizeReached()
             notifyDataSetChanged()
@@ -278,6 +297,17 @@ class ImagePickerAdapter(
     }
 
     open class BaseImagePickerViewHolder(itemView: View) : ViewHolder(itemView)
+
+    /**
+     * Subscribe and add to disposables.
+     *
+     * @param consumer the consumer
+     */
+    fun <T> Observable<T>.observe(consumer: (T) -> Unit) {
+        disposables.add(subscribe(consumer, {
+            Log.e(this.javaClass.simpleName, it.message ?: "error received while observing.")
+        }))
+    }
 
     companion object {
         // 1 MB = 1048576 Bytes.

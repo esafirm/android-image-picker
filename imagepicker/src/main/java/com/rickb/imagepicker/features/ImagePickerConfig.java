@@ -39,6 +39,8 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     private Double totalSizeLimit;
 
+    private Double amountOfMBsAlreadyInUse;
+
     public ImagePickerConfig() {
     }
 
@@ -190,6 +192,15 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         return this.totalSizeLimit;
     }
 
+
+    public void amountOfMBsAlreadyInUse(Double shouldShow) {
+        this.amountOfMBsAlreadyInUse = shouldShow;
+    }
+
+    public Double getAmountOfMBsAlreadyInUse() {
+        return this.amountOfMBsAlreadyInUse;
+    }
+
     /* --------------------------------------------------- */
     /* > Parcelable */
     /* --------------------------------------------------- */
@@ -217,6 +228,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         dest.writeInt(this.limit);
         dest.writeInt(this.theme);
         dest.writeDouble(this.totalSizeLimit);
+        dest.writeDouble(this.amountOfMBsAlreadyInUse);
         dest.writeByte(this.folderMode ? (byte) 1 : (byte) 0);
         dest.writeByte(this.includeVideo ? (byte) 1 : (byte) 0);
         dest.writeByte(this.onlyVideo ? (byte) 1 : (byte) 0);
@@ -243,6 +255,7 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         this.limit = in.readInt();
         this.theme = in.readInt();
         this.totalSizeLimit = in.readDouble();
+        this.amountOfMBsAlreadyInUse = in.readDouble();
         this.folderMode = in.readByte() != 0;
         this.includeVideo = in.readByte() != 0;
         this.onlyVideo = in.readByte() != 0;

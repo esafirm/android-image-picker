@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-
     <FrameLayout
         android:id="@+id/ef_imagepicker_fragment_placeholder"
         android:layout_width="match_parent"

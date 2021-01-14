@@ -211,6 +211,15 @@ public abstract class ImagePicker {
         return this;
     }
 
+    /**
+     * @param megaBytes Amount of MB's that were already used.
+     * @return This ImagePicker instance
+     */
+    public ImagePicker amountOfMBsAlreadyInUse(double megaBytes) {
+        config.amountOfMBsAlreadyInUse(megaBytes);
+        return this;
+    }
+
     public ImagePickerConfig getConfig() {
         LocaleManager.setLanguage(config.getLanguage());
         return ConfigUtils.checkConfig(config);

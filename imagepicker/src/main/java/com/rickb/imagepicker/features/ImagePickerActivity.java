@@ -9,6 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.rickb.imagepicker.R;
 import com.rickb.imagepicker.features.cameraonly.CameraOnlyConfig;
 import com.rickb.imagepicker.helper.ConfigUtils;
@@ -20,17 +25,17 @@ import com.rickb.imagepicker.model.Image;
 
 import java.util.List;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
-
 public class ImagePickerActivity extends AppCompatActivity implements ImagePickerInteractionListener, ImagePickerView {
 
     private ActionBar actionBar;
     private ImagePickerFragment imagePickerFragment;
 
     private ImagePickerConfig config;
+
+    /**
+     * the done button menu item
+     */
+    MenuItem menuDone;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -101,6 +106,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
 
         MenuItem menuDone = menu.findItem(R.id.menu_done);
         if (menuDone != null) {
+            this.menuDone = menuDone;
             menuDone.setTitle(ConfigUtils.getDoneButtonText(this, config));
             menuDone.setEnabled(imagePickerFragment.isShowDoneButton());
         }

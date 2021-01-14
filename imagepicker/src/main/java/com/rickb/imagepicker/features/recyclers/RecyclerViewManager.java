@@ -102,7 +102,7 @@ public class RecyclerViewManager {
 
         /* Init folder and image adapter */
         final ImageLoader imageLoader = ImagePickerComponentHolder.getInstance().getImageLoader();
-        imageAdapter = new ImagePickerAdapter(context, imageLoader, selectedImages, onImageClickListener, config.totalSizeLimit(), config.getLimit());
+        imageAdapter = new ImagePickerAdapter(context, imageLoader, selectedImages, onImageClickListener, config.totalSizeLimit() - config.getAmountOfMBsAlreadyInUse(), config.getLimit());
         folderAdapter = new FolderPickerAdapter(context, imageLoader, bucket -> {
             foldersState = recyclerView.getLayoutManager().onSaveInstanceState();
             onFolderClickListener.onFolderClick(bucket);
@@ -226,8 +226,8 @@ public class RecyclerViewManager {
 
     public boolean isShowDoneButton() {
         return !isDisplayingFolderView()
+                && !imageAdapter.isMaxTotalSizeReached()
                 && !imageAdapter.getSelectedImages().isEmpty()
                 && (config.getReturnMode() != ReturnMode.ALL && config.getReturnMode() != ReturnMode.GALLERY_ONLY);
     }
-
 }
