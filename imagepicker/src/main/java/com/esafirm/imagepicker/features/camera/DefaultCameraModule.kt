@@ -94,11 +94,11 @@ class DefaultCameraModule : CameraModule, Serializable {
         }
     }
 
-    override fun removeImage() {
+    override fun removeImage(context: Context) {
         val imagePath = currentImagePath ?: return
         val file = File(imagePath)
         if (file.exists()) {
-            file.delete()
+            context.deleteFile(file.name)
         }
     }
 }

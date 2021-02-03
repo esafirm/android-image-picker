@@ -121,8 +121,8 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         });
     }
 
-    void abortCaptureImage() {
-        getCameraModule().removeImage();
+    void abortCaptureImage(Context context) {
+        getCameraModule().removeImage(context);
     }
 
     private void runOnUiIfAvailable(Runnable runnable) {

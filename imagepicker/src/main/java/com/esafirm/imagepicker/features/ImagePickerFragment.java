@@ -408,7 +408,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
             if (resultCode == RESULT_OK) {
                 presenter.finishCaptureImage(getActivity(), data, getBaseConfig());
             } else if (resultCode == RESULT_CANCELED && isCameraOnly) {
-                presenter.abortCaptureImage();
+                presenter.abortCaptureImage(requireContext());
                 interactionListener.cancel();
             }
         }
