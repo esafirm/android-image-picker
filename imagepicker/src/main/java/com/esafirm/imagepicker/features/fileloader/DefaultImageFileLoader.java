@@ -14,6 +14,7 @@ import com.esafirm.imagepicker.model.Image;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,8 @@ public class DefaultImageFileLoader implements ImageFileLoader {
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
             MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.DATE_ADDED
     };
 
     @Override
@@ -129,8 +131,10 @@ public class DefaultImageFileLoader implements ImageFileLoader {
 
             List<Image> temp = new ArrayList<>();
             Map<String, Folder> folderMap = null;
+            Map<String, Integer> folderDateMap = null;
             if (isFolderMode) {
                 folderMap = new HashMap<>();
+                folderDateMap = new HashMap<>();
             }
 
             if (cursor.moveToLast()) {
@@ -155,6 +159,7 @@ public class DefaultImageFileLoader implements ImageFileLoader {
                     long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
                     String name = cursor.getString(cursor.getColumnIndex(projection[1]));
                     String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
+                    int dateAdded = cursor.getInt(cursor.getColumnIndex(projection[4]));
 
                     Image image = new Image(id, name, path);
 
@@ -167,6 +172,10 @@ public class DefaultImageFileLoader implements ImageFileLoader {
                             folderMap.put(bucket, folder);
                         }
                         folder.getImages().add(image);
+                        int lastDate = folderDateMap.getOrDefault(bucket, 0);
+                        if (dateAdded > lastDate) {
+                            folderDateMap.put(bucket, dateAdded);
+                        }
                     }
 
                 } while (cursor.moveToPrevious());
@@ -176,7 +185,19 @@ public class DefaultImageFileLoader implements ImageFileLoader {
             /* Convert HashMap to ArrayList if not null */
             List<Folder> folders = null;
             if (folderMap != null) {
-                folders = new ArrayList<>(folderMap.values());
+                ArrayList<Map.Entry<String, Integer>> times =
+                    new ArrayList<Map.Entry<String, Integer>>(folderDateMap.entrySet());
+                times.sort(new Comparator<Map.Entry<String, Integer>>() {
+                  @Override
+                  public int compare(Map.Entry<String, Integer> lhs, Map.Entry<String, Integer> rhs) {
+                      // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                      return lhs.getValue() > rhs.getValue() ? -1 : (lhs.getValue() < rhs.getValue()) ? 1 : 0;
+                  }
+                });
+                folders = new ArrayList<>();
+                for (int i = 0; i < times.size(); i++) {
+                  folders.add(folderMap.get(times.get(i).getKey()));
+                }
             }
 
             listener.onImageLoaded(temp, folders);
