@@ -35,6 +35,7 @@ jobs:
 
       - name: Run tests on Firebase Test Lab
         uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+        if: github.ref == 'refs/heads/master'
         with:
           arg-spec: 'firebasetest.yml:android-pixel-4'
         env:
