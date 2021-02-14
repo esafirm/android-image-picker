@@ -1,4 +1,4 @@
-package com.esafirm.imagepicker.features;
+package com.esafirm.imagepicker.features
 
 /**
  * Define the ImagePicker return behaviour
@@ -7,9 +7,6 @@ package com.esafirm.imagepicker.features;
  * CAMERA_ONLY -> When image is picked with Camera, dismiss then deliver the result
  * GALLERY_ONLY -> Same as CAMERA_ONLY but with Gallery
  */
-public enum ReturnMode {
-    NONE,
-    ALL,
-    CAMERA_ONLY,
-    GALLERY_ONLY
+enum class ReturnMode {
+    NONE, ALL, CAMERA_ONLY, GALLERY_ONLY
 }
