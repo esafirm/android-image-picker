@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
-import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
+import com.esafirm.imagepicker.features.camera.CameraModule;
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
 import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.fileloader.DefaultImageFileLoader;
@@ -59,7 +59,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     private static final int RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
     private static final int RC_PERMISSION_REQUEST_CAMERA = 24;
 
-    private IpLogger logger = IpLogger.getInstance();
+    private final IpLogger logger = IpLogger.INSTANCE;
 
     private RecyclerView recyclerView;
     private SnackBarView snackBarView;
@@ -110,7 +110,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         }
 
         if (savedInstanceState != null) {
-            presenter.setCameraModule((DefaultCameraModule) savedInstanceState.getSerializable(STATE_KEY_CAMERA_MODULE));
+            presenter.setCameraModule((CameraModule) savedInstanceState.getSerializable(STATE_KEY_CAMERA_MODULE));
         }
 
         if (isCameraOnly) {
@@ -234,7 +234,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
      * 2. Update item decoration
      * 3. Update title
      */
-    void setImageAdapter(List<Image> images) {
+    void setImageAdapter(@Nullable List<? extends Image> images) {
         recyclerViewManager.setImageAdapter(images);
         updateTitle();
     }
@@ -521,7 +521,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     /* --------------------------------------------------- */
 
     @Override
-    public void finishPickImages(List<Image> images) {
+    public void finishPickImages(@Nullable List<? extends Image> images) {
         Intent data = new Intent();
         ArrayList<Image> imageArrayList = new ArrayList<>(images);
         data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, imageArrayList);
@@ -534,7 +534,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     }
 
     @Override
-    public void showFetchCompleted(List<Image> images, List<Folder> folders) {
+    public void showFetchCompleted(@Nullable List<? extends Image> images, @Nullable List<Folder> folders) {
         ImagePickerConfig config = getImagePickerConfig();
         if (config != null && config.isFolderMode()) {
             setFolderAdapter(folders);

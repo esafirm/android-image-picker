@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import android.widget.Toast;
-
 import com.esafirm.imagepicker.R;
+import com.esafirm.imagepicker.features.camera.CameraModule;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
 import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.common.BasePresenter;
@@ -26,14 +26,14 @@ import java.util.List;
 class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
 
     private DefaultImageFileLoader imageLoader;
-    private DefaultCameraModule cameraModule;
+    private CameraModule cameraModule;
     private Handler main = new Handler(Looper.getMainLooper());
 
     ImagePickerPresenter(DefaultImageFileLoader imageLoader) {
         this.imageLoader = imageLoader;
     }
 
-    DefaultCameraModule getCameraModule() {
+    CameraModule getCameraModule() {
         if (cameraModule == null) {
             cameraModule = new DefaultCameraModule();
         }
@@ -41,7 +41,7 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
     }
 
     /* Set the camera module in onRestoreInstance */
-    void setCameraModule(DefaultCameraModule cameraModule) {
+    void setCameraModule(CameraModule cameraModule) {
         this.cameraModule = cameraModule;
     }
 

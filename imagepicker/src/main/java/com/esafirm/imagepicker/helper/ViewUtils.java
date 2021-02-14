@@ -3,9 +3,9 @@ package com.esafirm.imagepicker.helper;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.core.content.ContextCompat;
 import android.view.View;
-import android.view.ViewTreeObserver;
+
+import androidx.core.content.ContextCompat;
 
 import com.esafirm.imagepicker.R;
 
@@ -21,16 +21,5 @@ public class ViewUtils {
             backResourceId = R.drawable.ef_ic_arrow_back;
         }
         return ContextCompat.getDrawable(context.getApplicationContext(), backResourceId);
-    }
-
-    public static void onPreDraw(final View view, final Runnable runnable) {
-        view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                view.getViewTreeObserver().removeOnPreDrawListener(this);
-                runnable.run();
-                return false;
-            }
-        });
     }
 }

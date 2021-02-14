@@ -46,7 +46,7 @@ public class ImagePickerUtils {
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                IpLogger.getInstance().d("Oops! Failed create " + path);
+                IpLogger.INSTANCE.d("Oops! Failed create " + path);
                 return null;
             }
         }

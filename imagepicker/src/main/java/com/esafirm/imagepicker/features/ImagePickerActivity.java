@@ -9,6 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
 import com.esafirm.imagepicker.helper.ConfigUtils;
@@ -18,12 +23,9 @@ import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 
-import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
+import java.util.List;
 
 public class ImagePickerActivity extends AppCompatActivity implements ImagePickerInteractionListener, ImagePickerView {
 
@@ -46,7 +48,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         /* This should not happen */
         Intent intent = getIntent();
         if (intent == null || intent.getExtras() == null) {
-            IpLogger.getInstance().e("This should not happen. Please open an issue!");
+            IpLogger.INSTANCE.e("This should not happen. Please open an issue!");
             finish();
             return;
         }
@@ -169,7 +171,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     @Override
-    public void selectionChanged(List<Image> imageList) {
+    public void selectionChanged(@Nullable List<? extends Image> imageList) {
         // Do nothing when the selection changes.
     }
 
@@ -189,7 +191,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     @Override
-    public void showFetchCompleted(List<Image> images, List<Folder> folders) {
+    public void showFetchCompleted(@Nullable List<? extends Image> images, @Nullable List<Folder> folders) {
         imagePickerFragment.showFetchCompleted(images, folders);
     }
 
@@ -209,7 +211,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     }
 
     @Override
-    public void finishPickImages(List<Image> images) {
+    public void finishPickImages(@Nullable List<? extends Image> images) {
         imagePickerFragment.finishPickImages(images);
     }
 }

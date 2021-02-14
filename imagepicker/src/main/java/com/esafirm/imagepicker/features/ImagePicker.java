@@ -33,7 +33,7 @@ public abstract class ImagePicker {
 
         public ImagePickerWithActivity(Activity activity) {
             this.activity = activity;
-            init(activity);
+            init();
         }
 
         @Override
@@ -53,7 +53,7 @@ public abstract class ImagePicker {
 
         public ImagePickerWithFragment(Fragment fragment) {
             this.fragment = fragment;
-            init(fragment.requireContext());
+            init();
         }
 
         @Override
@@ -71,8 +71,8 @@ public abstract class ImagePicker {
     /* > Stater */
     /* --------------------------------------------------- */
 
-    public void init(Context context) {
-        config = ImagePickerConfigFactory.createDefault(context);
+    public void init() {
+        config = ImagePickerConfigFactory.createDefault();
     }
 
     public static ImagePickerWithActivity create(Activity activity) {
@@ -193,7 +193,7 @@ public abstract class ImagePicker {
     }
 
     public ImagePicker enableLog(boolean isEnable) {
-        IpLogger.getInstance().setEnable(isEnable);
+        IpLogger.INSTANCE.setEnable(isEnable);
         return this;
     }
 

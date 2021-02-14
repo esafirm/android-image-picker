@@ -14,9 +14,8 @@ import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.helper.UriUtils
 import com.esafirm.imagepicker.model.ImageFactory
 import java.io.File
-import java.io.Serializable
 
-class DefaultCameraModule : CameraModule, Serializable {
+class DefaultCameraModule : CameraModule {
 
     private var currentImagePath: String? = null
     private var currentUri: String? = null
@@ -25,7 +24,7 @@ class DefaultCameraModule : CameraModule, Serializable {
      * Helper function to get camera Intent without config
      */
     fun getCameraIntent(context: Context): Intent? {
-        return getCameraIntent(context, ImagePickerConfigFactory.createDefault(context))
+        return getCameraIntent(context, ImagePickerConfigFactory.createDefault())
     }
 
     override fun getCameraIntent(context: Context, config: BaseConfig): Intent? {
@@ -68,7 +67,7 @@ class DefaultCameraModule : CameraModule, Serializable {
         checkNotNull(imageReadyListener) { "OnImageReadyListener must not be null" }
 
         if (currentImagePath == null) {
-            IpLogger.getInstance().w("currentImagePath null. " +
+            IpLogger.w("currentImagePath null. " +
                 "This happen if you haven't call #getCameraIntent() or the activity is being recreated")
             imageReadyListener.onImageReady(null)
             return
@@ -77,13 +76,13 @@ class DefaultCameraModule : CameraModule, Serializable {
         val imageUri = Uri.parse(currentImagePath)
         if (imageUri != null) {
             MediaScannerConnection.scanFile(context.applicationContext, arrayOf(imageUri.path), null) { path: String?, uri: Uri? ->
-                IpLogger.getInstance().d("File $path was scanned successfully: $uri")
+                IpLogger.d("File $path was scanned successfully: $uri")
 
                 if (path == null) {
-                    IpLogger.getInstance().d("This should not happen, go back to Immediate implementation")
+                    IpLogger.d("This should not happen, go back to Immediate implementation")
                 }
                 if (uri == null) {
-                    IpLogger.getInstance().d("scanFile is failed. Uri is null")
+                    IpLogger.d("scanFile is failed. Uri is null")
                 }
 
                 val finalPath = path ?: currentImagePath!!

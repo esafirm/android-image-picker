@@ -1,7 +1,5 @@
 package com.esafirm.imagepicker.features;
 
-import android.content.Context;
-
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
 
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ public class ImagePickerConfigFactory {
         return config;
     }
 
-    public static ImagePickerConfig createDefault(Context context) {
+    public static ImagePickerConfig createDefault() {
         ImagePickerConfig config = new ImagePickerConfig();
         config.setMode(IpCons.MODE_MULTIPLE);
         config.setLimit(IpCons.MAX_LIMIT);

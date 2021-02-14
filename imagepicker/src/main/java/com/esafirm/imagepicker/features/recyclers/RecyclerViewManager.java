@@ -5,6 +5,10 @@ import android.content.res.Configuration;
 import android.os.Parcelable;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
@@ -23,9 +27,6 @@ import com.esafirm.imagepicker.view.GridSpacingItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.esafirm.imagepicker.features.IpCons.MAX_LIMIT;
 import static com.esafirm.imagepicker.features.IpCons.MODE_MULTIPLE;
@@ -138,7 +139,7 @@ public class RecyclerViewManager {
                 : String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.getLimit());
     }
 
-    public void setImageAdapter(List<Image> images) {
+    public void setImageAdapter(@Nullable List<? extends Image> images) {
         imageAdapter.setData(images);
         setItemDecoration(imageColumns);
         recyclerView.setAdapter(imageAdapter);
