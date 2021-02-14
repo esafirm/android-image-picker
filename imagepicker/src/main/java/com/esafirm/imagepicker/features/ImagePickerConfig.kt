@@ -6,7 +6,6 @@ import com.esafirm.imagepicker.features.common.BaseConfig
 import com.esafirm.imagepicker.model.Image
 import kotlinx.android.parcel.Parcelize
 import java.io.File
-import java.util.*
 
 @Parcelize
 class ImagePickerConfig(
@@ -24,25 +23,18 @@ class ImagePickerConfig(
     var isShowCamera: Boolean = false,
 ) : BaseConfig(), Parcelable {
 
-    var selectedImages: ArrayList<Image>? = null
-    var excludedImages: ArrayList<File?>? = null
+    var selectedImages: List<Image>? = null
+    var excludedImages: List<File>? = null
         private set
 
     @Transient
     var language: String? = null
 
-    fun setExcludedImages(excludedImages: ArrayList<Image>?) {
-        if (excludedImages != null && excludedImages.isNotEmpty()) {
-            this.excludedImages = ArrayList()
-            for (image in excludedImages) {
-                this.excludedImages!!.add(File(image.path))
-            }
-        } else {
-            this.excludedImages = null
-        }
+    fun setExcludedImages(excludedImages: List<Image>) {
+        this.excludedImages = excludedImages.map { File(it.path) }
     }
 
-    fun setExcludedImageFiles(excludedImages: ArrayList<File?>?) {
+    fun setExcludedImageFiles(excludedImages: List<File>?) {
         this.excludedImages = excludedImages
     }
 

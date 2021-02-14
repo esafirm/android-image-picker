@@ -8,6 +8,7 @@ import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import com.esafirm.imagepicker.features.*
 import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader
+import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.model.Image
 import com.esafirm.rximagepicker.RxImagePicker
 import kotlinx.android.synthetic.main.activity_main.*
@@ -73,11 +74,14 @@ class MainActivity : AppCompatActivity() {
                 .toolbarImageTitle("Tap to select") // image selection title
                 .toolbarDoneButtonText("DONE") // done button text
 
-            ImagePickerComponentHolder.getInstance().imageLoader = if (useCustomImageLoader) {
-                GrayscaleImageLoader()
-            } else {
-                DefaultImageLoader()
-            }
+            ImagePickerComponentsHolder.setInternalComponent(object : DefaultImagePickerComponents(this) {
+                override val imageLoader: ImageLoader
+                    get() = if (useCustomImageLoader) {
+                        GrayscaleImageLoader()
+                    } else {
+                        DefaultImageLoader()
+                    }
+            })
 
             if (isSingleMode) {
                 imagePicker.single()

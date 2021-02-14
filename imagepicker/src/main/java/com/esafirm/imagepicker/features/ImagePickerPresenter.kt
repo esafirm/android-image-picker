@@ -20,8 +20,7 @@ import java.io.File
 
 internal class ImagePickerPresenter(private val imageLoader: DefaultImageFileLoader) : BasePresenter<ImagePickerView?>() {
 
-    /* Set the camera module in onRestoreInstance */
-    lateinit var cameraModule: CameraModule
+    private val cameraModule: CameraModule = ImagePickerComponentsHolder.cameraModule
 
     private val main = Handler(Looper.getMainLooper())
     fun abortLoad() {
@@ -35,7 +34,7 @@ internal class ImagePickerPresenter(private val imageLoader: DefaultImageFileLoa
         val includeVideo = config.isIncludeVideo
         val onlyVideo = config.isOnlyVideo
         val includeAnimation = config.isIncludeAnimation
-        val excludedImages = config.excludedImages
+        val excludedImages = config.excludedImages ?: emptyList()
 
         runOnUi { showLoading(true) }
 

@@ -13,7 +13,7 @@ open class BaseConfig : Parcelable {
 
     var returnMode: ReturnMode? = null
 
-    var saveImage: Boolean = true
+    var isSaveImage: Boolean = true
 
     fun setSavePath(savePath: ImagePickerSavePath?) {
         imageDirectory = savePath

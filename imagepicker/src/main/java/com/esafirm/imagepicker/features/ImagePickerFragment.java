@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.features.camera.CameraHelper;
-import com.esafirm.imagepicker.features.camera.CameraModule;
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
 import com.esafirm.imagepicker.features.common.BaseConfig;
 import com.esafirm.imagepicker.features.fileloader.DefaultImageFileLoader;
@@ -50,7 +49,6 @@ import static android.app.Activity.RESULT_OK;
 import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
 
 public class ImagePickerFragment extends Fragment implements ImagePickerView {
-    private static final String STATE_KEY_CAMERA_MODULE = "Key.CameraModule";
     private static final String STATE_KEY_RECYCLER = "Key.Recycler";
     private static final String STATE_KEY_SELECTED_IMAGES = "Key.SelectedImages";
 
@@ -107,10 +105,6 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                     "ImagePickerInteractionListener. This will be set automatically if the " +
                     "activity implements ImagePickerInteractionListener, and can be set manually " +
                     "with fragment.setInteractionListener(listener).");
-        }
-
-        if (savedInstanceState != null) {
-            presenter.setCameraModule((CameraModule) savedInstanceState.getSerializable(STATE_KEY_CAMERA_MODULE));
         }
 
         if (isCameraOnly) {
@@ -182,7 +176,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         snackBarView = rootView.findViewById(R.id.ef_snackbar);
     }
 
-    private void setupRecyclerView(ImagePickerConfig config, ArrayList<Image> selectedImages) {
+    private void setupRecyclerView(ImagePickerConfig config, List<Image> selectedImages) {
         recyclerViewManager = new RecyclerViewManager(
                 recyclerView,
                 config,
@@ -219,8 +213,6 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(STATE_KEY_CAMERA_MODULE, presenter.getCameraModule());
-
         if (!isCameraOnly) {
             outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager.getRecyclerState());
             outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, (ArrayList<? extends Parcelable>)
