@@ -34,7 +34,7 @@ class DefaultCameraModule : CameraModule, Serializable {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val imageFile = ImagePickerUtils.createImageFile(config.imageDirectory, context)
 
-        if (imageFile != null) {
+        if (config.isSaveImage && imageFile != null) {
             val appContext = context.applicationContext
             val uri = createCameraUri(appContext, imageFile)
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
