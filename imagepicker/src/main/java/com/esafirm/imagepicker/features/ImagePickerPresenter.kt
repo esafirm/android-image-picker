@@ -70,9 +70,9 @@ internal class ImagePickerPresenter(
         }
     }
 
-    fun captureImage(fragment: Fragment, config: BaseConfig?, requestCode: Int) {
-        val context = fragment.activity!!.applicationContext
-        val intent = cameraModule.getCameraIntent(fragment.activity!!, config!!)
+    fun captureImage(fragment: Fragment, config: BaseConfig, requestCode: Int) {
+        val context = fragment.requireContext().applicationContext
+        val intent = cameraModule.getCameraIntent(fragment.requireContext(), config)
         if (intent == null) {
             Toast.makeText(context, context.getString(R.string.ef_error_create_image_file), Toast.LENGTH_LONG).show()
             return

@@ -109,7 +109,7 @@ class CustomUIActivity : AppCompatActivity() {
             return true
         }
         if (id == com.esafirm.imagepicker.R.id.menu_camera) {
-            imagePickerFragment.captureImageWithPermission()
+            imagePickerFragment.captureImage()
             return true
         }
         return super.onOptionsItemSelected(item)

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
@@ -72,7 +71,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
 
         if (isCameraOnly) {
             if (savedInstanceState == null) {
-                captureImageWithPermission()
+                captureImage()
             }
             return null
         }
@@ -253,46 +252,6 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         }
     }
 
-    private fun requestCameraPermissions() {
-        logger.w("Write External permission is not granted. Requesting permission")
-        val permissions = ArrayList<String>(2)
-        if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.CAMERA)
-        }
-        if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-        if (checkForRationale(permissions)) {
-            requestPermissions(permissions.toTypedArray(), RC_PERMISSION_REQUEST_CAMERA)
-        } else {
-            val permission = ImagePickerPreferences.PREF_CAMERA_REQUESTED
-            if (!preferences.isPermissionRequested(permission)) {
-                preferences.setPermissionRequested(permission)
-                requestPermissions(permissions.toTypedArray(), RC_PERMISSION_REQUEST_CAMERA)
-            } else {
-                if (isCameraOnly) {
-                    Toast.makeText(requireActivity().applicationContext,
-                        getString(R.string.ef_msg_no_camera_permission), Toast.LENGTH_SHORT).show()
-                    interactionListener!!.cancel()
-                } else {
-                    binding!!.efSnackbar.show(R.string.ef_msg_no_camera_permission) { v: View? -> openAppSettings() }
-                }
-            }
-        }
-    }
-
-    private fun checkForRationale(permissions: List<String>): Boolean {
-        var i = 0
-        val size = permissions.size
-        while (i < size) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!, permissions[i])) {
-                return true
-            }
-            i++
-        }
-        return false
-    }
-
     /**
      * Handle permission results
      */
@@ -302,16 +261,6 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     logger.d("Write External permission granted")
                     loadData()
-                    return
-                }
-                logger.e("Permission not granted: results len = " + grantResults.size +
-                    " Result code = " + if (grantResults.isNotEmpty()) grantResults[0] else "(empty)")
-                interactionListener!!.cancel()
-            }
-            RC_PERMISSION_REQUEST_CAMERA -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    logger.d("Camera permission granted")
-                    captureImage()
                     return
                 }
                 logger.e("Permission not granted: results len = " + grantResults.size +
@@ -352,34 +301,14 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     }
 
     /**
-     * Request for camera permission
-     */
-    fun captureImageWithPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val isCameraGranted = ActivityCompat
-                .checkSelfPermission(activity!!, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-            val isWriteGranted = ActivityCompat
-                .checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-            if (isCameraGranted && isWriteGranted) {
-                captureImage()
-            } else {
-                logger.w("Camera permission is not granted. Requesting permission")
-                requestCameraPermissions()
-            }
-        } else {
-            captureImage()
-        }
-    }
-
-    /**
      * Start camera intent
      * Create a temporary file and pass file Uri to camera intent
      */
-    private fun captureImage() {
+    fun captureImage() {
         if (!checkCameraAvailability(activity!!)) {
             return
         }
-        presenter!!.captureImage(this, baseConfig, RC_CAPTURE)
+        presenter!!.captureImage(this, baseConfig!!, RC_CAPTURE)
     }
 
     override fun onDestroy() {
@@ -467,7 +396,6 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
 
         private const val RC_CAPTURE = 2000
         private const val RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23
-        private const val RC_PERMISSION_REQUEST_CAMERA = 24
 
         fun newInstance(
             config: ImagePickerConfig?,

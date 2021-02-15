@@ -24,6 +24,5 @@ class ImagePickerPreferences(private val context: Context) {
 
     companion object {
         const val PREF_WRITE_EXTERNAL_STORAGE_REQUESTED = "writeExternalRequested"
-        const val PREF_CAMERA_REQUESTED = "cameraRequested"
     }
 }

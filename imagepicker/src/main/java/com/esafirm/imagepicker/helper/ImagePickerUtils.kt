@@ -24,7 +24,11 @@ object ImagePickerUtils {
         val mediaStorageDir: File = if (savePath.isFullPath) {
             File(path)
         } else {
-            val parent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) else Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val parent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            } else {
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            }
             File(parent, path)
         }
 

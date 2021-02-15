@@ -5,6 +5,7 @@ import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.IpCons
 import com.esafirm.imagepicker.features.ReturnMode
+import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.features.common.BaseConfig
 
 object ConfigUtils {
@@ -17,6 +18,7 @@ object ConfigUtils {
     }
 
     fun shouldReturn(config: BaseConfig, isCamera: Boolean): Boolean {
+        if (config is CameraOnlyConfig) return true
         val mode = config.returnMode
         return if (isCamera) {
             mode === ReturnMode.ALL || mode === ReturnMode.CAMERA_ONLY

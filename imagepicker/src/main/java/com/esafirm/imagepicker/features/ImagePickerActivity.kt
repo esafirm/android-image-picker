@@ -100,7 +100,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
             return true
         }
         if (id == R.id.menu_camera) {
-            imagePickerFragment.captureImageWithPermission()
+            imagePickerFragment.captureImage()
             return true
         }
         return super.onOptionsItemSelected(item)
