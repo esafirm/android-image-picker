@@ -21,12 +21,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.databinding.EfFragmentImagePickerBinding
 import com.esafirm.imagepicker.features.camera.CameraHelper.checkCameraAvailability
-import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.features.fileloader.DefaultImageFileLoader
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager
 import com.esafirm.imagepicker.helper.ConfigUtils
 import com.esafirm.imagepicker.helper.ImagePickerPreferences
-import com.esafirm.imagepicker.helper.IpCrasher.openIssue
+import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
@@ -41,23 +40,21 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         ImagePickerPreferences(requireContext())
     }
 
-    private var recyclerViewManager: RecyclerViewManager? = null
-    private var presenter: ImagePickerPresenter? = null
-    private var config: ImagePickerConfig? = null
-    private var interactionListener: ImagePickerInteractionListener? = null
-
-    private val isCameraOnly by lazy {
-        arguments?.containsKey(CameraOnlyConfig::class.java.simpleName) ?: false
+    private val config: ImagePickerConfig by lazy {
+        arguments!!.getParcelable(ImagePickerConfig::class.java.simpleName)!!
     }
+
+    private lateinit var presenter: ImagePickerPresenter
+
+    private var recyclerViewManager: RecyclerViewManager? = null
+    private var interactionListener: ImagePickerInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (!isCameraOnly) {
-            lifecycle.addObserver(ContentObserverTrigger(
-                requireActivity().contentResolver,
-                this::loadData
-            ))
-        }
+        lifecycle.addObserver(ContentObserverTrigger(
+            requireActivity().contentResolver,
+            this::loadData
+        ))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -69,14 +66,6 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
                 "activity implements ImagePickerInteractionListener, and can be set manually " +
                 "with fragment.setInteractionListener(listener).")
 
-        if (isCameraOnly) {
-            if (savedInstanceState == null) {
-                captureImage()
-            }
-            return null
-        }
-
-        val config = imagePickerConfig ?: openIssue()
         // clone the inflater using the ContextThemeWrapper
         val localInflater = inflater.cloneInContext(ContextThemeWrapper(activity, config.theme))
 
@@ -110,26 +99,6 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         return view
     }
 
-    private val baseConfig get() = if (isCameraOnly) cameraOnlyConfig else imagePickerConfig
-
-    private val imagePickerConfig: ImagePickerConfig?
-        get() {
-            if (config == null) {
-                val bundle = arguments ?: openIssue()
-                val hasImagePickerConfig = bundle.containsKey(ImagePickerConfig::class.java.simpleName)
-                val hasCameraOnlyConfig = bundle.containsKey(ImagePickerConfig::class.java.simpleName)
-                if (!hasCameraOnlyConfig && !hasImagePickerConfig) {
-                    openIssue()
-                }
-                config = bundle.getParcelable(ImagePickerConfig::class.java.simpleName)
-            }
-            return config
-        }
-
-    private val cameraOnlyConfig: CameraOnlyConfig?
-        get() = arguments?.getParcelable(CameraOnlyConfig::class.java.simpleName)
-
-
     private fun createRecyclerViewManager(
         recyclerView: RecyclerView,
         config: ImagePickerConfig,
@@ -155,22 +124,18 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
 
     private fun setupComponents() {
         presenter = ImagePickerPresenter(DefaultImageFileLoader(requireContext()))
-        presenter!!.attachView(this)
+        presenter.attachView(this)
     }
 
     override fun onResume() {
         super.onResume()
-        if (!isCameraOnly) {
-            loadDataWithPermission()
-        }
+        loadDataWithPermission()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (!isCameraOnly) {
-            outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager!!.recyclerState)
-            outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager!!.selectedImages as ArrayList<out Parcelable?>)
-        }
+        outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager!!.recyclerState)
+        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager!!.selectedImages as ArrayList<out Parcelable?>)
     }
 
     /**
@@ -198,7 +163,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
      * Get all selected images then return image to caller activity
      */
     fun onDone() {
-        presenter!!.onDoneSelectImages(recyclerViewManager!!.selectedImages)
+        presenter.onDoneSelectImages(recyclerViewManager!!.selectedImages)
     }
 
     /**
@@ -224,11 +189,8 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     }
 
     private fun loadData() {
-        presenter!!.abortLoad()
-        val config = imagePickerConfig
-        if (config != null) {
-            presenter!!.loadImages(config)
-        }
+        presenter.abortLoad()
+        presenter.loadImages(config)
     }
 
     /**
@@ -292,10 +254,9 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                presenter!!.finishCaptureImage(requireContext(), data, baseConfig)
-            } else if (resultCode == Activity.RESULT_CANCELED && isCameraOnly) {
-                presenter!!.abortCaptureImage()
-                interactionListener!!.cancel()
+                presenter.finishCaptureImage(requireContext(), data, config)
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                presenter.abortCaptureImage()
             }
         }
     }
@@ -308,22 +269,19 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         if (!checkCameraAvailability(activity!!)) {
             return
         }
-        presenter!!.captureImage(this, baseConfig!!, RC_CAPTURE)
+        presenter.captureImage(this, config, RC_CAPTURE)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter?.abortLoad()
-        presenter?.detachView()
+        presenter.abortLoad()
+        presenter.detachView()
     }
 
     /**
      * @return true if the [Fragment] consume the back event
      */
     fun handleBack(): Boolean {
-        if (isCameraOnly) {
-            return false
-        }
         if (recyclerViewManager!!.handleBack()) {
             // Handled.
             updateTitle()
@@ -351,10 +309,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     /* --------------------------------------------------- */
 
     override fun finishPickImages(images: List<Image>?) {
-        val data = Intent()
-        val imageArrayList = ArrayList(images ?: emptyList())
-        data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, imageArrayList)
-        interactionListener!!.finishPickImages(data)
+        interactionListener?.finishPickImages(ImagePickerUtils.createResultIntent(images))
     }
 
     override fun showCapturedImage() {
@@ -362,8 +317,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     }
 
     override fun showFetchCompleted(images: List<Image>, folders: List<Folder>) {
-        val config = imagePickerConfig
-        if (config != null && config.isFolderMode) {
+        if (config.isFolderMode) {
             setFolderAdapter(folders)
         } else {
             setImageAdapter(images)
@@ -397,20 +351,13 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         private const val RC_CAPTURE = 2000
         private const val RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23
 
-        fun newInstance(
-            config: ImagePickerConfig?,
-            cameraOnlyConfig: CameraOnlyConfig?
-        ): ImagePickerFragment {
-            val fragment = ImagePickerFragment()
-            val args = Bundle()
-            if (config != null) {
-                args.putParcelable(ImagePickerConfig::class.java.simpleName, config)
+        fun newInstance(config: ImagePickerConfig): ImagePickerFragment {
+            val args = Bundle().apply {
+                putParcelable(ImagePickerConfig::class.java.simpleName, config)
             }
-            if (cameraOnlyConfig != null) {
-                args.putParcelable(CameraOnlyConfig::class.java.simpleName, cameraOnlyConfig)
+            return ImagePickerFragment().apply {
+                arguments = args
             }
-            fragment.arguments = args
-            return fragment
         }
     }
 }

@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.features.camera.CameraModule
-import com.esafirm.imagepicker.features.camera.OnImageReadyListener
 import com.esafirm.imagepicker.features.common.BaseConfig
 import com.esafirm.imagepicker.features.common.BasePresenter
 import com.esafirm.imagepicker.features.common.ImageLoaderListener
@@ -81,17 +80,15 @@ internal class ImagePickerPresenter(
     }
 
     fun finishCaptureImage(context: Context, data: Intent?, config: BaseConfig?) {
-        cameraModule.getImage(context, data, object : OnImageReadyListener {
-            override fun onImageReady(images: List<Image>?) {
-                runOnUi {
-                    if (ConfigUtils.shouldReturn(config!!, true)) {
-                        finishPickImages(images)
-                    } else {
-                        showCapturedImage()
-                    }
+        cameraModule.getImage(context, data) { images ->
+            runOnUi {
+                if (ConfigUtils.shouldReturn(config!!, true)) {
+                    finishPickImages(images)
+                } else {
+                    showCapturedImage()
                 }
             }
-        })
+        }
     }
 
     fun abortCaptureImage() {

@@ -63,13 +63,11 @@ class DefaultCameraModule : CameraModule {
         return UriUtils.uriForFile(appContext, imageFile)
     }
 
-    override fun getImage(context: Context, intent: Intent?, imageReadyListener: OnImageReadyListener?) {
-        checkNotNull(imageReadyListener) { "OnImageReadyListener must not be null" }
-
+    override fun getImage(context: Context, intent: Intent?, imageReadyListener: OnImageReadyListener) {
         if (currentImagePath == null) {
             IpLogger.w("currentImagePath null. " +
                 "This happen if you haven't call #getCameraIntent() or the activity is being recreated")
-            imageReadyListener.onImageReady(null)
+            imageReadyListener.invoke(null)
             return
         }
 
@@ -87,7 +85,7 @@ class DefaultCameraModule : CameraModule {
 
                 val finalPath = path ?: currentImagePath!!
                 val finalUri = uri ?: Uri.parse(currentUri)
-                imageReadyListener.onImageReady(ImageFactory.singleImage(finalUri, finalPath))
+                imageReadyListener.invoke(ImageFactory.singleImage(finalUri, finalPath))
                 ImagePickerUtils.revokeAppPermission(context, imageUri)
             }
         }

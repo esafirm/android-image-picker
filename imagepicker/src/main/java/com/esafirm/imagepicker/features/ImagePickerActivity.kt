@@ -1,18 +1,19 @@
 package com.esafirm.imagepicker.features
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.FrameLayout
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.helper.ConfigUtils
+import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger.e
 import com.esafirm.imagepicker.helper.LocaleManager
 import com.esafirm.imagepicker.helper.ViewUtils
@@ -21,9 +22,24 @@ import com.esafirm.imagepicker.model.Image
 
 class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener, ImagePickerView {
 
+    companion object {
+        private const val RC_CAMERA = 1011
+    }
+
+    private val cameraModule = ImagePickerComponentsHolder.cameraModule
+
     private var actionBar: ActionBar? = null
     private lateinit var imagePickerFragment: ImagePickerFragment
-    private var config: ImagePickerConfig? = null
+
+    private val config: ImagePickerConfig? by lazy {
+        intent.extras!!.getParcelable(ImagePickerConfig::class.java.simpleName)
+    }
+
+    private val cameraOnlyConfig: CameraOnlyConfig? by lazy {
+        intent.extras?.getParcelable(CameraOnlyConfig::class.java.simpleName)
+    }
+
+    private val isCameraOnly by lazy { cameraOnlyConfig != null }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleManager.updateResources(newBase))
@@ -40,33 +56,27 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
             finish()
             return
         }
-        config = intent.extras?.getParcelable(ImagePickerConfig::class.java.simpleName)
-        val cameraOnlyConfig: CameraOnlyConfig? = intent.extras?.getParcelable(CameraOnlyConfig::class.java.simpleName)
-        val isCameraOnly = cameraOnlyConfig != null
 
-        // TODO extract camera only function so we don't have to rely to Fragment
-        if (!isCameraOnly) {
-            setTheme(config!!.theme)
-            setContentView(R.layout.ef_activity_image_picker)
-            setupView(config!!)
-        } else {
-            setContentView(createCameraLayout())
+        if (isCameraOnly) {
+            val cameraIntent = cameraModule.getCameraIntent(this, cameraOnlyConfig!!)
+            startActivityForResult(cameraIntent, RC_CAMERA)
+            return
         }
+
+        val currentConfig = config!!
+        setTheme(currentConfig.theme)
+        setContentView(R.layout.ef_activity_image_picker)
+        setupView(currentConfig)
+
         if (savedInstanceState != null) {
             // The fragment has been restored.
             imagePickerFragment = supportFragmentManager.findFragmentById(R.id.ef_imagepicker_fragment_placeholder) as ImagePickerFragment
         } else {
-            imagePickerFragment = ImagePickerFragment.newInstance(config, cameraOnlyConfig)
+            imagePickerFragment = ImagePickerFragment.newInstance(currentConfig)
             val ft = supportFragmentManager.beginTransaction()
             ft.replace(R.id.ef_imagepicker_fragment_placeholder, imagePickerFragment)
             ft.commit()
         }
-    }
-
-    private fun createCameraLayout(): FrameLayout {
-        val frameLayout = FrameLayout(this)
-        frameLayout.id = R.id.ef_imagepicker_fragment_placeholder
-        return frameLayout
     }
 
     /**
@@ -78,10 +88,12 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.menu_camera).isVisible = config?.isShowCamera ?: true
-        menu.findItem(R.id.menu_done).apply {
-            title = ConfigUtils.getDoneButtonText(this@ImagePickerActivity, config!!)
-            isVisible = imagePickerFragment.isShowDoneButton
+        if (!isCameraOnly) {
+            menu.findItem(R.id.menu_camera).isVisible = config?.isShowCamera ?: true
+            menu.findItem(R.id.menu_done).apply {
+                title = ConfigUtils.getDoneButtonText(this@ImagePickerActivity, config!!)
+                isVisible = imagePickerFragment.isShowDoneButton
+            }
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -126,7 +138,16 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
             setHomeAsUpIndicator(arrowDrawable)
             setDisplayShowTitleEnabled(true)
         }
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_CAMERA && resultCode == Activity.RESULT_OK) {
+            cameraModule.getImage(this, data) { images ->
+                val result = ImagePickerUtils.createResultIntent(images)
+                finishPickImages(result)
+            }
+        }
     }
 
     /* --------------------------------------------------- */

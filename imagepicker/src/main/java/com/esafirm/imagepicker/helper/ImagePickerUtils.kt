@@ -10,6 +10,7 @@ import android.os.Environment
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import com.esafirm.imagepicker.features.ImagePickerSavePath
+import com.esafirm.imagepicker.features.IpCons
 import com.esafirm.imagepicker.helper.IpLogger.d
 import com.esafirm.imagepicker.model.Image
 import java.io.File
@@ -117,5 +118,12 @@ object ImagePickerUtils {
         } else {
             ""
         }
+    }
+
+    fun createResultIntent(images: List<Image>?): Intent {
+        val data = Intent()
+        val imageArrayList = ArrayList(images ?: emptyList())
+        data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, imageArrayList)
+        return data
     }
 }
