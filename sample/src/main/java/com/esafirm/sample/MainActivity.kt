@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCustomUI() {
-        val config = imagePicker.config
+        val config = imagePicker.getConfig()
         val intent = Intent(this, CustomUIActivity::class.java)
         intent.putExtra(ImagePickerConfig::class.java.simpleName, config)
         startActivityForResult(intent, IpCons.RC_IMAGE_PICKER)
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             images.clear()
-            images.addAll(ImagePicker.getImages(data))
+            images.addAll(ImagePicker.getImages(data) ?: emptyList())
             printImages(images)
             return
         }

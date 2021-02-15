@@ -21,9 +21,9 @@ class ImagePickerConfig(
     var isOnlyVideo: Boolean = false,
     var isIncludeAnimation: Boolean = false,
     var isShowCamera: Boolean = false,
+    var selectedImages: List<Image> = emptyList()
 ) : BaseConfig(), Parcelable {
 
-    var selectedImages: List<Image>? = null
     var excludedImages: List<File>? = null
         private set
 

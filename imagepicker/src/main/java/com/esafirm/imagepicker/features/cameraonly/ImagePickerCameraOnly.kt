@@ -12,12 +12,12 @@ class ImagePickerCameraOnly {
 
     private val config = ImagePickerConfigFactory.createCameraDefault()
 
-    fun imageDirectory(directory: String?): ImagePickerCameraOnly {
+    fun imageDirectory(directory: String): ImagePickerCameraOnly {
         config.setImageDirectory(directory)
         return this
     }
 
-    fun imageFullDirectory(fullPath: String?): ImagePickerCameraOnly {
+    fun imageFullDirectory(fullPath: String): ImagePickerCameraOnly {
         config.setImageFullDirectory(fullPath)
         return this
     }

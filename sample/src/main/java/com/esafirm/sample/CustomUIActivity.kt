@@ -89,7 +89,7 @@ class CustomUIActivity : AppCompatActivity() {
         }
         val menuDone = menu.findItem(com.esafirm.imagepicker.R.id.menu_done)
         if (menuDone != null) {
-            menuDone.title = ConfigUtils.getDoneButtonText(this, config)
+            menuDone.title = ConfigUtils.getDoneButtonText(this, config!!)
             menuDone.isVisible = imagePickerFragment.isShowDoneButton
         }
         return super.onPrepareOptionsMenu(menu)

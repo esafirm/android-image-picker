@@ -8,22 +8,17 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 open class BaseConfig : Parcelable {
 
-    var imageDirectory: ImagePickerSavePath? = null
-        private set
+    var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT
 
     var returnMode: ReturnMode? = null
 
     var isSaveImage: Boolean = true
 
-    fun setSavePath(savePath: ImagePickerSavePath?) {
-        imageDirectory = savePath
+    fun setImageDirectory(dirName: String) {
+        savePath = ImagePickerSavePath(dirName, false)
     }
 
-    fun setImageDirectory(dirName: String?) {
-        imageDirectory = ImagePickerSavePath(dirName!!, false)
-    }
-
-    fun setImageFullDirectory(path: String?) {
-        imageDirectory = ImagePickerSavePath(path!!, true)
+    fun setImageFullDirectory(path: String) {
+        savePath = ImagePickerSavePath(path, true)
     }
 }

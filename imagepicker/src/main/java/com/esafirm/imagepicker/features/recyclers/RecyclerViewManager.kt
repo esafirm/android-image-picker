@@ -68,8 +68,8 @@ class RecyclerViewManager(
 
     fun setupAdapters(
         selectedImages: List<Image>?,
-        onImageClickListener: OnImageClickListener,
-        onFolderClickListener: OnFolderClickListener
+        onImageClick: OnImageClickListener,
+        onFolderClick: OnFolderClickListener
     ) {
         var selectedImages = selectedImages
         if (config.mode == IpCons.MODE_SINGLE && selectedImages != null && selectedImages.size > 1) {
@@ -78,13 +78,11 @@ class RecyclerViewManager(
         /* Init folder and image adapter */
         val imageLoader = imageLoader!!
         imageAdapter = ImagePickerAdapter(context, imageLoader, selectedImages
-            ?: emptyList(), onImageClickListener)
-        folderAdapter = FolderPickerAdapter(context, imageLoader, object : OnFolderClickListener {
-            override fun onFolderClick(bucket: Folder) {
-                foldersState = recyclerView.layoutManager?.onSaveInstanceState()
-                onFolderClickListener.onFolderClick(bucket)
-            }
-        })
+            ?: emptyList(), onImageClick)
+        folderAdapter = FolderPickerAdapter(context, imageLoader) { it ->
+            foldersState = recyclerView.layoutManager?.onSaveInstanceState()
+            onFolderClick(it)
+        }
     }
 
     private fun setItemDecoration(columns: Int) {
@@ -125,7 +123,7 @@ class RecyclerViewManager(
                 return ConfigUtils.getImageTitle(context, config)
             }
             val imageSize = imageAdapter.selectedImages.size
-            val useDefaultTitle = !ImagePickerUtils.isStringEmpty(config.imageTitle) && imageSize == 0
+            val useDefaultTitle = config.imageTitle.isNullOrBlank().not() && imageSize == 0
             if (useDefaultTitle) {
                 return ConfigUtils.getImageTitle(context, config)
             }
@@ -161,7 +159,7 @@ class RecyclerViewManager(
             return imageAdapter.selectedImages
         }
 
-    fun setImageSelectedListener(listener: OnImageSelectedListener?) {
+    fun setImageSelectedListener(listener: OnImageSelectedListener) {
         checkAdapterIsInitialized()
         imageAdapter.setImageSelectedListener(listener)
     }

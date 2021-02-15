@@ -23,7 +23,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
 
     private var actionBar: ActionBar? = null
     private lateinit var imagePickerFragment: ImagePickerFragment
-    private lateinit var config: ImagePickerConfig
+    private var config: ImagePickerConfig? = null
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleManager.updateResources(newBase))
@@ -40,15 +40,15 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
             finish()
             return
         }
-        config = intent.extras?.getParcelable(ImagePickerConfig::class.java.simpleName)!!
+        config = intent.extras?.getParcelable(ImagePickerConfig::class.java.simpleName)
         val cameraOnlyConfig: CameraOnlyConfig? = intent.extras?.getParcelable(CameraOnlyConfig::class.java.simpleName)
         val isCameraOnly = cameraOnlyConfig != null
 
         // TODO extract camera only function so we don't have to rely to Fragment
         if (!isCameraOnly) {
-            setTheme(config.theme)
+            setTheme(config!!.theme)
             setContentView(R.layout.ef_activity_image_picker)
-            setupView()
+            setupView(config!!)
         } else {
             setContentView(createCameraLayout())
         }
@@ -78,9 +78,9 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.menu_camera).isVisible = config.isShowCamera
+        menu.findItem(R.id.menu_camera).isVisible = config?.isShowCamera ?: true
         menu.findItem(R.id.menu_done).apply {
-            title = ConfigUtils.getDoneButtonText(this@ImagePickerActivity, config)
+            title = ConfigUtils.getDoneButtonText(this@ImagePickerActivity, config!!)
             isVisible = imagePickerFragment.isShowDoneButton
         }
         return super.onPrepareOptionsMenu(menu)
@@ -112,7 +112,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
         }
     }
 
-    private fun setupView() {
+    private fun setupView(config: ImagePickerConfig) {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         actionBar = supportActionBar
@@ -159,7 +159,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
         imagePickerFragment.showLoading(isLoading)
     }
 
-    override fun showFetchCompleted(images: List<Image>?, folders: List<Folder?>?) {
+    override fun showFetchCompleted(images: List<Image>, folders: List<Folder>) {
         imagePickerFragment.showFetchCompleted(images, folders)
     }
 

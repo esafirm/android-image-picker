@@ -30,7 +30,7 @@ class RxImagePicker private constructor() {
         context.startActivity(intent)
     }
 
-    fun onHandleResult(images: List<Image>) {
+    fun onHandleResult(images: List<Image>?) {
         subject.onNext(images)
     }
 

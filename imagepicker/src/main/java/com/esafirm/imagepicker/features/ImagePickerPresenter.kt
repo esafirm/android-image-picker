@@ -18,7 +18,9 @@ import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import java.io.File
 
-internal class ImagePickerPresenter(private val imageLoader: DefaultImageFileLoader) : BasePresenter<ImagePickerView?>() {
+internal class ImagePickerPresenter(
+    private val imageLoader: DefaultImageFileLoader
+) : BasePresenter<ImagePickerView>() {
 
     private val cameraModule: CameraModule = ImagePickerComponentsHolder.cameraModule
 
@@ -39,10 +41,10 @@ internal class ImagePickerPresenter(private val imageLoader: DefaultImageFileLoa
         runOnUi { showLoading(true) }
 
         imageLoader.loadDeviceImages(isFolder, onlyVideo, includeVideo, includeAnimation, excludedImages, object : ImageLoaderListener {
-            override fun onImageLoaded(images: List<Image>?, folders: List<Folder>?) {
+            override fun onImageLoaded(images: List<Image>, folders: List<Folder>) {
                 runOnUi {
                     showFetchCompleted(images, folders)
-                    val isEmpty = folders?.isEmpty() ?: images?.isEmpty() ?: true
+                    val isEmpty = folders.isEmpty()
                     if (isEmpty) {
                         showEmpty()
                     } else {
@@ -78,11 +80,11 @@ internal class ImagePickerPresenter(private val imageLoader: DefaultImageFileLoa
         fragment.startActivityForResult(intent, requestCode)
     }
 
-    fun finishCaptureImage(context: Context?, data: Intent?, config: BaseConfig?) {
-        cameraModule.getImage(context!!, data, object : OnImageReadyListener {
+    fun finishCaptureImage(context: Context, data: Intent?, config: BaseConfig?) {
+        cameraModule.getImage(context, data, object : OnImageReadyListener {
             override fun onImageReady(images: List<Image>?) {
                 runOnUi {
-                    if (ConfigUtils.shouldReturn(config, true)) {
+                    if (ConfigUtils.shouldReturn(config!!, true)) {
                         finishPickImages(images)
                     } else {
                         showCapturedImage()

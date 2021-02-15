@@ -31,7 +31,7 @@ class DefaultCameraModule : CameraModule {
         prepareForNewIntent()
 
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        val imageFile = ImagePickerUtils.createImageFile(config.imageDirectory, context)
+        val imageFile = ImagePickerUtils.createImageFile(config.savePath, context)
 
         if (config.isSaveImage && imageFile != null) {
             val appContext = context.applicationContext

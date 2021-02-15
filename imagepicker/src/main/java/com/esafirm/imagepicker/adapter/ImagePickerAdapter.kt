@@ -81,7 +81,7 @@ class ImagePickerAdapter(
             fileTypeIndicator.visibility = if (showFileTypeIndicator) View.VISIBLE else View.GONE
             alphaView.alpha = if (isSelected) 0.5f else 0f
             itemView.setOnClickListener {
-                val shouldSelect = itemClickListener.onImageClick(isSelected)
+                val shouldSelect = itemClickListener(isSelected)
 
                 if (isSelected) {
                     removeSelectedImage(image, position)
@@ -130,7 +130,7 @@ class ImagePickerAdapter(
 
     private fun mutateSelection(runnable: Runnable) {
         runnable.run()
-        imageSelectedListener?.onSelectionUpdate(selectedImages)
+        imageSelectedListener?.invoke(selectedImages)
     }
 
     fun setImageSelectedListener(imageSelectedListener: OnImageSelectedListener?) {
