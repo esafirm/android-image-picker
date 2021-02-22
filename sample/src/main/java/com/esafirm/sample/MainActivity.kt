@@ -1,7 +1,6 @@
 package com.esafirm.sample
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
@@ -29,15 +28,6 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, MainFragment())
                 .commitAllowingStateLoss()
         }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == RC_CAMERA) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                captureImage()
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun captureImage() {
@@ -132,9 +122,5 @@ class MainActivity : AppCompatActivity() {
         text_view.setOnClickListener {
             ImageViewerActivity.start(this@MainActivity, images)
         }
-    }
-
-    companion object {
-        private const val RC_CAMERA = 3000
     }
 }
