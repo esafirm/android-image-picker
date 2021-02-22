@@ -34,7 +34,7 @@ import java.util.*
 class ImagePickerFragment : Fragment(), ImagePickerView {
 
     private var binding: EfFragmentImagePickerBinding? = null
-    private val logger = IpLogger
+    private var recyclerViewManager: RecyclerViewManager? = null
 
     private val preferences: ImagePickerPreferences by lazy {
         ImagePickerPreferences(requireContext())
@@ -45,9 +45,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     }
 
     private lateinit var presenter: ImagePickerPresenter
-
-    private var recyclerViewManager: RecyclerViewManager? = null
-    private var interactionListener: ImagePickerInteractionListener? = null
+    private lateinit var interactionListener: ImagePickerInteractionListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,11 +58,14 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setupComponents()
 
-        val interactionListener = this.interactionListener
-            ?: throw RuntimeException("ImagePickerFragment needs an " +
+        if (::interactionListener.isInitialized.not()) {
+            throw RuntimeException("ImagePickerFragment needs an " +
                 "ImagePickerInteractionListener. This will be set automatically if the " +
                 "activity implements ImagePickerInteractionListener, and can be set manually " +
                 "with fragment.setInteractionListener(listener).")
+        }
+
+        val interactionListener = this.interactionListener
 
         // clone the inflater using the ContextThemeWrapper
         val localInflater = inflater.cloneInContext(ContextThemeWrapper(activity, config.theme))
@@ -97,6 +98,12 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         this.recyclerViewManager = recyclerViewManager
 
         return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+        recyclerViewManager = null
     }
 
     private fun createRecyclerViewManager(
@@ -134,8 +141,8 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager!!.recyclerState)
-        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager!!.selectedImages as ArrayList<out Parcelable?>)
+        outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager?.recyclerState)
+        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager?.selectedImages as ArrayList<out Parcelable?>)
     }
 
     /**
@@ -145,17 +152,17 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
      * 3. Update title
      */
     private fun setImageAdapter(images: List<Image>) {
-        recyclerViewManager!!.setImageAdapter(images)
+        recyclerViewManager?.setImageAdapter(images)
         updateTitle()
     }
 
     private fun setFolderAdapter(folders: List<Folder>) {
-        recyclerViewManager!!.setFolderAdapter(folders)
+        recyclerViewManager?.setFolderAdapter(folders)
         updateTitle()
     }
 
     private fun updateTitle() {
-        interactionListener!!.setTitle(recyclerViewManager!!.title)
+        interactionListener.setTitle(recyclerViewManager!!.title)
     }
 
     /**
@@ -199,7 +206,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
      * If permission denied and user choose 'Never Ask Again', show snackbar with an action that navigate to app settings
      */
     private fun requestWriteExternalPermission() {
-        logger.w("Write External permission is not granted. Requesting permission")
+        IpLogger.w("Write External permission is not granted. Requesting permission")
         val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             requestPermissions(permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE)
@@ -209,7 +216,9 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
                 preferences.setPermissionRequested(permission)
                 requestPermissions(permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE)
             } else {
-                binding!!.efSnackbar.show(R.string.ef_msg_no_write_external_permission) { v: View? -> openAppSettings() }
+                binding?.efSnackbar?.show(R.string.ef_msg_no_write_external_permission) {
+                    openAppSettings()
+                }
             }
         }
     }
@@ -221,16 +230,16 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         when (requestCode) {
             RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    logger.d("Write External permission granted")
+                    IpLogger.d("Write External permission granted")
                     loadData()
                     return
                 }
-                logger.e("Permission not granted: results len = " + grantResults.size +
+                IpLogger.e("Permission not granted: results len = " + grantResults.size +
                     " Result code = " + if (grantResults.isNotEmpty()) grantResults[0] else "(empty)")
-                interactionListener!!.cancel()
+                interactionListener.cancel()
             }
             else -> {
-                logger.d("Got unexpected permission result: $requestCode")
+                IpLogger.d("Got unexpected permission result: $requestCode")
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults)
             }
         }
@@ -296,11 +305,11 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is ImagePickerInteractionListener) {
-            interactionListener = context
+            setInteractionListener(context)
         }
     }
 
-    fun setInteractionListener(listener: ImagePickerInteractionListener?) {
+    fun setInteractionListener(listener: ImagePickerInteractionListener) {
         interactionListener = listener
     }
 
@@ -309,7 +318,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     /* --------------------------------------------------- */
 
     override fun finishPickImages(images: List<Image>?) {
-        interactionListener?.finishPickImages(ImagePickerUtils.createResultIntent(images))
+        interactionListener.finishPickImages(ImagePickerUtils.createResultIntent(images))
     }
 
     override fun showCapturedImage() {
@@ -332,16 +341,20 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showLoading(isLoading: Boolean) = binding!!.run {
-        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
-        tvEmptyImages.visibility = View.GONE
+    override fun showLoading(isLoading: Boolean) {
+        binding?.run {
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
+            tvEmptyImages.visibility = View.GONE
+        }
     }
 
-    override fun showEmpty() = binding!!.run {
-        progressBar.visibility = View.GONE
-        recyclerView.visibility = View.GONE
-        tvEmptyImages.visibility = View.VISIBLE
+    override fun showEmpty() {
+        binding?.run {
+            progressBar.visibility = View.GONE
+            recyclerView.visibility = View.GONE
+            tvEmptyImages.visibility = View.VISIBLE
+        }
     }
 
     companion object {

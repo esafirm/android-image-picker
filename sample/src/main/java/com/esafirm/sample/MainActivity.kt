@@ -10,9 +10,7 @@ import com.esafirm.imagepicker.features.*
 import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader
 import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.model.Image
-import com.esafirm.rximagepicker.RxImagePicker
 import kotlinx.android.synthetic.main.activity_main.*
-import rx.Observable
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         button_pick_image.setOnClickListener { start() }
-        button_pick_image_rx.setOnClickListener { imagePickerObservable.forEach(action) }
         button_intent.setOnClickListener { startWithIntent() }
         button_camera.setOnClickListener { captureImage() }
         button_custom_ui.setOnClickListener { startCustomUI() }
@@ -47,70 +44,75 @@ class MainActivity : AppCompatActivity() {
         ImagePicker.cameraOnly().start(this)
     }
 
-    private val action = { images: List<Image>? -> printImages(images) }
-    private val imagePickerObservable: Observable<List<Image>>
-        get() = RxImagePicker.instance
-            .start(this, ImagePicker.create(this))// max images can be selected (99 by default)
+    private fun createConfig(): ImagePickerConfig {
+        val returnAfterCapture = ef_switch_return_after_capture.isChecked
+        val isSingleMode = ef_switch_single.isChecked
+        val useCustomImageLoader = ef_switch_imageloader.isChecked
+        val folderMode = ef_switch_folder_mode.isChecked
+        val includeVideo = ef_switch_include_video.isChecked
+        val onlyVideo = ef_switch_only_video.isChecked
+        val isExclude = ef_switch_include_exclude.isChecked
 
-    private val imagePicker: ImagePicker
-        get() {
-            val returnAfterCapture = ef_switch_return_after_capture.isChecked
-            val isSingleMode = ef_switch_single.isChecked
-            val useCustomImageLoader = ef_switch_imageloader.isChecked
-            val folderMode = ef_switch_folder_mode.isChecked
-            val includeVideo = ef_switch_include_video.isChecked
-            val onlyVideo = ef_switch_only_video.isChecked
-            val isExclude = ef_switch_include_exclude.isChecked
+        ImagePickerComponentsHolder.setInternalComponent(object : DefaultImagePickerComponents(this) {
+            override val imageLoader: ImageLoader
+                get() = if (useCustomImageLoader) {
+                    GrayscaleImageLoader()
+                } else {
+                    DefaultImageLoader()
+                }
+        })
 
-            val imagePicker = ImagePicker.create(this)
-                .language("in") // Set image picker language
-                .theme(R.style.ImagePickerTheme)
-                .returnMode(if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE) // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
-                .folderMode(folderMode) // set folder mode (false by default)
-                .includeVideo(includeVideo) // include video (false by default)
-                .onlyVideo(onlyVideo) // include video (false by default)
-                .toolbarArrowColor(Color.RED) // set toolbar arrow up color
-                .toolbarFolderTitle("Folder") // folder selection title
-                .toolbarImageTitle("Tap to select") // image selection title
-                .toolbarDoneButtonText("DONE") // done button text
+        return ImagePickerConfigFactory.create {
+            language = "in" // Set image picker language
+            theme = R.style.ImagePickerTheme
 
-            ImagePickerComponentsHolder.setInternalComponent(object : DefaultImagePickerComponents(this) {
-                override val imageLoader: ImageLoader
-                    get() = if (useCustomImageLoader) {
-                        GrayscaleImageLoader()
-                    } else {
-                        DefaultImageLoader()
-                    }
-            })
+            // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
+            returnMode = if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE
+
+            isFolderMode = folderMode // set folder mode (false by default)
+            isIncludeVideo = includeVideo // include video (false by default)
+            isOnlyVideo = onlyVideo // include video (false by default)
+            arrowColor = Color.RED // set toolbar arrow up color
+            folderTitle = "Folder" // folder selection title
+            imageTitle = "Tap to select" // image selection title
+            doneButtonText = "DONE" // done button text
+            limit = 10 // max images can be selected (99 by default)
+            isShowCamera = true // show camera or not (true by default)
+            setImageDirectory("Camera") // captured image directory name ("Camera" folder by default)
+            setImageFullDirectory(Environment.getExternalStorageDirectory().path) // can be full path
 
             if (isSingleMode) {
-                imagePicker.single()
+                single()
             } else {
-                imagePicker.multi() // multi mode (default mode)
+                multi() // multi mode (default mode)
             }
+
             if (isExclude) {
-                imagePicker.exclude(images) // don't show anything on this selected images
+                setExcludedImages(images) // don't show anything on this selected images
             } else {
-                imagePicker.origin(images) // original selected images, used in multi mode
+                selectedImages = images  // original selected images, used in multi mode
             }
-            return imagePicker.limit(10) // max images can be selected (99 by default)
-                .showCamera(true) // show camera or not (true by default)
-                .imageDirectory("Camera") // captured image directory name ("Camera" folder by default)
-                .imageFullDirectory(Environment.getExternalStorageDirectory().path) // can be full path
         }
+    }
 
     private fun startWithIntent() {
-        startActivityForResult(imagePicker.getIntent(this), IpCons.RC_IMAGE_PICKER)
+        val intent = createImagePickerIntent(this, createConfig())
+        startActivityForResult(intent, IpCons.RC_IMAGE_PICKER)
+    }
+
+    private val startImagePicker = registerImagePicker {
+        images.clear()
+        images.addAll(it)
+        printImages(images)
     }
 
     private fun start() {
-        imagePicker.start() // start image picker activity with request code
+        startImagePicker(createConfig())
     }
 
     private fun startCustomUI() {
-        val config = imagePicker.getConfig()
         val intent = Intent(this, CustomUIActivity::class.java)
-        intent.putExtra(ImagePickerConfig::class.java.simpleName, config)
+        intent.putExtra(ImagePickerConfig::class.java.simpleName, createConfig())
         startActivityForResult(intent, IpCons.RC_IMAGE_PICKER)
     }
 

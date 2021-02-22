@@ -14,7 +14,7 @@ import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.helper.ConfigUtils
 import com.esafirm.imagepicker.helper.ImagePickerUtils
-import com.esafirm.imagepicker.helper.IpLogger.e
+import com.esafirm.imagepicker.helper.IpCrasher
 import com.esafirm.imagepicker.helper.LocaleManager
 import com.esafirm.imagepicker.helper.ViewUtils
 import com.esafirm.imagepicker.model.Folder
@@ -52,9 +52,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
         /* This should not happen */
         val intent = intent
         if (intent == null || intent.extras == null) {
-            e("This should not happen. Please open an issue!")
-            finish()
-            return
+            IpCrasher.openIssue()
         }
 
         if (isCameraOnly) {

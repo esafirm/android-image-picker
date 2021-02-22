@@ -10,7 +10,7 @@ object ImagePickerConfigFactory {
     }
 
     @JvmStatic
-    fun createDefault(): ImagePickerConfig {
+    inline fun create(builder: ImagePickerConfig.() -> Unit = {}): ImagePickerConfig {
         val config = ImagePickerConfig(
             mode = IpCons.MODE_MULTIPLE,
             limit = IpCons.MAX_LIMIT,
@@ -18,6 +18,6 @@ object ImagePickerConfigFactory {
             isFolderMode = false,
         )
         config.returnMode = ReturnMode.NONE
-        return config
+        return config.apply(builder)
     }
 }

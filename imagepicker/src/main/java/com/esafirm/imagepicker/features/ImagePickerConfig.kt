@@ -3,17 +3,18 @@ package com.esafirm.imagepicker.features
 import android.os.Parcelable
 import androidx.annotation.StyleRes
 import com.esafirm.imagepicker.features.common.BaseConfig
+import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.model.Image
 import kotlinx.android.parcel.Parcelize
 import java.io.File
 
 @Parcelize
 class ImagePickerConfig(
+    internal var mode: Int = 0,
     var folderTitle: String? = null,
     var imageTitle: String? = null,
     var doneButtonText: String? = null,
     var arrowColor: Int = NO_COLOR,
-    var mode: Int = 0,
     var limit: Int = 0,
     @StyleRes var theme: Int = 0,
     var isFolderMode: Boolean = false,
@@ -41,4 +42,20 @@ class ImagePickerConfig(
     companion object {
         const val NO_COLOR = -1
     }
+}
+
+/* --------------------------------------------------- */
+/* > Ext */
+/* --------------------------------------------------- */
+
+fun ImagePickerConfig.single() {
+    mode = IpCons.MODE_SINGLE
+}
+
+fun ImagePickerConfig.multi() {
+    mode = IpCons.MODE_MULTIPLE
+}
+
+fun ImagePickerConfig.enableLog(isEnable: Boolean) {
+    IpLogger.setEnable(isEnable)
 }

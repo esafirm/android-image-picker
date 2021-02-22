@@ -9,12 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter
-import com.esafirm.imagepicker.features.ImagePickerComponentsHolder.imageLoader
+import com.esafirm.imagepicker.features.ImagePickerComponentsHolder
 import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.IpCons
 import com.esafirm.imagepicker.features.ReturnMode
 import com.esafirm.imagepicker.helper.ConfigUtils
-import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.listeners.OnFolderClickListener
 import com.esafirm.imagepicker.listeners.OnImageClickListener
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener
@@ -67,19 +66,23 @@ class RecyclerViewManager(
     }
 
     fun setupAdapters(
-        selectedImages: List<Image>?,
+        passedSelectedImage: List<Image>?,
         onImageClick: OnImageClickListener,
         onFolderClick: OnFolderClickListener
     ) {
-        var selectedImages = selectedImages
-        if (config.mode == IpCons.MODE_SINGLE && selectedImages != null && selectedImages.size > 1) {
-            selectedImages = emptyList()
+        val isSingleMode = config.mode == IpCons.MODE_SINGLE
+        val isSelectedNotEmpty = passedSelectedImage != null && passedSelectedImage.size > 1
+        val selectedImages = if (isSingleMode && isSelectedNotEmpty) {
+            emptyList()
+        } else {
+            passedSelectedImage
         }
+
         /* Init folder and image adapter */
-        val imageLoader = imageLoader!!
+        val imageLoader = ImagePickerComponentsHolder.imageLoader
         imageAdapter = ImagePickerAdapter(context, imageLoader, selectedImages
             ?: emptyList(), onImageClick)
-        folderAdapter = FolderPickerAdapter(context, imageLoader) { it ->
+        folderAdapter = FolderPickerAdapter(context, imageLoader) {
             foldersState = recyclerView.layoutManager?.onSaveInstanceState()
             onFolderClick(it)
         }
@@ -127,7 +130,11 @@ class RecyclerViewManager(
             if (useDefaultTitle) {
                 return ConfigUtils.getImageTitle(context, config)
             }
-            return if (config.limit == IpCons.MAX_LIMIT) String.format(context.getString(R.string.ef_selected), imageSize) else String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.limit)
+            return if (config.limit == IpCons.MAX_LIMIT) {
+                String.format(context.getString(R.string.ef_selected), imageSize)
+            } else {
+                String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.limit)
+            }
         }
 
     fun setImageAdapter(images: List<Image>?) {
