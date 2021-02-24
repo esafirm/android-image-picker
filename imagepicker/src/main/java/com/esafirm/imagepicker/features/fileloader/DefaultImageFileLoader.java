@@ -166,6 +166,15 @@ public class DefaultImageFileLoader implements ImageFileLoader {
                                 folderMap.put(bucket, folder);
                             }
                             folder.getImages().add(image);
+                        }else if(bucket == null){
+                            //if media is under root directory directly, bucket name returns null
+                            String folderName = new File(path).getParentFile().getName();
+                            Folder folder = folderMap.get(folderName);
+                            if (folder == null) {
+                                folder = new Folder(folderName);
+                                folderMap.put(folderName, folder);
+                            }
+                            folder.getImages().add(image);
                         }
                     }
 
