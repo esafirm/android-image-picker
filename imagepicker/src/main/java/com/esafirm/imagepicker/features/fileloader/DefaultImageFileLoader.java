@@ -155,7 +155,14 @@ public class DefaultImageFileLoader implements ImageFileLoader {
                     long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
                     String name = cursor.getString(cursor.getColumnIndex(projection[1]));
                     String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
-
+                    if (bucket == null) {
+                        File parent = new File(path).getParentFile();
+                        if (parent != null) {
+                            bucket = parent.getName();
+                        } else {
+                            bucket = "SDCARD";
+                        }
+                    }
                     if (name != null) {
                         Image image = new Image(id, name, path);
                         temp.add(image);
