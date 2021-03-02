@@ -155,7 +155,14 @@ public class DefaultImageFileLoader implements ImageFileLoader {
                     long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
                     String name = cursor.getString(cursor.getColumnIndex(projection[1]));
                     String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
-
+                    if (bucket == null) {
+                        File parent = new File(path).getParentFile();
+                        if (parent != null) {
+                            bucket = parent.getName();
+                        } else {
+                            bucket = "SDCARD";
+                        }
+                    }
                     if (name != null) {
                         Image image = new Image(id, name, path);
                         temp.add(image);
@@ -164,15 +171,6 @@ public class DefaultImageFileLoader implements ImageFileLoader {
                             if (folder == null) {
                                 folder = new Folder(bucket);
                                 folderMap.put(bucket, folder);
-                            }
-                            folder.getImages().add(image);
-                        }else if(bucket == null){
-                            //if media is under root directory directly, bucket name returns null
-                            String folderName = new File(path).getParentFile().getName();
-                            Folder folder = folderMap.get(folderName);
-                            if (folder == null) {
-                                folder = new Folder(folderName);
-                                folderMap.put(folderName, folder);
                             }
                             folder.getImages().add(image);
                         }
