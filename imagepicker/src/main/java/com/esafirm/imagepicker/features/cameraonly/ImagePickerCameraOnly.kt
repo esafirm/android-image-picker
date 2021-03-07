@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.esafirm.imagepicker.features.ImagePickerActivity
 import com.esafirm.imagepicker.features.ImagePickerConfigFactory
+import com.esafirm.imagepicker.features.ImagePickerSavePath
 import com.esafirm.imagepicker.features.IpCons
 
 class ImagePickerCameraOnly {
@@ -13,12 +14,12 @@ class ImagePickerCameraOnly {
     private val config = ImagePickerConfigFactory.createCameraDefault()
 
     fun imageDirectory(directory: String): ImagePickerCameraOnly {
-        config.setImageDirectory(directory)
+        config.savePath = ImagePickerSavePath(directory)
         return this
     }
 
     fun imageFullDirectory(fullPath: String): ImagePickerCameraOnly {
-        config.setImageFullDirectory(fullPath)
+        config.savePath = ImagePickerSavePath(fullPath, false)
         return this
     }
 

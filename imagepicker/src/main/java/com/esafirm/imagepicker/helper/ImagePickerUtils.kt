@@ -16,21 +16,23 @@ import com.esafirm.imagepicker.model.Image
 import java.io.File
 import java.net.URLConnection
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.Locale
 
 object ImagePickerUtils {
     private fun createFileInDirectory(savePath: ImagePickerSavePath, context: Context): File? {
         // External sdcard location
         val path = savePath.path
-        val mediaStorageDir: File = if (savePath.isFullPath) {
-            File(path)
-        } else {
+        val mediaStorageDir: File = if (savePath.isRelative) {
             val parent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             } else {
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
             }
             File(parent, path)
+        } else {
+            File(path)
         }
 
         // Create the storage directory if it does not exist

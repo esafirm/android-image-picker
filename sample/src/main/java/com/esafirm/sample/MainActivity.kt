@@ -1,5 +1,6 @@
 package com.esafirm.sample
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -53,6 +54,13 @@ class MainActivity : AppCompatActivity() {
         })
 
         return ImagePickerConfigFactory.create {
+
+            mode = if (isSingleMode) {
+                ImagePickerMode.SINGLE
+            } else {
+                ImagePickerMode.MULTIPLE // multi mode (default mode)
+            }
+
             language = "in" // Set image picker language
             theme = R.style.ImagePickerTheme
 
@@ -68,17 +76,11 @@ class MainActivity : AppCompatActivity() {
             doneButtonText = "DONE" // done button text
             limit = 10 // max images can be selected (99 by default)
             isShowCamera = true // show camera or not (true by default)
-            setImageDirectory("Camera") // captured image directory name ("Camera" folder by default)
-            setImageFullDirectory(Environment.getExternalStorageDirectory().path) // can be full path
-
-            if (isSingleMode) {
-                single()
-            } else {
-                multi() // multi mode (default mode)
-            }
+            savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)
+            savePath = ImagePickerSavePath(Environment.getExternalStorageDirectory().path, isRelative = false) // can be a full path
 
             if (isExclude) {
-                setExcludedImages(images) // don't show anything on this selected images
+                excludedImages = images.toFiles() // don't show anything on this selected images
             } else {
                 selectedImages = images  // original selected images, used in multi mode
             }
@@ -107,7 +109,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IpCons.RC_IMAGE_PICKER && data != null) {
             images.clear()
             images.addAll(ImagePicker.getImages(data) ?: emptyList())
             printImages(images)

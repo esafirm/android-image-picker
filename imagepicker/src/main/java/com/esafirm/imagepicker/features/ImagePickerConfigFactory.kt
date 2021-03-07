@@ -11,13 +11,7 @@ object ImagePickerConfigFactory {
 
     @JvmStatic
     inline fun create(builder: ImagePickerConfig.() -> Unit = {}): ImagePickerConfig {
-        val config = ImagePickerConfig(
-            mode = IpCons.MODE_MULTIPLE,
-            limit = IpCons.MAX_LIMIT,
-            isShowCamera = true,
-            isFolderMode = false,
-        )
-        config.returnMode = ReturnMode.NONE
+        val config = ImagePickerConfig()
         return config.apply(builder)
     }
 }

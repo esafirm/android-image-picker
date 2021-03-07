@@ -3,15 +3,14 @@ package com.esafirm.imagepicker.helper
 import android.content.Context
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.features.ImagePickerConfig
-import com.esafirm.imagepicker.features.IpCons
+import com.esafirm.imagepicker.features.ImagePickerMode
 import com.esafirm.imagepicker.features.ReturnMode
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.features.common.BaseConfig
 
 object ConfigUtils {
-    fun checkConfig(config: ImagePickerConfig?): ImagePickerConfig {
-        checkNotNull(config) { "ImagePickerConfig cannot be null" }
-        check(!(config.mode != IpCons.MODE_SINGLE
+    fun checkConfig(config: ImagePickerConfig): ImagePickerConfig {
+        check(!(config.mode != ImagePickerMode.SINGLE
             && (config.returnMode === ReturnMode.GALLERY_ONLY
             || config.returnMode === ReturnMode.ALL))) { "ReturnMode.GALLERY_ONLY and ReturnMode.ALL is only applicable in Single Mode!" }
         return config

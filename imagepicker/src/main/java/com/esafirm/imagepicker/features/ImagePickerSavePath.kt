@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class ImagePickerSavePath(
     val path: String,
-    val isFullPath: Boolean
+    val isRelative: Boolean = true
 ) : Parcelable {
     companion object {
         val DEFAULT = ImagePickerSavePath("Camera", false)

@@ -35,7 +35,7 @@ internal class ImagePickerPresenter(
         val includeVideo = config.isIncludeVideo
         val onlyVideo = config.isOnlyVideo
         val includeAnimation = config.isIncludeAnimation
-        val excludedImages = config.excludedImages ?: emptyList()
+        val excludedImages = config.excludedImages
 
         runOnUi { showLoading(true) }
 

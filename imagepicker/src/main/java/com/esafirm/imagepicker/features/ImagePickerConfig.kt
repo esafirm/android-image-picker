@@ -10,34 +10,24 @@ import java.io.File
 
 @Parcelize
 class ImagePickerConfig(
-    internal var mode: Int = 0,
+    var mode: ImagePickerMode = ImagePickerMode.MULTIPLE,
     var folderTitle: String? = null,
     var imageTitle: String? = null,
     var doneButtonText: String? = null,
     var arrowColor: Int = NO_COLOR,
-    var limit: Int = 0,
+    var limit: Int = IpCons.MAX_LIMIT,
     @StyleRes var theme: Int = 0,
     var isFolderMode: Boolean = false,
     var isIncludeVideo: Boolean = false,
     var isOnlyVideo: Boolean = false,
     var isIncludeAnimation: Boolean = false,
-    var isShowCamera: Boolean = false,
-    var selectedImages: List<Image> = emptyList()
+    var isShowCamera: Boolean = true,
+    var selectedImages: List<Image> = emptyList(),
+    var excludedImages: List<File> = emptyList()
 ) : BaseConfig(), Parcelable {
-
-    var excludedImages: List<File>? = null
-        private set
 
     @Transient
     var language: String? = null
-
-    fun setExcludedImages(excludedImages: List<Image>) {
-        this.excludedImages = excludedImages.map { File(it.path) }
-    }
-
-    fun setExcludedImageFiles(excludedImages: List<File>?) {
-        this.excludedImages = excludedImages
-    }
 
     companion object {
         const val NO_COLOR = -1
@@ -48,14 +38,8 @@ class ImagePickerConfig(
 /* > Ext */
 /* --------------------------------------------------- */
 
-fun ImagePickerConfig.single() {
-    mode = IpCons.MODE_SINGLE
-}
-
-fun ImagePickerConfig.multi() {
-    mode = IpCons.MODE_MULTIPLE
-}
-
 fun ImagePickerConfig.enableLog(isEnable: Boolean) {
     IpLogger.setEnable(isEnable)
 }
+
+fun List<Image>.toFiles() = this.map { File(it.path) }

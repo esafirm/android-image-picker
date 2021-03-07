@@ -11,6 +11,7 @@ import com.esafirm.imagepicker.adapter.FolderPickerAdapter
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter
 import com.esafirm.imagepicker.features.ImagePickerComponentsHolder
 import com.esafirm.imagepicker.features.ImagePickerConfig
+import com.esafirm.imagepicker.features.ImagePickerMode
 import com.esafirm.imagepicker.features.IpCons
 import com.esafirm.imagepicker.features.ReturnMode
 import com.esafirm.imagepicker.helper.ConfigUtils
@@ -70,7 +71,7 @@ class RecyclerViewManager(
         onImageClick: OnImageClickListener,
         onFolderClick: OnFolderClickListener
     ) {
-        val isSingleMode = config.mode == IpCons.MODE_SINGLE
+        val isSingleMode = config.mode == ImagePickerMode.SINGLE
         val isSelectedNotEmpty = passedSelectedImage != null && passedSelectedImage.size > 1
         val selectedImages = if (isSingleMode && isSelectedNotEmpty) {
             emptyList()
@@ -122,7 +123,7 @@ class RecyclerViewManager(
             if (isDisplayingFolderView) {
                 return ConfigUtils.getFolderTitle(context, config)
             }
-            if (config.mode == IpCons.MODE_SINGLE) {
+            if (config.mode == ImagePickerMode.SINGLE) {
                 return ConfigUtils.getImageTitle(context, config)
             }
             val imageSize = imageAdapter.selectedImages.size
@@ -172,12 +173,12 @@ class RecyclerViewManager(
     }
 
     fun selectImage(isSelected: Boolean): Boolean {
-        if (config.mode == IpCons.MODE_MULTIPLE) {
+        if (config.mode == ImagePickerMode.MULTIPLE) {
             if (imageAdapter.selectedImages.size >= config.limit && !isSelected) {
                 Toast.makeText(context, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show()
                 return false
             }
-        } else if (config.mode == IpCons.MODE_SINGLE) {
+        } else if (config.mode == ImagePickerMode.SINGLE) {
             if (imageAdapter.selectedImages.size > 0) {
                 imageAdapter.removeAllSelectedSingleClick()
             }
