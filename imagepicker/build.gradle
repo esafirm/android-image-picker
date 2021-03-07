@@ -58,4 +58,8 @@ dependencies {
 
     implementation "androidx.core:core-ktx:$core_ktx_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    testImplementation platform("org.junit:junit-bom:5.7.1")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation 'com.natpryce:hamkrest:1.8.0.1'
 }

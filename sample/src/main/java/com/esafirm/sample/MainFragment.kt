@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.esafirm.imagepicker.features.ImagePickerConfigFactory
+import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.ImagePickerMode
 import com.esafirm.imagepicker.features.ReturnMode
 import com.esafirm.imagepicker.features.registerImagePicker
@@ -29,7 +29,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         button_pick_fragment.setOnClickListener {
-            startImagePicker(ImagePickerConfigFactory.create {
+            startImagePicker(ImagePickerConfig {
                 mode = ImagePickerMode.SINGLE
                 returnMode = ReturnMode.ALL // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
                 isFolderMode = true // set folder mode (false by default)

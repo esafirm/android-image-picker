@@ -34,6 +34,10 @@ class ImagePickerConfig(
 
     companion object {
         const val NO_COLOR = -1
+
+        operator fun invoke(builder: ImagePickerConfig.() -> Unit): ImagePickerConfig {
+            return ImagePickerConfig().apply(builder)
+        }
     }
 }
 

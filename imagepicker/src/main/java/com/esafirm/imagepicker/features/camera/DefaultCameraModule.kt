@@ -7,7 +7,6 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import com.esafirm.imagepicker.features.ImagePickerConfigFactory
 import com.esafirm.imagepicker.features.common.BaseConfig
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger
@@ -19,13 +18,6 @@ class DefaultCameraModule : CameraModule {
 
     private var currentImagePath: String? = null
     private var currentUri: String? = null
-
-    /**
-     * Helper function to get camera Intent without config
-     */
-    fun getCameraIntent(context: Context): Intent? {
-        return getCameraIntent(context, ImagePickerConfigFactory.create())
-    }
 
     override fun getCameraIntent(context: Context, config: BaseConfig): Intent? {
         prepareForNewIntent()

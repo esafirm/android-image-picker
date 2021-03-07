@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 }
         })
 
-        return ImagePickerConfigFactory.create {
+        return ImagePickerConfig {
 
             mode = if (isSingleMode) {
                 ImagePickerMode.SINGLE
