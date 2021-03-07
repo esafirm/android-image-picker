@@ -8,22 +8,15 @@ import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import java.io.File
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class DefaultImageFileLoader(context: Context) : ImageFileLoader {
 
-    private val context: Context = context.applicationContext
+class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
 
     private var executor: ExecutorService? = null
-
-    private val projection = arrayOf(
-        MediaStore.Images.Media._ID,
-        MediaStore.Images.Media.DISPLAY_NAME,
-        MediaStore.Images.Media.DATA,
-        MediaStore.Images.Media.BUCKET_DISPLAY_NAME
-    )
 
     override fun loadDeviceImages(
         isFolderMode: Boolean,
@@ -35,6 +28,7 @@ class DefaultImageFileLoader(context: Context) : ImageFileLoader {
     ) {
         getExecutorService().execute(
             ImageLoadRunnable(
+                context.applicationContext,
                 isFolderMode,
                 onlyVideo,
                 includeVideo,
@@ -56,7 +50,8 @@ class DefaultImageFileLoader(context: Context) : ImageFileLoader {
         return executor!!
     }
 
-    private inner class ImageLoadRunnable internal constructor(
+    private class ImageLoadRunnable(
+        private val context: Context,
         private val isFolderMode: Boolean,
         private val onlyVideo: Boolean,
         private val includeVideo: Boolean,
@@ -64,6 +59,17 @@ class DefaultImageFileLoader(context: Context) : ImageFileLoader {
         private val exlucedImages: List<File>?,
         private val listener: ImageLoaderListener
     ) : Runnable {
+
+        companion object {
+            private const val DEFAULT_FOLDER_NAME = "SDCARD"
+        }
+
+        private val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+        )
 
         fun getQuerySelection(): String? {
             if (onlyVideo) {
@@ -114,7 +120,16 @@ class DefaultImageFileLoader(context: Context) : ImageFileLoader {
                     }
                     val id = cursor.getLong(cursor.getColumnIndex(projection[0]))
                     val name = cursor.getString(cursor.getColumnIndex(projection[1]))
-                    val bucket = cursor.getString(cursor.getColumnIndex(projection[3]))
+                    var bucket = cursor.getString(cursor.getColumnIndex(projection[3]))
+
+                    if (bucket == null) {
+                        val parent = File(path).parentFile
+                        bucket = if (parent != null) {
+                            parent.name
+                        } else {
+                            DEFAULT_FOLDER_NAME
+                        }
+                    }
 
                     if (name != null) {
                         val image = Image(id, name, path)

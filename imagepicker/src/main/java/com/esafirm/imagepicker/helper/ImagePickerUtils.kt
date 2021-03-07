@@ -93,9 +93,9 @@ object ImagePickerUtils {
         return mimeType != null && mimeType.startsWith("video")
     }
 
-    fun getVideoDurationLabel(context: Context?, file: File?): String {
+    fun getVideoDurationLabel(context: Context?, uri: Uri): String {
         val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(context, Uri.fromFile(file))
+        retriever.setDataSource(context, uri)
         val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
         retriever.release()
         val second = duration / 1000 % 60
