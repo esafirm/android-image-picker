@@ -1,0 +1,24 @@
+<resources>
+    <string name="ef_permission_write_external_rationale">端末のファイルへのアクセスを許可します</string>
+
+    <string name="ef_ok">OK</string>
+    <string name="ef_done">完了</string>
+    <string name="ef_camera">カメラ</string>
+
+    <string name="ef_title_folder">フォルダ</string>
+    <string name="ef_title_select_image">画像を選択</string>
+
+    <string name="ef_selected">%d 枚を選択済</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d 枚を選択済</string>
+
+    <string name="ef_error_create_image_file">写真の保存に失敗しました</string>
+    <string name="ef_error_no_camera">カメラがありません</string>
+    <string name="ef_error_null_cursor">エラーが発生しました</string>
+
+    <string name="ef_msg_empty_images">画像が見つかりません</string>
+    <string name="ef_msg_no_write_external_permission">端末のファイルへのアクセスを許可してください</string>
+    <string name="ef_msg_no_camera_permission">端末のカメラへのアクセスを許可してください</string>
+    <string name="ef_msg_limit_images">選択できる画像の上限です</string>
+    <string name="ef_ltitle_permission_denied">権限がありません</string>
+
+</resources>
