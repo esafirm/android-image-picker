@@ -13,6 +13,7 @@
     <string name="ef_selected_with_limit">%1$d/%2$d seçili</string>
 
     <string name="ef_error_create_image_file">Resim dosyası oluşturulamadı</string>
+    <string name="ef_error_create_video_file">Video dosyası oluşturulamadı</string>
     <string name="ef_error_no_camera">Kamera bulunamadı</string>
     <string name="ef_error_null_cursor">Hoop! Birşeyler yanlış gitti!</string>
 

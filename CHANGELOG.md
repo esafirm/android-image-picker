@@ -1,5 +1,8 @@
 ## Changelog
 
+**2.5.0**
+- Add video capture functionality
+
 **2.4.0**
 - Add `getUri()` for convenient [#285](https://github.com/esafirm/android-image-picker/pull/285)
 - Fixes for Android Q [#290](https://github.com/esafirm/android-image-picker/pull/290) [#293](https://github.com/esafirm/android-image-picker/pull/293)

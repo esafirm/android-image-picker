@@ -126,6 +126,10 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             imagePickerFragment.captureImageWithPermission();
             return true;
         }
+        if (id == R.id.menu_camcorder) {
+            imagePickerFragment.captureVideoWithPermission();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

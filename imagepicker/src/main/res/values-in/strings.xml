@@ -13,7 +13,8 @@
     <string name="ef_selected">%d terpilih</string>
     <string name="ef_selected_with_limit">%1$d/%2$d terpilih</string>
 
-    <string name="ef_error_create_image_file">Gagal membuat berkas gambar</string>
+    <string name="ef_error_create_image_file">Gagal membuat file Gambar</string>
+    <string name="ef_error_create_video_file">Gagal membuat file Video</string>
     <string name="ef_error_no_camera">Kamera tidak ditemukan</string>
     <string name="ef_error_null_cursor">Ups, ada yang tidak beres!</string>
 

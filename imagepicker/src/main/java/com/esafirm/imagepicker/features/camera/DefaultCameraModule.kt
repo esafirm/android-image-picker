@@ -45,6 +45,23 @@ class DefaultCameraModule : CameraModule, Serializable {
         return null
     }
 
+    override fun getCamcorderIntent(context: Context, config: BaseConfig): Intent? {
+        prepareForNewIntent()
+
+        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        val imageFile = ImagePickerUtils.createImageFile(config.imageDirectory, context)
+
+        if (imageFile != null) {
+            val appContext = context.applicationContext
+            val uri = createCameraUri(appContext, imageFile)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            ImagePickerUtils.grantAppPermission(context, intent, uri)
+            currentUri = uri.toString()
+            return intent
+        }
+        return null
+    }
+
     private fun prepareForNewIntent() {
         currentImagePath = null
         currentUri = null
