@@ -3,15 +3,17 @@
 </p>
 
 <h2 align="center">Android Image Picker</h2>
-<h3 align="center">No config yet highly configurable image picker for Android</h3>
+<h4 align="center">No config yet highly configurable image picker for Android</h3>
 
-<center>
+<p align="center">
+  <a href="https://android-arsenal.com/details/1/4618">
+    <img src="https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat" alt="Android Arsenal - ImagePicker" />
+  </a>
 
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/4618)
-
-[![](https://jitpack.io/v/esafirm/android-image-picker.svg)](https://jitpack.io/#esafirm/android-image-picker)
-
-</center>
+  <a href="https://jitpack.io/#esafirm/android-image-picker">
+    <img src="https://jitpack.io/v/esafirm/android-image-picker.svg" alt="jitpack - android image picker" />
+  </a>
+</p>
 
 # Screenshot
 
