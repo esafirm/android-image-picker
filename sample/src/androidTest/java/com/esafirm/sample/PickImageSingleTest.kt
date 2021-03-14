@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner::class)
-class PickImageTest {
+class PickImageSingleTest {
 
     @Rule
     @JvmField
@@ -45,13 +45,11 @@ class PickImageTest {
         val recyclerView = Views.recyclersView()
         recyclerView.perform(actionOnItemAtPosition<ViewHolder>(0, click()))
 
-        val actionMenuItemView = Views.pickerDoneButton()
-        actionMenuItemView.perform(click())
-
         val appCompatTextView = onView(allOf(withId(R.id.text_view)))
         appCompatTextView.perform(scrollTo(), click())
 
         val imageView = Views.imageDetail()
+
         imageView.check(matches(isDisplayed()))
         imageView.check(matches(hasDrawable()))
     }

@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.ef_imagepicker_item_folder.view.*
 class FolderPickerAdapter(
     context: Context,
     imageLoader: ImageLoader,
-    private val folderClickListener: OnFolderClickListener?
+    private val folderClickListener: OnFolderClickListener
 ) : BaseListAdapter<FolderViewHolder>(context, imageLoader) {
 
     private val folders: MutableList<Folder> = mutableListOf()
@@ -39,7 +39,7 @@ class FolderPickerAdapter(
         holder.apply {
             name.text = folder.folderName
             number.text = folder.images.size.toString()
-            itemView.setOnClickListener { folderClickListener?.onFolderClick(folder) }
+            itemView.setOnClickListener { folderClickListener(folder) }
         }
     }
 

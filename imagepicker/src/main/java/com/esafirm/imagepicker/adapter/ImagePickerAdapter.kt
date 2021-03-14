@@ -19,7 +19,6 @@ import com.esafirm.imagepicker.listeners.OnImageClickListener
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener
 import com.esafirm.imagepicker.model.Image
 import kotlinx.android.synthetic.main.ef_imagepicker_item_image.view.*
-import java.io.File
 import java.util.HashMap
 
 class ImagePickerAdapter(
@@ -68,7 +67,7 @@ class ImagePickerAdapter(
             if (!videoDurationHolder.containsKey(image.id)) {
                 val uri = Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), "" + image.id)
                 videoDurationHolder[image.id] = ImagePickerUtils.getVideoDurationLabel(
-                    context,  uri
+                    context, uri
                 )
             }
 
@@ -81,7 +80,7 @@ class ImagePickerAdapter(
             fileTypeIndicator.visibility = if (showFileTypeIndicator) View.VISIBLE else View.GONE
             alphaView.alpha = if (isSelected) 0.5f else 0f
             itemView.setOnClickListener {
-                val shouldSelect = itemClickListener.onImageClick(isSelected)
+                val shouldSelect = itemClickListener(isSelected)
 
                 if (isSelected) {
                     removeSelectedImage(image, position)
@@ -130,7 +129,7 @@ class ImagePickerAdapter(
 
     private fun mutateSelection(runnable: Runnable) {
         runnable.run()
-        imageSelectedListener?.onSelectionUpdate(selectedImages)
+        imageSelectedListener?.invoke(selectedImages)
     }
 
     fun setImageSelectedListener(imageSelectedListener: OnImageSelectedListener?) {

@@ -7,32 +7,23 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import com.esafirm.imagepicker.features.ImagePickerConfigFactory
 import com.esafirm.imagepicker.features.common.BaseConfig
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.helper.UriUtils
 import com.esafirm.imagepicker.model.ImageFactory
 import java.io.File
-import java.io.Serializable
 
-class DefaultCameraModule : CameraModule, Serializable {
+class DefaultCameraModule : CameraModule {
 
     private var currentImagePath: String? = null
     private var currentUri: String? = null
-
-    /**
-     * Helper function to get camera Intent without config
-     */
-    fun getCameraIntent(context: Context): Intent? {
-        return getCameraIntent(context, ImagePickerConfigFactory.createDefault(context))
-    }
 
     override fun getCameraIntent(context: Context, config: BaseConfig): Intent? {
         prepareForNewIntent()
 
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        val imageFile = ImagePickerUtils.createImageFile(config.imageDirectory, context)
+        val imageFile = ImagePickerUtils.createImageFile(config.savePath, context)
 
         if (config.isSaveImage && imageFile != null) {
             val appContext = context.applicationContext
@@ -64,31 +55,29 @@ class DefaultCameraModule : CameraModule, Serializable {
         return UriUtils.uriForFile(appContext, imageFile)
     }
 
-    override fun getImage(context: Context, intent: Intent?, imageReadyListener: OnImageReadyListener?) {
-        checkNotNull(imageReadyListener) { "OnImageReadyListener must not be null" }
-
+    override fun getImage(context: Context, intent: Intent?, imageReadyListener: OnImageReadyListener) {
         if (currentImagePath == null) {
-            IpLogger.getInstance().w("currentImagePath null. " +
+            IpLogger.w("currentImagePath null. " +
                 "This happen if you haven't call #getCameraIntent() or the activity is being recreated")
-            imageReadyListener.onImageReady(null)
+            imageReadyListener.invoke(null)
             return
         }
 
         val imageUri = Uri.parse(currentImagePath)
         if (imageUri != null) {
             MediaScannerConnection.scanFile(context.applicationContext, arrayOf(imageUri.path), null) { path: String?, uri: Uri? ->
-                IpLogger.getInstance().d("File $path was scanned successfully: $uri")
+                IpLogger.d("File $path was scanned successfully: $uri")
 
                 if (path == null) {
-                    IpLogger.getInstance().d("This should not happen, go back to Immediate implementation")
+                    IpLogger.d("This should not happen, go back to Immediate implementation")
                 }
                 if (uri == null) {
-                    IpLogger.getInstance().d("scanFile is failed. Uri is null")
+                    IpLogger.d("scanFile is failed. Uri is null")
                 }
 
                 val finalPath = path ?: currentImagePath!!
                 val finalUri = uri ?: Uri.parse(currentUri)
-                imageReadyListener.onImageReady(ImageFactory.singleImage(finalUri, finalPath))
+                imageReadyListener.invoke(ImageFactory.singleImage(finalUri, finalPath))
                 ImagePickerUtils.revokeAppPermission(context, imageUri)
             }
         }

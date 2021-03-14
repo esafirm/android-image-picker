@@ -12,7 +12,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.ImagePickerFragment
 import com.esafirm.imagepicker.features.ImagePickerInteractionListener
@@ -56,12 +55,12 @@ class CustomUIActivity : AppCompatActivity() {
 
         if (savedInstanceState != null) {
             // The fragment has been restored.
-            IpLogger.getInstance().e("Fragment has been restored")
+            IpLogger.e("Fragment has been restored")
             imagePickerFragment = supportFragmentManager
                 .findFragmentById(R.id.ef_imagepicker_fragment_placeholder) as ImagePickerFragment
         } else {
-            IpLogger.getInstance().e("Making fragment")
-            imagePickerFragment = ImagePickerFragment.newInstance(config, cameraOnlyConfig)
+            IpLogger.e("Making fragment")
+            imagePickerFragment = ImagePickerFragment.newInstance(config!!)
             supportFragmentManager.beginTransaction()
                 .replace(R.id.ef_imagepicker_fragment_placeholder, imagePickerFragment)
                 .commit()
@@ -90,7 +89,7 @@ class CustomUIActivity : AppCompatActivity() {
         }
         val menuDone = menu.findItem(com.esafirm.imagepicker.R.id.menu_done)
         if (menuDone != null) {
-            menuDone.title = ConfigUtils.getDoneButtonText(this, config)
+            menuDone.title = ConfigUtils.getDoneButtonText(this, config!!)
             menuDone.isVisible = imagePickerFragment.isShowDoneButton
         }
         return super.onPrepareOptionsMenu(menu)
@@ -110,7 +109,7 @@ class CustomUIActivity : AppCompatActivity() {
             return true
         }
         if (id == com.esafirm.imagepicker.R.id.menu_camera) {
-            imagePickerFragment.captureImageWithPermission()
+            imagePickerFragment.captureImage()
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -147,7 +146,7 @@ class CustomUIActivity : AppCompatActivity() {
     }
 
     internal inner class CustomInteractionListener : ImagePickerInteractionListener {
-        override fun setTitle(title: String) {
+        override fun setTitle(title: String?) {
             actionBar.title = title
             invalidateOptionsMenu()
         }
@@ -156,7 +155,14 @@ class CustomUIActivity : AppCompatActivity() {
             finish()
         }
 
-        override fun selectionChanged(imageList: List<Image>) {
+        override fun finishPickImages(result: Intent?) {
+            setResult(RESULT_OK, result)
+            finish()
+        }
+
+        override fun selectionChanged(imageList: List<Image>?) {
+            if (imageList == null) error("Image list is null")
+
             if (imageList.isEmpty()) {
                 photo_preview.setImageDrawable(null)
             } else {
@@ -168,11 +174,6 @@ class CustomUIActivity : AppCompatActivity() {
                 }
                 photo_preview.setImageBitmap(bitmap)
             }
-        }
-
-        override fun finishPickImages(result: Intent) {
-            setResult(RESULT_OK, result)
-            finish()
         }
     }
 }
