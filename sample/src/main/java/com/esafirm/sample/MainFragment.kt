@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
 
-    private val startImagePicker = registerImagePicker {
+    private val imagePickerLauncher = registerImagePicker {
         val firstImage = it.firstOrNull() ?: return@registerImagePicker
         Glide.with(img_fragment)
             .load(firstImage.uri)
@@ -29,14 +29,16 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         button_pick_fragment.setOnClickListener {
-            startImagePicker(ImagePickerConfig {
-                mode = ImagePickerMode.SINGLE
-                returnMode = ReturnMode.ALL // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
-                isFolderMode = true // set folder mode (false by default)
-                folderTitle = "Folder" // folder selection title
-                imageTitle = "Tap to select" // image selection title
-                doneButtonText = "DONE" // done button text
-            })
+            imagePickerLauncher.launch(
+                ImagePickerConfig {
+                    mode = ImagePickerMode.SINGLE
+                    returnMode = ReturnMode.ALL // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
+                    isFolderMode = true // set folder mode (false by default)
+                    folderTitle = "Folder" // folder selection title
+                    imageTitle = "Tap to select" // image selection title
+                    doneButtonText = "DONE" // done button text
+                }
+            )
         }
 
         button_close.setOnClickListener {

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import com.esafirm.imagepicker.features.*
+import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader
 import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.model.Image
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun captureImage() {
-        ImagePicker.cameraOnly().start(this)
+        imagePickerLauncher.launch(CameraOnlyConfig())
     }
 
     private fun createConfig(): ImagePickerConfig {
@@ -92,14 +93,14 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, IpCons.RC_IMAGE_PICKER)
     }
 
-    private val startImagePicker = registerImagePicker {
+    private val imagePickerLauncher = registerImagePicker {
         images.clear()
         images.addAll(it)
         printImages(images)
     }
 
     private fun start() {
-        startImagePicker(createConfig())
+        imagePickerLauncher.launch(createConfig())
     }
 
     private fun startCustomUI() {
