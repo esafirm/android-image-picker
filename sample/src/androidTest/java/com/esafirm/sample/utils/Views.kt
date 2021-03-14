@@ -23,7 +23,7 @@ object Views {
             allOf(withId(R.id.button_pick_image), withText("PICK IMAGE"),
                 childAtPosition(
                     childAtPosition(
-                        withId(R.id.ef_bottom_container),
+                        withId(R.id.bottom_container),
                         0),
                     0),
                 isDisplayed()))
