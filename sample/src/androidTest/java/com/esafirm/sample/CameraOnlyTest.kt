@@ -32,7 +32,6 @@ class CameraOnlyTest {
     @Rule
     @JvmField
     var grantPermissionRule = GrantPermissionRule.grant(
-        "android.permission.CAMERA",
         "android.permission.WRITE_EXTERNAL_STORAGE"
     )
 

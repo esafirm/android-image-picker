@@ -31,9 +31,8 @@ class DefaultCameraModule : CameraModule {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
             ImagePickerUtils.grantAppPermission(context, intent, uri)
             currentUri = uri.toString()
-            return intent
         }
-        return null
+        return intent
     }
 
     private fun prepareForNewIntent() {

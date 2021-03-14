@@ -9,6 +9,6 @@ class ImagePickerSavePath(
     val isRelative: Boolean = true
 ) : Parcelable {
     companion object {
-        val DEFAULT = ImagePickerSavePath("Camera", false)
+        val DEFAULT = ImagePickerSavePath("Camera", true)
     }
 }
