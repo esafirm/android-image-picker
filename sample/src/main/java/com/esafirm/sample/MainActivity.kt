@@ -11,21 +11,35 @@ import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader
 import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.model.Image
-import kotlinx.android.synthetic.main.activity_main.*
+import com.esafirm.sample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+
     private val images = arrayListOf<Image>()
+
+    private val imagePickerLauncher = registerImagePicker {
+        images.clear()
+        images.addAll(it)
+        printImages(images)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        button_pick_image.setOnClickListener { start() }
-        button_intent.setOnClickListener { startWithIntent() }
-        button_camera.setOnClickListener { captureImage() }
-        button_custom_ui.setOnClickListener { startCustomUI() }
-        button_launch_fragment.setOnClickListener {
+        binding = ActivityMainBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
+        setupButtons()
+    }
+
+    private fun setupButtons() = binding.run {
+        buttonPickImage.setOnClickListener { start() }
+        buttonIntent.setOnClickListener { startWithIntent() }
+        buttonCamera.setOnClickListener { captureImage() }
+        buttonCustomUi.setOnClickListener { startCustomUI() }
+        buttonLaunchFragment.setOnClickListener {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MainFragment())
                 .commitAllowingStateLoss()
@@ -37,13 +51,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createConfig(): ImagePickerConfig {
-        val returnAfterCapture = ef_switch_return_after_capture.isChecked
-        val isSingleMode = ef_switch_single.isChecked
-        val useCustomImageLoader = ef_switch_imageloader.isChecked
-        val folderMode = ef_switch_folder_mode.isChecked
-        val includeVideo = ef_switch_include_video.isChecked
-        val onlyVideo = ef_switch_only_video.isChecked
-        val isExclude = ef_switch_include_exclude.isChecked
+        val returnAfterCapture = binding.switchReturnAfterCapture.isChecked
+        val isSingleMode = binding.switchSingle.isChecked
+        val useCustomImageLoader = binding.switchImageloader.isChecked
+        val folderMode = binding.switchFolderMode.isChecked
+        val includeVideo = binding.switchIncludeVideo.isChecked
+        val onlyVideo = binding.switchOnlyVideo.isChecked
+        val isExclude = binding.switchIncludeExclude.isChecked
 
         ImagePickerComponentsHolder.setInternalComponent(object : DefaultImagePickerComponents(this) {
             override val imageLoader: ImageLoader
@@ -93,12 +107,6 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, IpCons.RC_IMAGE_PICKER)
     }
 
-    private val imagePickerLauncher = registerImagePicker {
-        images.clear()
-        images.addAll(it)
-        printImages(images)
-    }
-
     private fun start() {
         imagePickerLauncher.launch(createConfig())
     }
@@ -121,8 +129,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun printImages(images: List<Image>?) {
         if (images == null) return
-        text_view.text = images.joinToString("\n")
-        text_view.setOnClickListener {
+        binding.textView.text = images.joinToString("\n")
+        binding.textView.setOnClickListener {
             ImageViewerActivity.start(this@MainActivity, images)
         }
     }

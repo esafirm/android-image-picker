@@ -21,13 +21,15 @@ import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.helper.LocaleManager
 import com.esafirm.imagepicker.helper.ViewUtils
 import com.esafirm.imagepicker.model.Image
-import kotlinx.android.synthetic.main.activity_custom_ui.*
+import com.esafirm.sample.databinding.ActivityCustomUiBinding
 
 /**
  * This custom UI for ImagePicker puts the picker in the bottom half of the screen, and a preview of
  * the last selected image in the top half.
  */
 class CustomUIActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityCustomUiBinding
 
     private lateinit var actionBar: ActionBar
     private lateinit var imagePickerFragment: ImagePickerFragment
@@ -41,6 +43,11 @@ class CustomUIActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityCustomUiBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
+
         setResult(RESULT_CANCELED)
         config = intent.extras?.getParcelable(ImagePickerConfig::class.java.simpleName)
         cameraOnlyConfig = intent.extras?.getParcelable(CameraOnlyConfig::class.java.simpleName)
@@ -50,7 +57,6 @@ class CustomUIActivity : AppCompatActivity() {
             setTheme(theme)
         }
 
-        setContentView(R.layout.activity_custom_ui)
         setupView()
 
         if (savedInstanceState != null) {
@@ -128,7 +134,7 @@ class CustomUIActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
-        setSupportActionBar(toolbar as Toolbar)
+        setSupportActionBar(binding.toolbar as Toolbar)
         checkNotNull(supportActionBar)
 
         actionBar = supportActionBar!!
@@ -164,7 +170,7 @@ class CustomUIActivity : AppCompatActivity() {
             if (imageList == null) error("Image list is null")
 
             if (imageList.isEmpty()) {
-                photo_preview.setImageDrawable(null)
+                binding.photoPreview.setImageDrawable(null)
             } else {
                 val imageUri = imageList[imageList.size - 1].uri
                 val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -172,7 +178,7 @@ class CustomUIActivity : AppCompatActivity() {
                 } else {
                     MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                 }
-                photo_preview.setImageBitmap(bitmap)
+                binding.photoPreview.setImageBitmap(bitmap)
             }
         }
     }
