@@ -8,8 +8,6 @@ import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import com.esafirm.imagepicker.features.*
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
-import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader
-import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.model.Image
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -45,14 +43,9 @@ class MainActivity : AppCompatActivity() {
         val onlyVideo = ef_switch_only_video.isChecked
         val isExclude = ef_switch_include_exclude.isChecked
 
-        ImagePickerComponentsHolder.setInternalComponent(object : DefaultImagePickerComponents(this) {
-            override val imageLoader: ImageLoader
-                get() = if (useCustomImageLoader) {
-                    GrayscaleImageLoader()
-                } else {
-                    DefaultImageLoader()
-                }
-        })
+        ImagePickerComponentsHolder.setInternalComponent(
+            CustomImagePickerComponents(this, useCustomImageLoader)
+        )
 
         return ImagePickerConfig {
 

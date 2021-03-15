@@ -16,7 +16,7 @@ interface ImagePickerComponents {
 
 open class DefaultImagePickerComponents(context: Context) : ImagePickerComponents {
     override val imageLoader: ImageLoader by lazy { DefaultImageLoader() }
-    override val imageFileLoader: ImageFileLoader by lazy { DefaultImageFileLoader(context) }
+    override val imageFileLoader: ImageFileLoader by lazy { DefaultImageFileLoader(context.applicationContext) }
     override val cameraModule: CameraModule by lazy { DefaultCameraModule() }
 }
 

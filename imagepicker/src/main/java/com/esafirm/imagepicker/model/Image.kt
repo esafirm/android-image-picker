@@ -9,7 +9,7 @@ import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-open class Image(
+class Image(
     val id: Long,
     val name: String,
     val path: String,
