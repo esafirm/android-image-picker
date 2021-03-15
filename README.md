@@ -59,7 +59,7 @@ The simplest way to start
 
 ```kotlin
 val launcher = registerImagePicker {
-	// handle result here
+  // handle result here
 }
 
 launcher.launch()
@@ -69,27 +69,27 @@ Complete features of what you can do with ImagePicker
 
 ```kotlin
 val config = ImagePickerConfig {
-	mode = ImagePickerMode.SINGLE // default is multi image mode
-    language = "in" // Set image picker language
+  mode = ImagePickerMode.SINGLE // default is multi image mode
+  language = "in" // Set image picker language
 	theme = R.style.ImagePickerTheme
 
-    // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
-    returnMode = if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE
+  // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
+  returnMode = if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE
 
-    isFolderMode = folderMode // set folder mode (false by default)
-    isIncludeVideo = includeVideo // include video (false by default)
-    isOnlyVideo = onlyVideo // include video (false by default)
-    arrowColor = Color.RED // set toolbar arrow up color
-    folderTitle = "Folder" // folder selection title
-    imageTitle = "Tap to select" // image selection title
-    doneButtonText = "DONE" // done button text
-    limit = 10 // max images can be selected (99 by default)
-    isShowCamera = true // show camera or not (true by default)
-    savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)
-    savePath = ImagePickerSavePath(Environment.getExternalStorageDirectory().path, isRelative = false) // can be a full path
+  isFolderMode = folderMode // set folder mode (false by default)
+  isIncludeVideo = includeVideo // include video (false by default)
+  isOnlyVideo = onlyVideo // include video (false by default)
+  arrowColor = Color.RED // set toolbar arrow up color
+  folderTitle = "Folder" // folder selection title
+  imageTitle = "Tap to select" // image selection title
+  doneButtonText = "DONE" // done button text
+  limit = 10 // max images can be selected (99 by default)
+  isShowCamera = true // show camera or not (true by default)
+  savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)
+  savePath = ImagePickerSavePath(Environment.getExternalStorageDirectory().path, isRelative = false) // can be a full path
 
-    excludedImages = images.toFiles() // don't show anything on this selected images
-    selectedImages = images  // original selected images, used in multi mode
+  excludedImages = images.toFiles() // don't show anything on this selected images
+  selectedImages = images  // original selected images, used in multi mode
 }
 ```
 
@@ -108,9 +108,9 @@ when you're done picking images, result will be returned on launcher callback wi
 
 ```kotlin
 val launcher = registerImagePicker { result: List<Image> ->
-	result.forEach { image -> 
-	  println(image)
-	}
+  result.forEach { image ->
+    println(image)
+  }
 }    
 ```
 
