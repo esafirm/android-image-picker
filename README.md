@@ -132,17 +132,10 @@ You also still can use the `DefaultCameraModule` but discouraged to do it.
 - [Return mode](https://github.com/esafirm/android-image-picker/blob/master/docs/return_mode.md)
 - [Save location](https://github.com/esafirm/android-image-picker/blob/master/docs/save_location.md)
 
-# AndroidX and version 2.0.0 above
 
-As version 2.0.0 above, we already use AndroidX artifact in our library.
-If you have any trouble adding this version to your current project like [this](https://github.com/esafirm/android-image-picker/issues/226)
+# Version 2.x.x
 
-Please add this to your `gradle.properties` :
-
-```
-android.useAndroidX=true
-android.enableJetifier=true
-```
+If you still use the previous version, you can check 
 
 # Support Me!
 
