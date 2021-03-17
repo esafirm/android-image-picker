@@ -71,7 +71,7 @@ Complete features of what you can do with ImagePicker
 val config = ImagePickerConfig {
   mode = ImagePickerMode.SINGLE // default is multi image mode
   language = "in" // Set image picker language
-	theme = R.style.ImagePickerTheme
+  theme = R.style.ImagePickerTheme
 
   // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
   returnMode = if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE
