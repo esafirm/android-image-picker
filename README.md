@@ -1,19 +1,19 @@
-# ImagePicker 
+<p align="center">
+	<img  src="https://github.com/esafirm/android-image-picker/blob/master/art/logo.png?raw=true" width="140" height="140"/> 
+</p>
 
-[![CircleCI](https://circleci.com/gh/esafirm/android-image-picker.svg?style=svg)](https://circleci.com/gh/esafirm/android-image-picker)
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/4618)
+<h2 align="center">Android Image Picker</h2>
+<h4 align="center">No config yet highly configurable image picker for Android</h3>
 
-<img  src="https://github.com/esafirm/android-image-picker/blob/master/art/logo.png?raw=true" width="180" height="180"/> 
+<p align="center">
+  <a href="https://android-arsenal.com/details/1/4618">
+    <img src="https://img.shields.io/badge/Android%20Arsenal-ImagePicker-brightgreen.svg?style=flat" alt="Android Arsenal - ImagePicker" />
+  </a>
 
-A simple library to select images from the gallery and camera.
-
-# Support Me!
-
-I would make myself more commited to this repo and OSS works in general.
-
-Would you help me achieving this goals?
-
-<a href='https://ko-fi.com/M4M41RRE0' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+  <a href="https://jitpack.io/#esafirm/android-image-picker">
+    <img src="https://jitpack.io/v/esafirm/android-image-picker.svg" alt="jitpack - android image picker" />
+  </a>
+</p>
 
 # Screenshot
 
@@ -23,7 +23,7 @@ Would you help me achieving this goals?
 src="https://raw.githubusercontent.com/esafirm/android-image-picker/master/art/ss.gif" height="460" width="284"/>
 </details>
 
-## Download [![](https://jitpack.io/v/esafirm/android-image-picker.svg)](https://jitpack.io/#esafirm/android-image-picker)
+## Download
 
 Add this to your project's `build.gradle`
 
@@ -35,13 +35,11 @@ allprojects {
 }
 ```
 
-And add this to your module's `build.gradle` 
+And add this to your module's `build.gradle`
 
 ```groovy
 dependencies {
 	implementation 'com.github.esafirm.android-image-picker:imagepicker:x.y.z'
-	// for experimental rx picker
-	implementation 'com.github.esafirm.android-image-picker:rximagepicker:x.y.z'
 	// If you have a problem with Glide, please use the same Glide version or simply open an issue
 	implementation 'com.github.bumptech.glide:glide:4.5.0'
 }
@@ -51,75 +49,81 @@ change `x.y.z` to version in the [release page](https://github.com/esafirm/andro
 
 # Usage
 
-For full example, please refer to the `sample` app. 
+For full example, please refer to the `sample` app.
 
 Also you can browse the issue labeled as question [here](https://github.com/esafirm/android-image-picker/issues?utf8=%E2%9C%93&q=label%3Aquestion+)
 
 ## Start image picker activity
 
-The simplest way to start 
+The simplest way to start
 
-```java
-ImagePicker.create(this) // Activity or Fragment
-	    .start();
-``` 
+```kotlin
+val launcher = registerImagePicker {
+  // handle result here
+}
+
+launcher.launch()
+```
 
 Complete features of what you can do with ImagePicker
 
-```java
-ImagePicker.create(this)
-	.returnMode(ReturnMode.ALL) // set whether pick and / or camera action should return immediate result or not.
-	.folderMode(true) // folder mode (false by default)
-	.toolbarFolderTitle("Folder") // folder selection title
-	.toolbarImageTitle("Tap to select") // image selection title
-	.toolbarArrowColor(Color.BLACK) // Toolbar 'up' arrow color
-	.includeVideo(true) // Show video on image picker
-	.onlyVideo(onlyVideo) // include video (false by default)
-	.single() // single mode
-	.multi() // multi mode (default mode)
-	.limit(10) // max images can be selected (99 by default)
-	.showCamera(true) // show camera or not (true by default)
-	.imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
-	.origin(images) // original selected images, used in multi mode
-	.exclude(images) // exclude anything that in image.getPath()
-	.excludeFiles(files) // same as exclude but using ArrayList<File>
-	.theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
-	.enableLog(false) // disabling log
-	.start(); // start image picker activity with request code
-```                
-If you want to call it outside `Activity` or `Fragment`, you can simply get the `Intent` from the builder
+```kotlin
+val config = ImagePickerConfig {
+  mode = ImagePickerMode.SINGLE // default is multi image mode
+  language = "in" // Set image picker language
+	theme = R.style.ImagePickerTheme
 
-```java
-ImagePicker.create(activity).getIntent(context)
+  // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
+  returnMode = if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE
 
+  isFolderMode = folderMode // set folder mode (false by default)
+  isIncludeVideo = includeVideo // include video (false by default)
+  isOnlyVideo = onlyVideo // include video (false by default)
+  arrowColor = Color.RED // set toolbar arrow up color
+  folderTitle = "Folder" // folder selection title
+  imageTitle = "Tap to select" // image selection title
+  doneButtonText = "DONE" // done button text
+  limit = 10 // max images can be selected (99 by default)
+  isShowCamera = true // show camera or not (true by default)
+  savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)
+  savePath = ImagePickerSavePath(Environment.getExternalStorageDirectory().path, isRelative = false) // can be a full path
+
+  excludedImages = images.toFiles() // don't show anything on this selected images
+  selectedImages = images  // original selected images, used in multi mode
+}
+```
+
+If you want to call it outside `Activity` or `Fragment`, you can get the `Intent` with `createImagePickerIntent`
+
+> Please note: handling in `onActivityResult` is not recommended since it's already deprecated in favor of the new result API
+
+```kotlin
+val intent = createImagePickerIntent(context, ImagePickerConfig())
+startActivityForResult(intent, RC_IMAGE_PICKER)
 ```
 
 ## Receive result
 
-```java
-  @Override
-    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
-        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
-			// Get a list of picked images
-			List<Image> images = ImagePicker.getImages(data)
-            // or get a single image only
-			Image image = ImagePicker.getFirstImageOrNull(data)
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-```
+when you're done picking images, result will be returned on launcher callback with type `List<Image>`. This list cannot be null but can be empty
 
+```kotlin
+val launcher = registerImagePicker { result: List<Image> ->
+  result.forEach { image ->
+    println(image)
+  }
+}    
+```
 
 ## Camera Only
 
-```java
-ImagePicker.cameraOnly().start(activity) // Could be Activity, Fragment, Support Fragment 
+Use `CameraOnlyConfig` instead of `ImagePickerConfig`
 
-// You could also get the Intent 
-ImagePicker.cameraOnly().getIntent(context)
+```kotlin
+val launcher = registerImagePicker { }
+launcher.launch(CameraOnlyConfig())
 ```
 
-You also still can use the `DefaultCameraModule` but discouraged to do it. 
+You also still can use the `DefaultCameraModule` but discouraged to do it.
 
 # Wiki
 
@@ -129,17 +133,17 @@ You also still can use the `DefaultCameraModule` but discouraged to do it.
 - [Save location](https://github.com/esafirm/android-image-picker/blob/master/docs/save_location.md)
 
 
-# AndroidX and version 2.0.0 above
+# Version 2.x.x
 
-As version 2.0.0 above, we already use AndroidX artifact in our library. 
-If you have any trouble adding this version to your current project like [this](https://github.com/esafirm/android-image-picker/issues/226)
+If you still use the previous version, you can check 
 
-Please add this to your `gradle.properties` :
+# Support Me!
 
-```
-android.useAndroidX=true
-android.enableJetifier=true
-```
+I would make myself more commited to this repo and OSS works in general.
+
+Would you help me achieving this goals?
+
+<a href='https://ko-fi.com/M4M41RRE0' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 # Credits
 
@@ -161,6 +165,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 [The Original Image Picker](https://github.com/nguyenhoanglam/ImagePicker)
 
-[You can find the original lincense here ](https://raw.githubusercontent.com/esafirm/ImagePicker/master/ORIGINAL_LICENSE) 
-
-
+[You can find the original lincense here ](https://raw.githubusercontent.com/esafirm/ImagePicker/master/ORIGINAL_LICENSE)

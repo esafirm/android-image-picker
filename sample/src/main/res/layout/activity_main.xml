@@ -1,17 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ef_bottom_container"
+        android:layout_above="@+id/bottom_container"
         android:fillViewport="true">
 
         <LinearLayout
@@ -19,66 +19,52 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Switch
-                android:id="@+id/ef_switch_return_after_capture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/ef_spacing"
-                android:text="Return After First   "/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_return_after_capture"
+                style="@style/SampleSwitch"
+                android:text="Return After First" />
 
-            <Switch
-                android:id="@+id/ef_switch_folder_mode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/ef_spacing"
-                android:text="Folder Mode   "/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_folder_mode"
+                style="@style/SampleSwitch"
+                android:text="Folder Mode" />
 
-            <Switch
-                android:id="@+id/ef_switch_include_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/ef_spacing"
-                android:text="Include Video"/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_include_video"
+                style="@style/SampleSwitch"
+                android:text="Include Video" />
 
-            <Switch
-                android:id="@+id/ef_switch_only_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/ef_spacing"
-                android:text="Only video"/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_only_video"
+                style="@style/SampleSwitch"
+                android:text="Only video" />
 
-            <Switch
-                android:id="@+id/ef_switch_single"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/ef_spacing"
-                android:text="Single Mode?   "/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_single"
+                style="@style/SampleSwitch"
+                android:text="Single Mode?" />
 
-            <Switch
-                android:id="@+id/ef_switch_imageloader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/ef_spacing"
-                android:text="Custom Image Loader?   "/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_imageloader"
+                style="@style/SampleSwitch"
+                android:text="Custom Image Loader?   " />
 
-            <Switch
-                android:id="@+id/ef_switch_include_exclude"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:text="Exclude   "/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_include_exclude"
+                style="@style/SampleSwitch"
+                android:text="Exclude" />
 
             <TextView
                 android:id="@+id/text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello, world!"/>
+                android:text="Result goes here…" />
 
         </LinearLayout>
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/ef_bottom_container"
+        android:id="@+id/bottom_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -96,27 +82,13 @@
                 android:id="@+id/button_pick_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PICK IMAGE"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button_pick_image_rx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PICK IMAGE RX"/>
+                android:text="PICK IMAGE" />
 
             <Button
                 android:id="@+id/button_launch_fragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Launch Fragment"/>
+                android:text="Launch Fragment" />
 
         </LinearLayout>
 
@@ -129,19 +101,19 @@
                 android:id="@+id/button_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Camera"/>
+                android:text="Camera" />
 
             <Button
                 android:id="@+id/button_intent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Intent"/>
+                android:text="Intent" />
 
             <Button
                 android:id="@+id/button_custom_ui"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Custom UI"/>
+                android:text="Custom UI" />
 
         </LinearLayout>
 
@@ -150,6 +122,6 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
