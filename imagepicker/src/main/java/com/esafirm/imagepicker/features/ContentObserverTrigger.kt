@@ -21,6 +21,7 @@ class ContentObserverTrigger(
             Lifecycle.Event.ON_CREATE -> onCreate()
             Lifecycle.Event.ON_DESTROY -> onDestroy()
             else -> {
+                // Ignore others event
             }
         }
     }
@@ -30,7 +31,7 @@ class ContentObserverTrigger(
             handler = Handler()
         }
 
-        val contentObserver = object : ContentObserver(handler) {
+        observer = object : ContentObserver(handler) {
             override fun onChange(selfChange: Boolean) {
                 loadData()
             }
@@ -39,7 +40,7 @@ class ContentObserverTrigger(
         contentResolver.registerContentObserver(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             false,
-            contentObserver
+            observer!!
         )
     }
 

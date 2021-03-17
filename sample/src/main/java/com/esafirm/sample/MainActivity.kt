@@ -59,14 +59,9 @@ class MainActivity : AppCompatActivity() {
         val onlyVideo = binding.switchOnlyVideo.isChecked
         val isExclude = binding.switchIncludeExclude.isChecked
 
-        ImagePickerComponentsHolder.setInternalComponent(object : DefaultImagePickerComponents(this) {
-            override val imageLoader: ImageLoader
-                get() = if (useCustomImageLoader) {
-                    GrayscaleImageLoader()
-                } else {
-                    DefaultImageLoader()
-                }
-        })
+        ImagePickerComponentsHolder.setInternalComponent(
+            CustomImagePickerComponents(this, useCustomImageLoader)
+        )
 
         return ImagePickerConfig {
 
