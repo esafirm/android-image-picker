@@ -10,7 +10,7 @@ public class BaseConfig implements Parcelable {
 
     private ImagePickerSavePath savePath;
     private ReturnMode returnMode;
-    private boolean saveImage;
+    private boolean saveImage = true;
 
     public ReturnMode getReturnMode() {
         return returnMode;

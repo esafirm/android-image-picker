@@ -25,7 +25,7 @@ class DefaultCameraModule : CameraModule, Serializable {
      * Helper function to get camera Intent without config
      */
     fun getCameraIntent(context: Context): Intent? {
-        return getCameraIntent(context, ImagePickerConfigFactory.createDefault(context))
+        return getCameraIntent(context, ImagePickerConfigFactory.createDefault())
     }
 
     override fun getCameraIntent(context: Context, config: BaseConfig): Intent? {
