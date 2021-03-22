@@ -33,14 +33,22 @@ class Image(
             }
         }
 
-    override fun equals(o: Any?): Boolean {
+    override fun equals(other: Any?): Boolean {
         return when {
-            this === o -> true
-            o == null || javaClass != o.javaClass -> return false
+            this === other -> true
+            other == null || javaClass != other.javaClass -> return false
             else -> {
-                val image = o as Image
+                val image = other as Image
                 image.path.equals(path, ignoreCase = true)
             }
         }
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + path.hashCode()
+        result = 31 * result + (uriHolder?.hashCode() ?: 0)
+        return result
     }
 }
