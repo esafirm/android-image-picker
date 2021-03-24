@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_custom_ui.*
  * the last selected image in the top half.
  */
 class CustomUIActivity : AppCompatActivity() {
- b
+
     private lateinit var actionBar: ActionBar
     private lateinit var imagePickerFragment: ImagePickerFragment
 
@@ -111,6 +111,10 @@ class CustomUIActivity : AppCompatActivity() {
         }
         if (id == com.esafirm.imagepicker.R.id.menu_camera) {
             imagePickerFragment.captureImageWithPermission()
+            return true
+        }
+        if (id == com.esafirm.imagepicker.R.id.menu_camcorder) {
+            imagePickerFragment.captureVideoWithPermission()
             return true
         }
         return super.onOptionsItemSelected(item)

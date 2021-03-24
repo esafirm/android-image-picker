@@ -69,6 +69,21 @@ public class ImagePickerUtils {
         return result;
     }
 
+    public static File createVideoFile(ImagePickerSavePath savePath, Context context) {
+        final File mediaStorageDir = createFileInDirectory(savePath, context);
+        if (mediaStorageDir == null) return null;
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(new Date());
+        File result = new File(mediaStorageDir, "VID_" + timeStamp + ".mp4");
+        int counter = 0;
+        while (result.exists()) {
+            counter++;
+            result = new File(mediaStorageDir, "VID_" + timeStamp + "(" + counter + ").mp4");
+        }
+        return result;
+    }
+
     public static String getNameFromFilePath(String path) {
         if (path.contains(File.separator)) {
             return path.substring(path.lastIndexOf(File.separator) + 1);
