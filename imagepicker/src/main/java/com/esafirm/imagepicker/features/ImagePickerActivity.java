@@ -104,6 +104,12 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             menuDone.setTitle(ConfigUtils.getDoneButtonText(this, config));
             menuDone.setVisible(imagePickerFragment.isShowDoneButton());
         }
+
+        MenuItem menuCamcorder = menu.findItem(R.id.menu_camcorder);
+        if (menuCamcorder != null) {
+            if (config != null)
+            menuCamcorder.setVisible(config.isShowCamcorder());
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 

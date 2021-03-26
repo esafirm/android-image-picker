@@ -55,7 +55,6 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     private static final String STATE_KEY_SELECTED_IMAGES = "Key.SelectedImages";
 
     private static final int RC_CAPTURE = 2000;
-    private static final int RC_VID_CAPTURE = 2001;
 
     private static final int RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
     private static final int RC_PERMISSION_REQUEST_CAMERA = 24;
@@ -474,7 +473,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         if (!CameraHelper.checkCameraAvailability(getActivity())) {
             return;
         }
-        presenter.captureVideo(this, getBaseConfig(), RC_VID_CAPTURE);
+        presenter.captureVideo(this, getBaseConfig(), RC_CAPTURE);
     }
 
     private void startContentObserver() {
