@@ -117,6 +117,11 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker showCamcorder(boolean show) {
+        config.setShowCamcorder(show);
+        return this;
+    }
+
     public ImagePicker toolbarArrowColor(@ColorInt int color) {
         config.setArrowColor(color);
         return this;
