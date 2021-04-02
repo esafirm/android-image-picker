@@ -9,11 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter
-import com.esafirm.imagepicker.features.ImagePickerComponentsHolder
-import com.esafirm.imagepicker.features.ImagePickerConfig
-import com.esafirm.imagepicker.features.ImagePickerMode
-import com.esafirm.imagepicker.features.IpCons
-import com.esafirm.imagepicker.features.ReturnMode
+import com.esafirm.imagepicker.features.*
 import com.esafirm.imagepicker.helper.ConfigUtils
 import com.esafirm.imagepicker.listeners.OnFolderClickListener
 import com.esafirm.imagepicker.listeners.OnImageClickListener
@@ -188,7 +184,7 @@ class RecyclerViewManager(
 
     val isShowDoneButton: Boolean
         get() = (!isDisplayingFolderView
-            && imageAdapter.selectedImages.isNotEmpty()
-            && config.returnMode !== ReturnMode.ALL && config.returnMode !== ReturnMode.GALLERY_ONLY)
+                && (imageAdapter.selectedImages.isNotEmpty() || config.showDoneButtonAlways)
+                && config.returnMode !== ReturnMode.ALL && config.returnMode !== ReturnMode.GALLERY_ONLY)
 
 }

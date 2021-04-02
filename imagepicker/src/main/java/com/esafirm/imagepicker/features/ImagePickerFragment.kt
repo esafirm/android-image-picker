@@ -170,7 +170,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
      * Get all selected images then return image to caller activity
      */
     fun onDone() {
-        presenter.onDoneSelectImages(recyclerViewManager!!.selectedImages)
+        presenter.onDoneSelectImages(recyclerViewManager!!.selectedImages,config)
     }
 
     /**
