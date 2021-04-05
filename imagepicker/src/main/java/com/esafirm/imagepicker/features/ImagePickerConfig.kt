@@ -27,7 +27,7 @@ class ImagePickerConfig(
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.NONE,
     override var isSaveImage: Boolean = true,
-    override var showDoneButtonAlways: Boolean = false
+    var showDoneButtonAlways: Boolean = false
 ) : BaseConfig(), Parcelable {
 
     @Transient

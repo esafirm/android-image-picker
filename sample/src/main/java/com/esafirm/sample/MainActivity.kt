@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
             folderTitle = "Folder" // folder selection title
             imageTitle = "Tap to select" // image selection title
             doneButtonText = "DONE" // done button text
-            showDoneButtonAlways = false // Show done button always or not
+            showDoneButtonAlways = true // Show done button always or not
             limit = 10 // max images can be selected (99 by default)
             isShowCamera = true // show camera or not (true by default)
             savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)

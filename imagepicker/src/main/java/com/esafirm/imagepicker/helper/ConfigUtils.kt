@@ -40,8 +40,4 @@ object ConfigUtils {
         val doneButtonText = config.doneButtonText
         return if (doneButtonText.isNullOrBlank()) context.getString(R.string.ef_done) else doneButtonText
     }
-
-    fun getDoneButtonTextVisibility(config: ImagePickerConfig): Boolean {
-        return config.showDoneButtonAlways
-    }
 }

@@ -10,6 +10,5 @@ import kotlinx.android.parcel.Parcelize
 class CameraOnlyConfig(
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.ALL,
-    override var isSaveImage: Boolean = true,
-    override var showDoneButtonAlways: Boolean = false
+    override var isSaveImage: Boolean = true
 ) : BaseConfig(), Parcelable

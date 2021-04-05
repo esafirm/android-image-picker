@@ -7,5 +7,4 @@ abstract class BaseConfig {
     abstract var savePath: ImagePickerSavePath
     abstract var returnMode: ReturnMode
     abstract var isSaveImage: Boolean
-    abstract var showDoneButtonAlways: Boolean
 }

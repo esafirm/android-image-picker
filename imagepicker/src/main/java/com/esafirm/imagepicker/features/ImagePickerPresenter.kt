@@ -58,7 +58,7 @@ internal class ImagePickerPresenter(
         })
     }
 
-    fun onDoneSelectImages(selectedImages: List<Image>?,config: BaseConfig) {
+    fun onDoneSelectImages(selectedImages: List<Image>?,config: ImagePickerConfig) {
 
         if(config.showDoneButtonAlways && selectedImages?.size==0){
             runOnUi {
