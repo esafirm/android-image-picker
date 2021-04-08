@@ -26,7 +26,8 @@ class ImagePickerConfig(
     var excludedImages: List<File> = emptyList(),
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.NONE,
-    override var isSaveImage: Boolean = true
+    override var isSaveImage: Boolean = true,
+    var showDoneButtonAlways: Boolean = false
 ) : BaseConfig(), Parcelable {
 
     @Transient
