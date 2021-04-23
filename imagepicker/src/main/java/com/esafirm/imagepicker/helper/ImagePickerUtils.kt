@@ -65,7 +65,7 @@ object ImagePickerUtils {
         } else path
     }
 
-    fun grantAppPermission(context: Context, intent: Intent?, fileUri: Uri?) {
+    fun grantAppPermission(context: Context, intent: Intent, fileUri: Uri?) {
         val resolvedIntentActivities = context.packageManager
             .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
         for (resolvedIntentInfo in resolvedIntentActivities) {
@@ -98,8 +98,11 @@ object ImagePickerUtils {
     fun getVideoDurationLabel(context: Context?, uri: Uri): String {
         val retriever = MediaMetadataRetriever()
         retriever.setDataSource(context, uri)
-        val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+        val durationData = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
         retriever.release()
+
+        // Return default duration label if null
+        val duration = durationData?.toLongOrNull() ?: return "00:00"
         val second = duration / 1000 % 60
         val minute = duration / (1000 * 60) % 60
         val hour = duration / (1000 * 60 * 60) % 24
