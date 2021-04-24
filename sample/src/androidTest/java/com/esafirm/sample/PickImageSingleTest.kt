@@ -4,22 +4,19 @@ package com.esafirm.sample
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.LargeTest
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.esafirm.sample.matchers.hasDrawable
 import com.esafirm.sample.utils.Views
+import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 import org.junit.Rule
 import org.junit.Test
@@ -39,17 +36,18 @@ class PickImageSingleTest {
 
     @Test
     fun pickImage() {
-        val appCompatButton = Views.pickImageButton()
-        appCompatButton.perform(click())
+        clickOn(R.id.switch_return_after_capture)
+        clickOn(R.id.switch_single)
+
+        Views.pickImageButton().perform(click())
 
         val recyclerView = Views.recyclersView()
         recyclerView.perform(actionOnItemAtPosition<ViewHolder>(0, click()))
 
-        val appCompatTextView = onView(allOf(withId(R.id.text_view)))
-        appCompatTextView.perform(scrollTo(), click())
+        Views.waitFor(1_000)
+        clickOn(R.id.text_view)
 
         val imageView = Views.imageDetail()
-
         imageView.check(matches(isDisplayed()))
         imageView.check(matches(hasDrawable()))
     }
