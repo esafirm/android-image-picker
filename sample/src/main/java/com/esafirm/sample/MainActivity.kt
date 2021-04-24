@@ -8,8 +8,6 @@ import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import com.esafirm.imagepicker.features.*
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
-import com.esafirm.imagepicker.features.imageloader.DefaultImageLoader
-import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.model.Image
 import com.esafirm.sample.databinding.ActivityMainBinding
 

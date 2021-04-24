@@ -2,10 +2,12 @@ package com.esafirm.sample.utils
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ScrollView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -18,6 +20,14 @@ import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.IsInstanceOf
 
 object Views {
+    fun waitFor(timeInMs: Long) {
+        Thread.sleep(timeInMs)
+    }
+
+    /* --------------------------------------------------- */
+    /* > Specific view */
+    /* --------------------------------------------------- */
+
     fun pickImageButton(): ViewInteraction {
         return onView(
             allOf(withId(R.id.button_pick_image), withText("PICK IMAGE"),
@@ -52,7 +62,9 @@ object Views {
         return onView(
             allOf(ViewMatchers.withParent(allOf(withId(R.id.container),
                 ViewMatchers.withParent(IsInstanceOf.instanceOf(ScrollView::class.java)))),
-                isDisplayed()))
+                isDisplayed(),
+                isAssignableFrom(ImageView::class.java)
+            ))
     }
 
     fun childAtPosition(
