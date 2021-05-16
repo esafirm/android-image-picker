@@ -39,9 +39,7 @@ And add this to your module's `build.gradle`
 
 ```groovy
 dependencies {
-	implementation 'com.github.esafirm.android-image-picker:imagepicker:x.y.z'
-	// If you have a problem with Glide, please use the same Glide version or simply open an issue
-	implementation 'com.github.bumptech.glide:glide:4.5.0'
+  implementation 'com.github.esafirm:android-image-picker:x.y.z'
 }
 ```
 
@@ -135,7 +133,7 @@ You also still can use the `DefaultCameraModule` but discouraged to do it.
 
 # Version 2.x.x
 
-If you still use the previous version, you can check 
+If you still use the previous version, you can check `2.x` branch in [here](https://github.com/esafirm/android-image-picker/tree/2.x)
 
 # Support Me!
 
