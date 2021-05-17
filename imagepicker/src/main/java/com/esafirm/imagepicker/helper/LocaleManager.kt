@@ -3,7 +3,7 @@ package com.esafirm.imagepicker.helper
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
-import java.util.*
+import java.util.Locale
 
 object LocaleManager {
 

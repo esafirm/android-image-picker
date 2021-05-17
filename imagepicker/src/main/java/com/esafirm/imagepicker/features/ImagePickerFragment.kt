@@ -29,7 +29,7 @@ import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
-import java.util.*
+import java.util.ArrayList
 
 class ImagePickerFragment : Fragment(), ImagePickerView {
 
@@ -41,7 +41,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     }
 
     private val config: ImagePickerConfig by lazy {
-        arguments!!.getParcelable(ImagePickerConfig::class.java.simpleName)!!
+        requireArguments().getParcelable(ImagePickerConfig::class.java.simpleName)!!
     }
 
     private lateinit var presenter: ImagePickerPresenter
@@ -170,7 +170,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
      * Get all selected images then return image to caller activity
      */
     fun onDone() {
-        presenter.onDoneSelectImages(recyclerViewManager!!.selectedImages,config)
+        presenter.onDoneSelectImages(recyclerViewManager!!.selectedImages, config)
     }
 
     /**
@@ -208,7 +208,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     private fun requestWriteExternalPermission() {
         IpLogger.w("Write External permission is not granted. Requesting permission")
         val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             requestPermissions(permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE)
         } else {
             val permission = ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED
@@ -275,7 +275,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
      * Create a temporary file and pass file Uri to camera intent
      */
     fun captureImage() {
-        if (!checkCameraAvailability(activity!!)) {
+        if (!checkCameraAvailability(requireActivity())) {
             return
         }
         presenter.captureImage(this, config, RC_CAPTURE)
