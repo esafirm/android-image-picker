@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 
 public class ImagePickerPreferences {
 
-    public static final String PREF_WRITE_EXTERNAL_STORAGE_REQUESTED = "writeExternalRequested";
+    public static final String PREF_EXTERNAL_STORAGE_REQUESTED = "writeExternalRequested";
     public static final String PREF_CAMERA_REQUESTED = "cameraRequested";
 
     private Context context;

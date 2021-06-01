@@ -18,7 +18,7 @@
     <string name="ef_error_null_cursor">Ups, ada yang tidak beres!</string>
 
     <string name="ef_msg_empty_images">Gambar tidak ditemukan</string>
-    <string name="ef_msg_no_write_external_permission">Mohon berikan izin terhadap penyimpanan untuk memilih gambar</string>
+    <string name="ef_msg_no_external_permission">Mohon berikan izin terhadap penyimpanan untuk memilih gambar</string>
     <string name="ef_msg_no_camera_permission">Mohon berikan izin terhadap kamera untuk mengambil gambar</string>
     <string name="ef_msg_limit_images">Gambar yang terpilih sudah mencapai batas maksimal</string>
 </resources>

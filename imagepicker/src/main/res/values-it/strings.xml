@@ -17,7 +17,7 @@
     <string name="ef_error_null_cursor">Oops, qualcosa è andato storto!</string>
 
     <string name="ef_msg_empty_images">Nessuna immagine trovata</string>
-    <string name="ef_msg_no_write_external_permission">Dai il permesso per poter selezionare le immagini</string>
+    <string name="ef_msg_no_external_permission">Dai il permesso per poter selezionare le immagini</string>
     <string name="ef_msg_no_camera_permission">Dai il permesso per poter scattare una foto</string>
     <string name="ef_msg_limit_images">Hai raggiunto il limite massimo di selezione</string>
     <string name="ef_ltitle_permission_denied">Permesso negato</string>

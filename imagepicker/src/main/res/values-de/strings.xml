@@ -18,7 +18,7 @@
     <string name="ef_error_null_cursor">Ups, da ist was schiefgegangen!</string>
 
     <string name="ef_msg_empty_images">Keine Bilder gefunden</string>
-    <string name="ef_msg_no_write_external_permission">Bitte erlaube Zugriff auf den Speicher um Bilder auszuwählen</string>
+    <string name="ef_msg_no_external_permission">Bitte erlaube Zugriff auf den Speicher um Bilder auszuwählen</string>
     <string name="ef_msg_no_camera_permission">Bitte erlaube Zugriff auf die Kamera um Bilder aufzunehmen</string>
     <string name="ef_msg_limit_images">Maximale Anzahl Bilder erreicht</string>
 

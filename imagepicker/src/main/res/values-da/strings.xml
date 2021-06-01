@@ -18,7 +18,7 @@
     <string name="ef_error_null_cursor">Beklager, der er sket en fejl!</string>
 
     <string name="ef_msg_empty_images">Ingen billeder fundet</string>
-    <string name="ef_msg_no_write_external_permission">Giv tilladelse til at vælge billeder fra telefon hukkommelsen</string>
+    <string name="ef_msg_no_external_permission">Giv tilladelse til at vælge billeder fra telefon hukkommelsen</string>
     <string name="ef_msg_no_camera_permission">Giv tilladelse til kamera til at tage billeder</string>
     <string name="ef_msg_limit_images">Der kan ikke vælges flere billeder</string>
 

@@ -18,7 +18,7 @@
     <string name="ef_error_null_cursor">عذراً، هناك خطأ ما!</string>
 
     <string name="ef_msg_empty_images">لم يتم العثور على صور</string>
-    <string name="ef_msg_no_write_external_permission">عليك إعطاء التطبيق الصلاحية لاستخدام الصور</string>
+    <string name="ef_msg_no_external_permission">عليك إعطاء التطبيق الصلاحية لاستخدام الصور</string>
     <string name="ef_msg_no_camera_permission">عليك إعطاء التطبيق الصلاحية لاستخدام الكاميرا لتتمكن من التصوير</string>
     <string name="ef_msg_limit_images">تحديد إختيار الصور</string>
 </resources>
