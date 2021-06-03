@@ -134,7 +134,7 @@ class CustomUIActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
-        setSupportActionBar(binding.toolbar as Toolbar)
+        setSupportActionBar(binding.toolbar.root as Toolbar)
         checkNotNull(supportActionBar)
 
         actionBar = supportActionBar!!
