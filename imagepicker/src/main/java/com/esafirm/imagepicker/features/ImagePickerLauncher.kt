@@ -30,9 +30,10 @@ class ImagePickerLauncher(
 typealias ImagePickerCallback = (List<Image>) -> Unit
 
 fun Fragment.registerImagePicker(
+    context: Context,
     callback: ImagePickerCallback
 ): ImagePickerLauncher {
-    return ImagePickerLauncher(requireContext(), createLauncher(callback))
+    return ImagePickerLauncher(context, createLauncher(callback))
 }
 
 fun ComponentActivity.registerImagePicker(
