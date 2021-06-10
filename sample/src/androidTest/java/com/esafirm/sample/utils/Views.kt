@@ -67,7 +67,7 @@ object Views {
             ))
     }
 
-    fun childAtPosition(
+    private fun childAtPosition(
         parentMatcher: Matcher<View>, position: Int): Matcher<View> {
 
         return object : TypeSafeMatcher<View>() {

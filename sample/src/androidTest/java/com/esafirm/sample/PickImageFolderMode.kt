@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4ClassRunner::class)
-class PickImageSingleTest {
+class PickImageFolderMode {
 
     @Rule
     @JvmField
@@ -29,14 +29,22 @@ class PickImageSingleTest {
 
     @Test
     fun pickImage() {
-        clickOn(R.id.switch_return_after_capture)
-        clickOn(R.id.switch_single)
+        // Activate switch
+        clickOn(R.id.switch_folder_mode)
 
         Views.pickImageButton().perform(click())
 
         val recyclerView = Views.recyclersView()
+        // Click folder
+        recyclerView.perform(actionOnItemAtPosition<ViewHolder>(0, click()))
+        // Click image
         recyclerView.perform(actionOnItemAtPosition<ViewHolder>(0, click()))
 
+        // Click done button
+        val actionMenuItemView = Views.pickerDoneButton()
+        actionMenuItemView.perform(click())
+
+        // Check image is picked
         Views.waitFor(1_000)
         clickOn(R.id.text_view)
 
