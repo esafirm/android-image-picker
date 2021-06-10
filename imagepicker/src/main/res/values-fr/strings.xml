@@ -18,7 +18,7 @@
     <string name="ef_error_null_cursor">Oups, quelque chose s\'est mal déroulé!</string>
 
     <string name="ef_msg_empty_images">Aucune image trouvée</string>
-    <string name="ef_msg_no_write_external_permission">L\'application nécessite l\'autorisation de stockage pour afficher les images</string>
+    <string name="ef_msg_no_external_permission">L\'application nécessite l\'autorisation de stockage pour afficher les images</string>
     <string name="ef_msg_no_camera_permission">L\'application nécessite l\'autorisation de la caméra</string>
     <string name="ef_msg_limit_images">Limite du nombre d\'images</string>
 

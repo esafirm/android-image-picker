@@ -47,7 +47,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
+import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_EXTERNAL_STORAGE_REQUESTED;
 
 public class ImagePickerFragment extends Fragment implements ImagePickerView {
     private static final String STATE_KEY_CAMERA_MODULE = "Key.CameraModule";
@@ -56,8 +56,11 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
     private static final int RC_CAPTURE = 2000;
 
-    private static final int RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23;
+    private static final int RC_PERMISSION_REQUEST_EXTERNAL_STORAGE = 23;
     private static final int RC_PERMISSION_REQUEST_CAMERA = 24;
+
+    private static final boolean IS_EXTERNAL_STORAGE_LEGACY = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || android.os.Environment.isExternalStorageLegacy();
+    private static final String REQUIRED_EXTERNAL_STORAGE_PERMISSION = IS_EXTERNAL_STORAGE_LEGACY ?  Manifest.permission.WRITE_EXTERNAL_STORAGE : Manifest.permission.READ_EXTERNAL_STORAGE;
 
     private IpLogger logger = IpLogger.getInstance();
 
@@ -272,11 +275,11 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
      * Check permission
      */
     private void getDataWithPermission() {
-        int rc = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int rc = ActivityCompat.checkSelfPermission(getActivity(), REQUIRED_EXTERNAL_STORAGE_PERMISSION);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             getData();
         } else {
-            requestWriteExternalPermission();
+            requestExternalPermission();
         }
     }
 
@@ -293,34 +296,34 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
      * If permission denied or app is first launched, request for permission
      * If permission denied and user choose 'Never Ask Again', show snackbar with an action that navigate to app settings
      */
-    private void requestWriteExternalPermission() {
-        logger.w("Write External permission is not granted. Requesting permission");
+    private void requestExternalPermission() {
+        logger.w("External permission is not granted. Requesting permission");
 
-        final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        final String[] permissions = new String[]{REQUIRED_EXTERNAL_STORAGE_PERMISSION};
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            requestPermissions(permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_EXTERNAL_STORAGE_PERMISSION)) {
+            requestPermissions(permissions, RC_PERMISSION_REQUEST_EXTERNAL_STORAGE);
         } else {
-            final String permission = PREF_WRITE_EXTERNAL_STORAGE_REQUESTED;
+            final String permission = PREF_EXTERNAL_STORAGE_REQUESTED;
             if (!preferences.isPermissionRequested(permission)) {
                 preferences.setPermissionRequested(permission);
-                requestPermissions(permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+                requestPermissions(permissions, RC_PERMISSION_REQUEST_EXTERNAL_STORAGE);
             } else {
-                snackBarView.show(R.string.ef_msg_no_write_external_permission, v -> openAppSettings());
+                snackBarView.show(R.string.ef_msg_no_external_permission, v -> openAppSettings());
             }
         }
     }
 
     private void requestCameraPermissions() {
-        logger.w("Write External permission is not granted. Requesting permission");
+        logger.w("Camera permission is not granted. Requesting permission");
 
         ArrayList<String> permissions = new ArrayList<>(2);
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.CAMERA);
         }
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), REQUIRED_EXTERNAL_STORAGE_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(REQUIRED_EXTERNAL_STORAGE_PERMISSION);
         }
 
         if (checkForRationale(permissions)) {
@@ -357,9 +360,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE: {
+            case RC_PERMISSION_REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    logger.d("Write External permission granted");
+                    logger.d("External permission granted");
                     getData();
                     return;
                 }
@@ -421,7 +424,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final boolean isCameraGranted = ActivityCompat
                     .checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-            final boolean isWriteGranted = ActivityCompat
+            final boolean isWriteGranted = !IS_EXTERNAL_STORAGE_LEGACY || ActivityCompat
                     .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
             if (isCameraGranted && isWriteGranted) {
                 captureImage();

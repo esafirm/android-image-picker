@@ -13,7 +13,7 @@
     <string name="ef_error_no_camera">Камера недоступна</string>
     <string name="ef_error_null_cursor">Ой! Что-то пошло не так!</string>
     <string name="ef_msg_empty_images">Изображений не найдено</string>
-    <string name="ef_msg_no_write_external_permission">Пожалуйста, разрешите доступ к хранилищу, чтобы выбрать изображения</string>
+    <string name="ef_msg_no_external_permission">Пожалуйста, разрешите доступ к хранилищу, чтобы выбрать изображения</string>
     <string name="ef_msg_no_camera_permission">Пожалуйста, разрешите доступ к камере, чтобы сделать снимок</string>
     <string name="ef_msg_limit_images">Лимит выбора изображений</string>
 </resources>

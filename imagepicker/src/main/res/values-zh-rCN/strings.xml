@@ -16,7 +16,7 @@
     <string name="ef_error_null_cursor">啊哦，发生错误！</string>
 
     <string name="ef_msg_empty_images">找不到照片</string>
-    <string name="ef_msg_no_write_external_permission">请给予存取外部存储权限以选择照片</string>
+    <string name="ef_msg_no_external_permission">请给予存取外部存储权限以选择照片</string>
     <string name="ef_msg_no_camera_permission">请给予获取相机权限以拍摄照片</string>
     <string name="ef_msg_limit_images">已达到最多选择照片数量</string>
     <string name="ef_ltitle_permission_denied">没有权限</string>

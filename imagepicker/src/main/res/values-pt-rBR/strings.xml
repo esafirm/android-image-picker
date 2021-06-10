@@ -18,7 +18,7 @@
     <string name="ef_error_null_cursor">Ops, algo deu errado!</string>
 
     <string name="ef_msg_empty_images">Nenhuma imagem encontrada</string>
-    <string name="ef_msg_no_write_external_permission">Por favor dê permissão ao armazenamento para selecionar as imagens</string>
+    <string name="ef_msg_no_external_permission">Por favor dê permissão ao armazenamento para selecionar as imagens</string>
     <string name="ef_msg_no_camera_permission">Por favor dê permissão à câmera para tirar fotos</string>
     <string name="ef_msg_limit_images">Limite de imagens atingido</string>
 
