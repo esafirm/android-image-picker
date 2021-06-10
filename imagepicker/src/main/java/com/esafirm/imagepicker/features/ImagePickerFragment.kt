@@ -27,14 +27,15 @@ import com.esafirm.imagepicker.helper.ConfigUtils
 import com.esafirm.imagepicker.helper.ImagePickerPreferences
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger
+import com.esafirm.imagepicker.helper.state.fetch
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import java.util.ArrayList
 
-class ImagePickerFragment : Fragment(), ImagePickerView {
+class ImagePickerFragment : Fragment() {
 
     private var binding: EfFragmentImagePickerBinding? = null
-    private var recyclerViewManager: RecyclerViewManager? = null
+    private lateinit var recyclerViewManager: RecyclerViewManager
 
     private val preferences: ImagePickerPreferences by lazy {
         ImagePickerPreferences(requireContext())
@@ -56,7 +57,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setupComponents()
+        presenter = ImagePickerPresenter(DefaultImageFileLoader(requireContext()))
 
         if (::interactionListener.isInitialized.not()) {
             throw RuntimeException("ImagePickerFragment needs an " +
@@ -100,10 +101,45 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        subscribeToUiState()
+    }
+
+    private fun subscribeToUiState() = presenter.getUiState().observe(this) { state ->
+        showLoading(state.isLoading)
+
+        state.error.fetch {
+            showError(this)
+        }
+
+        val isEmpty = state.images.isEmpty()
+        if (isEmpty) {
+            showEmpty()
+            return@observe
+        }
+
+        if (config.isFolderMode) {
+            setFolderAdapter(state.folders)
+        } else {
+            setImageAdapter(state.images)
+        }
+
+        state.finishPickImage.fetch {
+            val images = this
+            interactionListener.finishPickImages(
+                ImagePickerUtils.createResultIntent(images)
+            )
+        }
+
+        state.showCapturedImage.fetch {
+            loadDataWithPermission()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-        recyclerViewManager = null
     }
 
     private fun createRecyclerViewManager(
@@ -129,11 +165,6 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         }
     }
 
-    private fun setupComponents() {
-        presenter = ImagePickerPresenter(DefaultImageFileLoader(requireContext()))
-        presenter.attachView(this)
-    }
-
     override fun onResume() {
         super.onResume()
         loadDataWithPermission()
@@ -141,8 +172,8 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager?.recyclerState)
-        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager?.selectedImages as ArrayList<out Parcelable?>)
+        outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager.recyclerState)
+        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager.selectedImages as ArrayList<out Parcelable?>)
     }
 
     /**
@@ -152,17 +183,17 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
      * 3. Update title
      */
     private fun setImageAdapter(images: List<Image>) {
-        recyclerViewManager?.setImageAdapter(images)
+        recyclerViewManager.setImageAdapter(images)
         updateTitle()
     }
 
     private fun setFolderAdapter(folders: List<Folder>) {
-        recyclerViewManager?.setFolderAdapter(folders)
+        recyclerViewManager.setFolderAdapter(folders)
         updateTitle()
     }
 
     private fun updateTitle() {
-        interactionListener.setTitle(recyclerViewManager!!.title)
+        interactionListener.setTitle(recyclerViewManager.title)
     }
 
     /**
@@ -170,7 +201,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
      * Get all selected images then return image to caller activity
      */
     fun onDone() {
-        presenter.onDoneSelectImages(recyclerViewManager!!.selectedImages, config)
+        presenter.onDoneSelectImages(recyclerViewManager.selectedImages, config)
     }
 
     /**
@@ -180,7 +211,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         super.onConfigurationChanged(newConfig)
 
         // recyclerViewManager can be null here if we use cameraOnly mode
-        recyclerViewManager?.changeOrientation(newConfig.orientation)
+        recyclerViewManager.changeOrientation(newConfig.orientation)
     }
 
     /**
@@ -195,10 +226,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         }
     }
 
-    private fun loadData() {
-        presenter.abortLoad()
-        presenter.loadImages(config)
-    }
+    private fun loadData() = presenter.loadData(config)
 
     /**
      * Request for permission
@@ -284,14 +312,13 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.abortLoad()
-        presenter.detachView()
     }
 
     /**
      * @return true if the [Fragment] consume the back event
      */
     fun handleBack(): Boolean {
-        if (recyclerViewManager!!.handleBack()) {
+        if (recyclerViewManager.handleBack()) {
             // Handled.
             updateTitle()
             return true
@@ -300,7 +327,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
     }
 
     val isShowDoneButton: Boolean
-        get() = recyclerViewManager!!.isShowDoneButton
+        get() = recyclerViewManager.isShowDoneButton
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -313,27 +340,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         interactionListener = listener
     }
 
-    /* --------------------------------------------------- */
-    /* > View Methods */
-    /* --------------------------------------------------- */
-
-    override fun finishPickImages(images: List<Image>?) {
-        interactionListener.finishPickImages(ImagePickerUtils.createResultIntent(images))
-    }
-
-    override fun showCapturedImage() {
-        loadDataWithPermission()
-    }
-
-    override fun showFetchCompleted(images: List<Image>, folders: List<Folder>) {
-        if (config.isFolderMode) {
-            setFolderAdapter(folders)
-        } else {
-            setImageAdapter(images)
-        }
-    }
-
-    override fun showError(throwable: Throwable?) {
+    private fun showError(throwable: Throwable?) {
         var message = "Unknown Error"
         if (throwable is NullPointerException) {
             message = "Images do not exist"
@@ -341,7 +348,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showLoading(isLoading: Boolean) {
+    private fun showLoading(isLoading: Boolean) {
         binding?.run {
             progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
@@ -349,7 +356,7 @@ class ImagePickerFragment : Fragment(), ImagePickerView {
         }
     }
 
-    override fun showEmpty() {
+    private fun showEmpty() {
         binding?.run {
             progressBar.visibility = View.GONE
             recyclerView.visibility = View.GONE

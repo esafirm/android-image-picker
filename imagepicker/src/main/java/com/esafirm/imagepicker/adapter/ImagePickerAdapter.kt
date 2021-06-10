@@ -9,12 +9,15 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter.ImageViewHolder
 import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.features.imageloader.ImageType
 import com.esafirm.imagepicker.helper.ImagePickerUtils
+import com.esafirm.imagepicker.helper.diff.SimpleDiffUtilCallBack
 import com.esafirm.imagepicker.listeners.OnImageClickListener
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener
 import com.esafirm.imagepicker.model.Image
@@ -28,7 +31,10 @@ class ImagePickerAdapter(
     private val itemClickListener: OnImageClickListener
 ) : BaseListAdapter<ImageViewHolder>(context, imageLoader) {
 
-    private val images: MutableList<Image> = mutableListOf()
+    private val listDiffer by lazy {
+        AsyncListDiffer<Image>(this, SimpleDiffUtilCallBack())
+    }
+
     val selectedImages: MutableList<Image> = mutableListOf()
 
     private var imageSelectedListener: OnImageSelectedListener? = null
@@ -50,7 +56,7 @@ class ImagePickerAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ImageViewHolder, position: Int) {
-        val image = images.getOrNull(position) ?: return
+        val image = getItem(position) ?: return
 
         val isSelected = isSelected(image)
         imageLoader.loadImage(image, viewHolder.imageView, ImageType.GALLERY)
@@ -99,11 +105,10 @@ class ImagePickerAdapter(
         return selectedImages.any { it.path == image.path }
     }
 
-    override fun getItemCount() = images.size
+    override fun getItemCount() = listDiffer.currentList.size
 
     fun setData(images: List<Image>) {
-        this.images.clear()
-        this.images.addAll(images)
+        listDiffer.submitList(images)
     }
 
     private fun addSelected(image: Image, position: Int) {
@@ -136,7 +141,7 @@ class ImagePickerAdapter(
         this.imageSelectedListener = imageSelectedListener
     }
 
-    fun getItem(position: Int) = images.getOrNull(position)
+    fun getItem(position: Int) = listDiffer.currentList.getOrNull(position)
 
     class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
         val imageView: ImageView = itemView.image_view

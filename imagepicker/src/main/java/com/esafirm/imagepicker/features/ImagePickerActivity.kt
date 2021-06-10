@@ -17,10 +17,9 @@ import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpCrasher
 import com.esafirm.imagepicker.helper.LocaleManager
 import com.esafirm.imagepicker.helper.ViewUtils
-import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 
-class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener, ImagePickerView {
+class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener {
 
     companion object {
         private const val RC_CAMERA = 1011
@@ -168,33 +167,5 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener,
     override fun finishPickImages(result: Intent?) {
         setResult(RESULT_OK, result)
         finish()
-    }
-
-    /* --------------------------------------------------- */
-    /* > View Methods */
-    /* --------------------------------------------------- */
-
-    override fun showLoading(isLoading: Boolean) {
-        imagePickerFragment.showLoading(isLoading)
-    }
-
-    override fun showFetchCompleted(images: List<Image>, folders: List<Folder>) {
-        imagePickerFragment.showFetchCompleted(images, folders)
-    }
-
-    override fun showError(throwable: Throwable?) {
-        imagePickerFragment.showError(throwable)
-    }
-
-    override fun showEmpty() {
-        imagePickerFragment.showEmpty()
-    }
-
-    override fun showCapturedImage() {
-        imagePickerFragment.showCapturedImage()
-    }
-
-    override fun finishPickImages(images: List<Image>?) {
-        imagePickerFragment.finishPickImages(images)
     }
 }
