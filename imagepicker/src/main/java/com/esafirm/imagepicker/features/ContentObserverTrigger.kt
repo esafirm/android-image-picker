@@ -10,7 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 
 class ContentObserverTrigger(
     private val contentResolver: ContentResolver,
-    private val loadData: () -> Unit
+    private val callback: () -> Unit
 ) : LifecycleEventObserver {
 
     private var handler: Handler? = null
@@ -33,7 +33,7 @@ class ContentObserverTrigger(
 
         observer = object : ContentObserver(handler) {
             override fun onChange(selfChange: Boolean) {
-                loadData()
+                callback()
             }
         }
 

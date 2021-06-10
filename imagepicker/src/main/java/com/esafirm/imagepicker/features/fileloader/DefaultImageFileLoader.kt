@@ -1,15 +1,19 @@
 package com.esafirm.imagepicker.features.fileloader
 
+import android.content.ContentResolver
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
+import android.os.Build
+import android.os.Bundle
 import android.provider.MediaStore
+import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.common.ImageLoaderListener
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import java.io.File
 import java.util.ArrayList
-import java.util.HashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -19,13 +23,15 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
     private var executor: ExecutorService? = null
 
     override fun loadDeviceImages(
-        isFolderMode: Boolean,
-        onlyVideo: Boolean,
-        includeVideo: Boolean,
-        includeAnimation: Boolean,
-        excludedImages: List<File>,
+        config: ImagePickerConfig,
         listener: ImageLoaderListener
     ) {
+        val isFolderMode = config.isFolderMode
+        val includeVideo = config.isIncludeVideo
+        val onlyVideo = config.isOnlyVideo
+        val includeAnimation = config.isIncludeAnimation
+        val excludedImages = config.excludedImages
+
         getExecutorService().execute(
             ImageLoadRunnable(
                 context.applicationContext,
@@ -56,12 +62,13 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
         private val onlyVideo: Boolean,
         private val includeVideo: Boolean,
         private val includeAnimation: Boolean,
-        private val exlucedImages: List<File>?,
+        private val excludedImages: List<File>?,
         private val listener: ImageLoaderListener
     ) : Runnable {
 
         companion object {
             private const val DEFAULT_FOLDER_NAME = "SDCARD"
+            private const val FIRST_LIMIT = 5
         }
 
         private val projection = arrayOf(
@@ -71,18 +78,60 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
 
-        fun getQuerySelection(): String? {
-            if (onlyVideo) {
-                return (MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
+        private fun queryData(
+            limit: Int? = null,
+            offset: Int? = null
+        ): Cursor? {
+            val sourceUri = getSourceUri()
+            val type = MediaStore.Files.FileColumns.MEDIA_TYPE
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val selectionArgs = when {
+                    onlyVideo -> arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString())
+                    includeVideo -> arrayOf(
+                        MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
+                        MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
+                    )
+                    else -> arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString())
+                }
+
+                val args = Bundle().apply {
+                    // Limit & Offset
+                    if (limit != null) {
+                        putInt(ContentResolver.QUERY_ARG_LIMIT, limit)
+                    }
+                    if (offset != null) {
+                        putInt(ContentResolver.QUERY_ARG_OFFSET, offset)
+                    }
+                    // Sort function
+                    putString(
+                        ContentResolver.QUERY_ARG_SORT_COLUMNS,
+                        MediaStore.Images.Media.DATE_ADDED
+                    )
+                    // Selection
+                    putStringArray(
+                        ContentResolver.QUERY_ARG_SQL_SELECTION_ARGS,
+                        selectionArgs
+                    )
+                }
+
+                return context.contentResolver.query(sourceUri, projection, args, null)
             }
-            if (includeVideo) {
-                return (MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + " OR "
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                    + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)
+
+            val selection = when {
+                onlyVideo -> "${type}=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}"
+                includeVideo -> "$type=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE} OR $type=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}"
+                else -> ""
             }
-            return null
+
+            val sortOrder = MediaStore.Images.Media.DATE_ADDED.let {
+                if (limit != null) "$it LIMIT $limit" else it
+            }.let {
+                if (offset != null) "$it OFFSET $offset" else it
+            }
+
+            return context.contentResolver.query(sourceUri, projection,
+                selection, null, sortOrder)
         }
 
         private fun getSourceUri(): Uri {
@@ -91,49 +140,49 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             } else MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         }
 
-        override fun run() {
-            val sourceUri = getSourceUri()
-            val querySelection = getQuerySelection()
+        private fun cursorToImage(cursor: Cursor): Image? {
+            val path = cursor.getString(cursor.getColumnIndex(projection[2]))
+            val file = makeSafeFile(path) ?: return null
+            if (excludedImages != null && excludedImages.contains(file)) return null
 
-            val cursor = context.contentResolver.query(sourceUri, projection,
-                querySelection, null, MediaStore.Images.Media.DATE_ADDED)
+            // Exclude GIF when we don't want it
+            if (!includeAnimation) {
+                if (ImagePickerUtils.isGifFormat(path)) return null
+            }
+
+            val id = cursor.getLong(cursor.getColumnIndex(projection[0]))
+            val name = cursor.getString(cursor.getColumnIndex(projection[1]))
+
+            if (name != null) {
+                return Image(id, name, path)
+            }
+            return null
+        }
+
+        private fun processData(cursor: Cursor?) {
             if (cursor == null) {
                 listener.onFailed(NullPointerException())
                 return
             }
-            val temp: MutableList<Image> = ArrayList()
-            var folderMap: MutableMap<String, Folder> = mutableMapOf()
-            if (isFolderMode) {
-                folderMap = HashMap()
-            }
+
+            val result: MutableList<Image> = ArrayList()
+            val folderMap: MutableMap<String, Folder> = mutableMapOf()
+
             if (cursor.moveToLast()) {
                 do {
-                    val path = cursor.getString(cursor.getColumnIndex(projection[2]))
-                    val file = makeSafeFile(path) ?: continue
-                    if (exlucedImages != null && exlucedImages.contains(file)) continue
+                    val image = cursorToImage(cursor)
 
-                    // Exclude GIF when we don't want it
-                    if (!includeAnimation) {
-                        if (ImagePickerUtils.isGifFormat(path)) {
-                            continue
+                    if (image != null) {
+                        result.add(image)
+
+                        // Load folders
+                        if (!isFolderMode) continue
+                        var bucket = cursor.getString(cursor.getColumnIndex(projection[3]))
+                        if (bucket == null) {
+                            val parent = File(image.path).parentFile
+                            bucket = if (parent != null) parent.name else DEFAULT_FOLDER_NAME
                         }
-                    }
-                    val id = cursor.getLong(cursor.getColumnIndex(projection[0]))
-                    val name = cursor.getString(cursor.getColumnIndex(projection[1]))
-                    var bucket = cursor.getString(cursor.getColumnIndex(projection[3]))
 
-                    if (bucket == null) {
-                        val parent = File(path).parentFile
-                        bucket = if (parent != null) {
-                            parent.name
-                        } else {
-                            DEFAULT_FOLDER_NAME
-                        }
-                    }
-
-                    if (name != null) {
-                        val image = Image(id, name, path)
-                        temp.add(image)
                         if (bucket != null) {
                             var folder = folderMap[bucket]
                             if (folder == null) {
@@ -143,12 +192,21 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                             folder.images.add(image)
                         }
                     }
+
                 } while (cursor.moveToPrevious())
             }
             cursor.close()
 
             val folders = folderMap.values.toList()
-            listener.onImageLoaded(temp, folders)
+            listener.onImageLoaded(result, folders)
+        }
+
+        override fun run() {
+            // We're gonna load two times for faster load if the devices has many images
+            val cursor = queryData(FIRST_LIMIT)
+            if (cursor?.count == FIRST_LIMIT) {
+                processData(queryData())
+            }
         }
     }
 
