@@ -1,6 +1,5 @@
 package com.esafirm.sample
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -12,16 +11,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private lateinit var binding: FragmentMainBinding
 
-    private lateinit var imagePickerLauncher: ImagePickerLauncher
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        imagePickerLauncher = registerImagePicker(context) {
-            val firstImage = it.firstOrNull() ?: return@registerImagePicker
-            Glide.with(binding.imgFragment)
-                .load(firstImage.uri)
-                .into(binding.imgFragment)
-        }
+    private val imagePickerLauncher = registerImagePicker {
+        val firstImage = it.firstOrNull() ?: return@registerImagePicker
+        Glide.with(binding.imgFragment)
+            .load(firstImage.uri)
+            .into(binding.imgFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

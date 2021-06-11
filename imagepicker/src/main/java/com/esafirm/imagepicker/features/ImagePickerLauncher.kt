@@ -17,12 +17,12 @@ import com.esafirm.imagepicker.model.Image
 /* --------------------------------------------------- */
 
 class ImagePickerLauncher(
-    private val context: Context,
+    private val context: () -> Context,
     private val resultLauncher: ActivityResultLauncher<Intent>
 ) {
     fun launch(config: BaseConfig = ImagePickerConfig()) {
         val finalConfig = if (config is ImagePickerConfig) checkConfig(config) else config
-        val intent = createImagePickerIntent(context, finalConfig)
+        val intent = createImagePickerIntent(context(), finalConfig)
         resultLauncher.launch(intent)
     }
 }
@@ -30,16 +30,17 @@ class ImagePickerLauncher(
 typealias ImagePickerCallback = (List<Image>) -> Unit
 
 fun Fragment.registerImagePicker(
-    context: Context,
+    context: () -> Context = { requireContext() },
     callback: ImagePickerCallback
 ): ImagePickerLauncher {
     return ImagePickerLauncher(context, createLauncher(callback))
 }
 
 fun ComponentActivity.registerImagePicker(
+    context: () -> Context = { this },
     callback: ImagePickerCallback
 ): ImagePickerLauncher {
-    return ImagePickerLauncher(this, createLauncher(callback))
+    return ImagePickerLauncher(context, createLauncher(callback))
 }
 
 fun createImagePickerIntent(context: Context, config: BaseConfig): Intent {
