@@ -68,7 +68,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
 
         companion object {
             private const val DEFAULT_FOLDER_NAME = "SDCARD"
-            private const val FIRST_LIMIT = 5
+            private const val FIRST_LIMIT = 1_000
         }
 
         private val projection = arrayOf(
