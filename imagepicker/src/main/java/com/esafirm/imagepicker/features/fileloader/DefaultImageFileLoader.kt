@@ -41,7 +41,8 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                 includeAnimation,
                 excludedImages,
                 listener
-            ))
+            )
+        )
     }
 
     override fun abortLoadImages() {
@@ -85,16 +86,13 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             val sourceUri = getSourceUri()
             val type = MediaStore.Files.FileColumns.MEDIA_TYPE
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val selectionArgs = when {
-                    onlyVideo -> arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString())
-                    includeVideo -> arrayOf(
-                        MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
-                        MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
-                    )
-                    else -> arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString())
-                }
+            val selection = when {
+                onlyVideo -> "${type}=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}"
+                includeVideo -> "$type=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE} OR $type=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}"
+                else -> ""
+            }
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val args = Bundle().apply {
                     // Limit & Offset
                     if (limit != null) {
@@ -106,22 +104,20 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                     // Sort function
                     putString(
                         ContentResolver.QUERY_ARG_SORT_COLUMNS,
-                        MediaStore.Images.Media.DATE_ADDED
+                        MediaStore.Files.FileColumns.DATE_MODIFIED
+                    )
+                    putStringArray(
+                        ContentResolver.QUERY_ARG_SORT_COLUMNS,
+                        arrayOf(MediaStore.Files.FileColumns.DATE_MODIFIED)
                     )
                     // Selection
-                    putStringArray(
-                        ContentResolver.QUERY_ARG_SQL_SELECTION_ARGS,
-                        selectionArgs
+                    putString(
+                        ContentResolver.QUERY_ARG_SQL_SELECTION,
+                        selection
                     )
                 }
 
                 return context.contentResolver.query(sourceUri, projection, args, null)
-            }
-
-            val selection = when {
-                onlyVideo -> "${type}=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}"
-                includeVideo -> "$type=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE} OR $type=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}"
-                else -> ""
             }
 
             val sortOrder = MediaStore.Images.Media.DATE_ADDED.let {
@@ -130,8 +126,10 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                 if (offset != null) "$it OFFSET $offset" else it
             }
 
-            return context.contentResolver.query(sourceUri, projection,
-                selection, null, sortOrder)
+            return context.contentResolver.query(
+                sourceUri, projection,
+                selection, null, sortOrder
+            )
         }
 
         private fun getSourceUri(): Uri {
