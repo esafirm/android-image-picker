@@ -204,7 +204,10 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
         override fun run() {
             // We're gonna load two times for faster load if the devices has many images
             val cursor = queryData(FIRST_LIMIT)
-            if (cursor?.count == FIRST_LIMIT) {
+            val isLoadDataAgain = cursor?.count == FIRST_LIMIT
+            processData(cursor)
+
+            if (isLoadDataAgain) {
                 processData(queryData())
             }
         }
