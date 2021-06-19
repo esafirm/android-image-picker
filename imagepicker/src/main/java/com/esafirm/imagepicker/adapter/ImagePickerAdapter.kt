@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter.ImageViewHolder
@@ -71,7 +70,8 @@ class ImagePickerAdapter(
 
         if (ImagePickerUtils.isVideoFormat(image)) {
             if (!videoDurationHolder.containsKey(image.id)) {
-                val uri = Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), "" + image.id)
+                val uri =
+                    Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), "" + image.id)
                 videoDurationHolder[image.id] = ImagePickerUtils.getVideoDurationLabel(
                     context, uri
                 )
@@ -141,7 +141,7 @@ class ImagePickerAdapter(
         this.imageSelectedListener = imageSelectedListener
     }
 
-    fun getItem(position: Int) = listDiffer.currentList.getOrNull(position)
+    private fun getItem(position: Int) = listDiffer.currentList.getOrNull(position)
 
     class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
         val imageView: ImageView = itemView.image_view

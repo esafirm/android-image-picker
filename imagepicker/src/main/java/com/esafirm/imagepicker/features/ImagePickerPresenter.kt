@@ -23,7 +23,10 @@ internal class ImagePickerPresenter(
 
     private val cameraModule: CameraModule = ImagePickerComponentsHolder.cameraModule
 
-    private val stateObs = LiveDataObservableState(ImagePickerState(isLoading = true), usePostValue = true)
+    private val stateObs = LiveDataObservableState(
+        ImagePickerState(isLoading = true),
+        usePostValue = true
+    )
 
     private fun setState(newState: ImagePickerState.() -> ImagePickerState) {
         stateObs.set(newState(stateObs.get()))
@@ -43,7 +46,8 @@ internal class ImagePickerPresenter(
                     ImagePickerState(
                         images = images,
                         folders = folders,
-                        isLoading = false
+                        isLoading = false,
+                        isFolder = config.isFolderMode.asSingleEvent()
                     )
                 }
             }
@@ -81,7 +85,11 @@ internal class ImagePickerPresenter(
         val context = fragment.requireContext().applicationContext
         val intent = cameraModule.getCameraIntent(fragment.requireContext(), config)
         if (intent == null) {
-            Toast.makeText(context, context.getString(R.string.ef_error_create_image_file), Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.ef_error_create_image_file),
+                Toast.LENGTH_LONG
+            ).show()
             return
         }
         fragment.startActivityForResult(intent, requestCode)

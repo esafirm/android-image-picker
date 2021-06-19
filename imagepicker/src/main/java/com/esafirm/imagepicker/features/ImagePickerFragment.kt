@@ -139,10 +139,13 @@ class ImagePickerFragment : Fragment() {
             return@observe
         }
 
-        if (config.isFolderMode) {
-            setFolderAdapter(state.folders)
-        } else {
-            setImageAdapter(state.images)
+        state.isFolder.fetch {
+            val isFolderMode = this
+            if (isFolderMode) {
+                setFolderAdapter(state.folders)
+            } else {
+                setImageAdapter(state.images)
+            }
         }
 
         state.finishPickImage.fetch {
