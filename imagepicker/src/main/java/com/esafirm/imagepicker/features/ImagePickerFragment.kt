@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -44,6 +45,17 @@ class ImagePickerFragment : Fragment() {
     private val config: ImagePickerConfig by lazy {
         requireArguments().getParcelable(ImagePickerConfig::class.java.simpleName)!!
     }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(RequestPermission()) { isGranted ->
+            if (isGranted) {
+                IpLogger.d("Write External permission granted")
+                loadData()
+            } else {
+                IpLogger.e("Permission not granted")
+                interactionListener.cancel()
+            }
+        }
 
     private lateinit var presenter: ImagePickerPresenter
     private lateinit var interactionListener: ImagePickerInteractionListener
@@ -249,50 +261,20 @@ class ImagePickerFragment : Fragment() {
      */
     private fun requestWriteExternalPermission() {
         IpLogger.w("Write External permission is not granted. Requesting permission")
-        val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        ) {
-            requestPermissions(permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE)
-        } else {
-            val permission = ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED
-            if (!preferences.isPermissionRequested(permission)) {
-                preferences.setPermissionRequested(permission)
-                requestPermissions(permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE)
-            } else {
-                binding?.efSnackbar?.show(R.string.ef_msg_no_write_external_permission) {
-                    openAppSettings()
-                }
-            }
-        }
-    }
-
-    /**
-     * Handle permission results
-     */
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    IpLogger.d("Write External permission granted")
-                    loadData()
-                    return
-                }
-                IpLogger.e(
-                    "Permission not granted: results len = " + grantResults.size +
-                        " Result code = " + if (grantResults.isNotEmpty()) grantResults[0] else "(empty)"
-                )
-                interactionListener.cancel()
+        val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        when {
+            shouldShowRequestPermissionRationale(permission) -> {
+                requestPermissionLauncher.launch(permission)
             }
             else -> {
-                IpLogger.d("Got unexpected permission result: $requestCode")
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+                if (!preferences.isPermissionRequested()) {
+                    preferences.setPermissionIsRequested()
+                    requestPermissionLauncher.launch(permission)
+                } else {
+                    binding?.efSnackbar?.show(R.string.ef_msg_no_write_external_permission) {
+                        openAppSettings()
+                    }
+                }
             }
         }
     }

@@ -3,26 +3,28 @@ package com.esafirm.imagepicker.helper
 import android.content.Context
 import android.preference.PreferenceManager
 
-class ImagePickerPreferences(private val context: Context) {
+class ImagePickerPreferences(context: Context) {
+
+    companion object {
+        private const val KEY_PERMISSION_GRANTED = "Key.WritePermissionGranted"
+    }
+
+    // TODO: Change this with data store
+    private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+
     /**
      * Set a permission is requested
      */
-    fun setPermissionRequested(permission: String?) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val editor = preferences.edit()
-        editor.putBoolean(permission, true)
-        editor.apply()
+    fun setPermissionIsRequested() {
+        preferences.edit()
+            .putBoolean(KEY_PERMISSION_GRANTED, true)
+            .apply()
     }
 
     /**
      * Check if a permission is requestted or not (false by default)
      */
-    fun isPermissionRequested(permission: String?): Boolean {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        return preferences.getBoolean(permission, false)
-    }
-
-    companion object {
-        const val PREF_WRITE_EXTERNAL_STORAGE_REQUESTED = "writeExternalRequested"
+    fun isPermissionRequested(): Boolean {
+        return preferences.getBoolean(KEY_PERMISSION_GRANTED, false)
     }
 }
