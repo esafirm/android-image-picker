@@ -10,5 +10,5 @@ typealias OnImageReadyListener = (List<Image>?) -> Unit
 interface CameraModule {
     fun getCameraIntent(context: Context, config: BaseConfig): Intent?
     fun getImage(context: Context, intent: Intent?, imageReadyListener: OnImageReadyListener)
-    fun removeImage()
+    fun removeImage(context: Context)
 }

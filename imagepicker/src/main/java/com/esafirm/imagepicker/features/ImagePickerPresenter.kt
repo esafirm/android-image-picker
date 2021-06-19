@@ -109,7 +109,7 @@ internal class ImagePickerPresenter(
         }
     }
 
-    fun abortCaptureImage() {
-        cameraModule.removeImage()
+    fun abortCaptureImage(context: Context) {
+        cameraModule.removeImage(context)
     }
 }

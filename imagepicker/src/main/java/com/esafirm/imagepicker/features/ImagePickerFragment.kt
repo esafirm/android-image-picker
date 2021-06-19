@@ -304,7 +304,7 @@ class ImagePickerFragment : Fragment() {
             if (resultCode == Activity.RESULT_OK) {
                 presenter.finishCaptureImage(requireContext(), data, config)
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                presenter.abortCaptureImage()
+                presenter.abortCaptureImage(requireContext())
             }
         }
     }

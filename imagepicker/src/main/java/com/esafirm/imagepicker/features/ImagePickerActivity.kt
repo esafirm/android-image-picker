@@ -67,7 +67,8 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
 
         if (savedInstanceState != null) {
             // The fragment has been restored.
-            imagePickerFragment = supportFragmentManager.findFragmentById(R.id.ef_imagepicker_fragment_placeholder) as ImagePickerFragment
+            imagePickerFragment =
+                supportFragmentManager.findFragmentById(R.id.ef_imagepicker_fragment_placeholder) as ImagePickerFragment
         } else {
             imagePickerFragment = ImagePickerFragment.newInstance(currentConfig)
             val ft = supportFragmentManager.beginTransaction()
@@ -140,6 +141,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_CANCELED) {
+            cameraModule.removeImage(this)
             setResult(RESULT_CANCELED)
             finish()
             return
