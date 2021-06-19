@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/ef_height_snackbar"
+    tools:background="@color/ef_black_alpha_50"
     tools:parentTag="RelativeLayout">
 
     <TextView
@@ -11,11 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/ef_snackbar_btn_action"
         android:layout_toStartOf="@+id/ef_snackbar_btn_action"
+        android:layout_toLeftOf="@+id/ef_snackbar_btn_action"
         android:maxLines="2"
         android:textColor="@color/ef_white"
-        tools:text="There'es something about you that make me very happy and anxious at the same time"/>
+        tools:text="There'es something about you that make me very happy and anxious at the same time" />
 
     <Button
         android:id="@+id/ef_snackbar_btn_action"
@@ -25,6 +25,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="?selectableItemBackground"
-        android:textColor="?colorAccent"
-        tools:text="@string/ef_ok"/>
+        android:text="@string/ef_ok"
+        android:textColor="?colorAccent" />
 </merge>
