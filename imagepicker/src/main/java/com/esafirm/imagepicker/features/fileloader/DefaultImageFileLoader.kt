@@ -1,5 +1,6 @@
 package com.esafirm.imagepicker.features.fileloader
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
@@ -81,6 +82,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
         )
 
+        @SuppressLint("InlinedApi")
         private fun queryData(limit: Int? = null): Cursor? {
             val useNewApi = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
             val sourceUri = if (limit != null && useNewApi) {
@@ -103,25 +105,29 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             if (useNewApi) {
                 val args = Bundle().apply {
                     // Sort function
-                    putString(
-                        ContentResolver.QUERY_ARG_SORT_COLUMNS,
-                        MediaStore.Files.FileColumns.DATE_MODIFIED
-                    )
                     putStringArray(
                         ContentResolver.QUERY_ARG_SORT_COLUMNS,
                         arrayOf(MediaStore.Files.FileColumns.DATE_MODIFIED)
+                    )
+                    putInt(
+                        ContentResolver.QUERY_ARG_SORT_DIRECTION,
+                        ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
                     )
                     // Selection
                     putString(
                         ContentResolver.QUERY_ARG_SQL_SELECTION,
                         selection
                     )
+                    // Limit
+                    if (limit != null) {
+                        putInt(ContentResolver.QUERY_ARG_LIMIT, limit)
+                    }
                 }
 
                 return context.contentResolver.query(sourceUri, projection, args, null)
             }
 
-            val sortOrder = MediaStore.Images.Media.DATE_ADDED.let {
+            val sortOrder = "${MediaStore.Images.Media.DATE_MODIFIED} DESC".let {
                 if (limit != null) "$it LIMIT $limit" else it
             }
 
@@ -165,7 +171,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             val result: MutableList<Image> = ArrayList()
             val folderMap: MutableMap<String, Folder> = mutableMapOf()
 
-            if (cursor.moveToLast()) {
+            if (cursor.moveToFirst()) {
                 do {
                     val image = cursorToImage(cursor)
 
@@ -190,7 +196,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                         }
                     }
 
-                } while (cursor.moveToPrevious())
+                } while (cursor.moveToNext())
             }
             cursor.close()
 
@@ -204,7 +210,6 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             val isLoadDataAgain = cursor?.count == FIRST_LIMIT
             processData(cursor)
 
-            Thread.sleep(5000)
             if (isLoadDataAgain) {
                 processData(queryData())
             }
