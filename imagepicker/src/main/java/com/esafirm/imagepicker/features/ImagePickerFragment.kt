@@ -50,20 +50,28 @@ class ImagePickerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(ContentObserverTrigger(
-            requireActivity().contentResolver,
-            this::loadData
-        ))
+        lifecycle.addObserver(
+            ContentObserverTrigger(
+                requireActivity().contentResolver,
+                this::loadData
+            )
+        )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         presenter = ImagePickerPresenter(DefaultImageFileLoader(requireContext()))
 
         if (::interactionListener.isInitialized.not()) {
-            throw RuntimeException("ImagePickerFragment needs an " +
-                "ImagePickerInteractionListener. This will be set automatically if the " +
-                "activity implements ImagePickerInteractionListener, and can be set manually " +
-                "with fragment.setInteractionListener(listener).")
+            throw RuntimeException(
+                "ImagePickerFragment needs an " +
+                    "ImagePickerInteractionListener. This will be set automatically if the " +
+                    "activity implements ImagePickerInteractionListener, and can be set manually " +
+                    "with fragment.setInteractionListener(listener)."
+            )
         }
 
         val interactionListener = this.interactionListener
@@ -114,7 +122,7 @@ class ImagePickerFragment : Fragment() {
         }
 
         val isEmpty = state.images.isEmpty()
-        if (isEmpty) {
+        if (isEmpty && state.isLoading.not()) {
             showEmpty()
             return@observe
         }
@@ -173,7 +181,10 @@ class ImagePickerFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(STATE_KEY_RECYCLER, recyclerViewManager.recyclerState)
-        outState.putParcelableArrayList(STATE_KEY_SELECTED_IMAGES, recyclerViewManager.selectedImages as ArrayList<out Parcelable?>)
+        outState.putParcelableArrayList(
+            STATE_KEY_SELECTED_IMAGES,
+            recyclerViewManager.selectedImages as ArrayList<out Parcelable?>
+        )
     }
 
     /**
@@ -218,7 +229,10 @@ class ImagePickerFragment : Fragment() {
      * Check permission
      */
     private fun loadDataWithPermission() {
-        val rc = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val rc = ActivityCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
         if (rc == PackageManager.PERMISSION_GRANTED) {
             loadData()
         } else {
@@ -236,7 +250,11 @@ class ImagePickerFragment : Fragment() {
     private fun requestWriteExternalPermission() {
         IpLogger.w("Write External permission is not granted. Requesting permission")
         val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) {
             requestPermissions(permissions, RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE)
         } else {
             val permission = ImagePickerPreferences.PREF_WRITE_EXTERNAL_STORAGE_REQUESTED
@@ -254,7 +272,11 @@ class ImagePickerFragment : Fragment() {
     /**
      * Handle permission results
      */
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -262,8 +284,10 @@ class ImagePickerFragment : Fragment() {
                     loadData()
                     return
                 }
-                IpLogger.e("Permission not granted: results len = " + grantResults.size +
-                    " Result code = " + if (grantResults.isNotEmpty()) grantResults[0] else "(empty)")
+                IpLogger.e(
+                    "Permission not granted: results len = " + grantResults.size +
+                        " Result code = " + if (grantResults.isNotEmpty()) grantResults[0] else "(empty)"
+                )
                 interactionListener.cancel()
             }
             else -> {
@@ -277,8 +301,10 @@ class ImagePickerFragment : Fragment() {
      * Open app settings screen
      */
     private fun openAppSettings() {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts("package", requireActivity().packageName, null))
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", requireActivity().packageName, null)
+        )
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
