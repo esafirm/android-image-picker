@@ -81,8 +81,10 @@ class RecyclerViewManager(
 
         /* Init folder and image adapter */
         val imageLoader = ImagePickerComponentsHolder.imageLoader
-        imageAdapter = ImagePickerAdapter(context, imageLoader, selectedImages
-            ?: emptyList(), onImageClick)
+        imageAdapter = ImagePickerAdapter(
+            context, imageLoader, selectedImages
+                ?: emptyList(), onImageClick
+        )
         folderAdapter = FolderPickerAdapter(context, imageLoader) {
             foldersState = recyclerView.layoutManager?.onSaveInstanceState()
             onFolderClick(it)
@@ -135,7 +137,11 @@ class RecyclerViewManager(
             return if (config.limit == IpCons.MAX_LIMIT) {
                 String.format(context.getString(R.string.ef_selected), imageSize)
             } else {
-                String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.limit)
+                String.format(
+                    context.getString(R.string.ef_selected_with_limit),
+                    imageSize,
+                    config.limit
+                )
             }
         }
 
@@ -155,7 +161,10 @@ class RecyclerViewManager(
         }
     }
 
-    /* --------------------------------------------------- */ /* > Images */ /* --------------------------------------------------- */
+    /* --------------------------------------------------- */
+    /* > Images */
+    /* --------------------------------------------------- */
+
     private fun checkAdapterIsInitialized() {
         if (!::imageAdapter.isInitialized) {
             error("Must call setupAdapters first!")

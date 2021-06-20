@@ -48,23 +48,34 @@ class DefaultCameraModule : CameraModule {
                 put(MediaStore.Images.Media.DISPLAY_NAME, imageFile.name)
                 put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
             }
-            val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            val collection =
+                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
             return appContext.contentResolver.insert(collection, values)
         }
         return UriUtils.uriForFile(appContext, imageFile)
     }
 
-    override fun getImage(context: Context, intent: Intent?, imageReadyListener: OnImageReadyListener) {
+    override fun getImage(
+        context: Context,
+        intent: Intent?,
+        imageReadyListener: OnImageReadyListener
+    ) {
         if (currentImagePath == null) {
-            IpLogger.w("currentImagePath null. " +
-                "This happen if you haven't call #getCameraIntent() or the activity is being recreated")
+            IpLogger.w(
+                "currentImagePath null. " +
+                    "This happen if you haven't call #getCameraIntent() or the activity is being recreated"
+            )
             imageReadyListener.invoke(null)
             return
         }
 
         val imageUri = Uri.parse(currentImagePath)
         if (imageUri != null) {
-            MediaScannerConnection.scanFile(context.applicationContext, arrayOf(imageUri.path), null) { path: String?, uri: Uri? ->
+            MediaScannerConnection.scanFile(
+                context.applicationContext,
+                arrayOf(imageUri.path),
+                null
+            ) { path: String?, uri: Uri? ->
                 IpLogger.d("File $path was scanned successfully: $uri")
 
                 if (path == null) {
@@ -82,11 +93,20 @@ class DefaultCameraModule : CameraModule {
         }
     }
 
-    override fun removeImage() {
+    override fun removeImage(context: Context) {
         val imagePath = currentImagePath ?: return
         val file = File(imagePath)
         if (file.exists()) {
             file.delete()
+        }
+
+        // Delete in the media store
+        try {
+            val uri = currentUri?.let { Uri.parse(it) } ?: return
+            context.applicationContext.contentResolver.delete(uri, null, null)
+        } catch (e: Exception) {
+            IpLogger.e("Can't delete cancelled uri")
+            e.printStackTrace()
         }
     }
 }

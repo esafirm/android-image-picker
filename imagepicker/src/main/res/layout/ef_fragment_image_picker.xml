@@ -29,6 +29,8 @@
         android:id="@+id/ef_snackbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ef_height_snackbar"
+        android:paddingStart="@dimen/ef_spacing_double"
+        android:paddingEnd="@dimen/ef_spacing_double"
         android:layout_alignParentBottom="true"
         android:background="@color/ef_black_alpha_aa" />
 </RelativeLayout>
