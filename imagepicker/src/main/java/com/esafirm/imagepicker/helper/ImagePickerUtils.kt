@@ -21,6 +21,9 @@ import java.util.Date
 import java.util.Locale
 
 object ImagePickerUtils {
+
+    private const val DEFAULT_DURATION_LABEL = "00:00"
+
     private fun createFileInDirectory(savePath: ImagePickerSavePath, context: Context): File? {
         // External sdcard location
         val path = savePath.path
@@ -70,14 +73,18 @@ object ImagePickerUtils {
             .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
         for (resolvedIntentInfo in resolvedIntentActivities) {
             val packageName = resolvedIntentInfo.activityInfo.packageName
-            context.grantUriPermission(packageName, fileUri,
-                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            context.grantUriPermission(
+                packageName, fileUri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
         }
     }
 
     fun revokeAppPermission(context: Context, fileUri: Uri?) {
-        context.revokeUriPermission(fileUri,
-            Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        context.revokeUriPermission(
+            fileUri,
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+        )
     }
 
     fun isGifFormat(image: Image): Boolean {
@@ -91,25 +98,32 @@ object ImagePickerUtils {
 
     fun isVideoFormat(image: Image): Boolean {
         val extension = getExtension(image.path)
-        val mimeType = if (TextUtils.isEmpty(extension)) URLConnection.guessContentTypeFromName(image.path) else MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val mimeType =
+            if (TextUtils.isEmpty(extension)) URLConnection.guessContentTypeFromName(image.path) else MimeTypeMap.getSingleton()
+                .getMimeTypeFromExtension(extension)
         return mimeType != null && mimeType.startsWith("video")
     }
 
     fun getVideoDurationLabel(context: Context?, uri: Uri): String {
-        val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(context, uri)
-        val durationData = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        retriever.release()
+        try {
+            val retriever = MediaMetadataRetriever()
+            retriever.setDataSource(context, uri)
+            val durationData =
+                retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            retriever.release()
 
-        // Return default duration label if null
-        val duration = durationData?.toLongOrNull() ?: return "00:00"
-        val second = duration / 1000 % 60
-        val minute = duration / (1000 * 60) % 60
-        val hour = duration / (1000 * 60 * 60) % 24
-        return if (hour > 0) {
-            String.format("%02d:%02d:%02d", hour, minute, second)
-        } else {
-            String.format("%02d:%02d", minute, second)
+            // Return default duration label if null
+            val duration = durationData?.toLongOrNull() ?: return DEFAULT_DURATION_LABEL
+            val second = duration / 1000 % 60
+            val minute = duration / (1000 * 60) % 60
+            val hour = duration / (1000 * 60 * 60) % 24
+            return if (hour > 0) {
+                String.format("%02d:%02d:%02d", hour, minute, second)
+            } else {
+                String.format("%02d:%02d", minute, second)
+            }
+        } catch (e: Exception) {
+            return DEFAULT_DURATION_LABEL
         }
     }
 
