@@ -60,7 +60,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     private static final int RC_PERMISSION_REQUEST_CAMERA = 24;
 
     private static final boolean IS_EXTERNAL_STORAGE_LEGACY = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || android.os.Environment.isExternalStorageLegacy();
-    private static final String REQUIRED_EXTERNAL_STORAGE_PERMISSION = IS_EXTERNAL_STORAGE_LEGACY ?  Manifest.permission.WRITE_EXTERNAL_STORAGE : Manifest.permission.READ_EXTERNAL_STORAGE;
+    private static final String REQUIRED_EXTERNAL_STORAGE_PERMISSION = IS_EXTERNAL_STORAGE_LEGACY ? Manifest.permission.WRITE_EXTERNAL_STORAGE : Manifest.permission.READ_EXTERNAL_STORAGE;
 
     private IpLogger logger = IpLogger.getInstance();
 
@@ -319,9 +319,6 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
         ArrayList<String> permissions = new ArrayList<>(2);
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.CAMERA);
-        }
         if (ActivityCompat.checkSelfPermission(getActivity(), REQUIRED_EXTERNAL_STORAGE_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(REQUIRED_EXTERNAL_STORAGE_PERMISSION);
         }
@@ -329,21 +326,16 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         if (checkForRationale(permissions)) {
             requestPermissions(permissions.toArray(new String[permissions.size()]), RC_PERMISSION_REQUEST_CAMERA);
         } else {
-            final String permission = ImagePickerPreferences.PREF_CAMERA_REQUESTED;
-            if (!preferences.isPermissionRequested(permission)) {
-                preferences.setPermissionRequested(permission);
-                requestPermissions(permissions.toArray(new String[permissions.size()]), RC_PERMISSION_REQUEST_CAMERA);
+            if (isCameraOnly) {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        getString(R.string.ef_msg_no_camera_permission), Toast.LENGTH_SHORT).show();
+                interactionListener.cancel();
             } else {
-                if (isCameraOnly) {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            getString(R.string.ef_msg_no_camera_permission), Toast.LENGTH_SHORT).show();
-                    interactionListener.cancel();
-                } else {
-                    snackBarView.show(R.string.ef_msg_no_camera_permission, v -> openAppSettings());
-                }
+                snackBarView.show(R.string.ef_msg_no_camera_permission, v -> openAppSettings());
             }
         }
     }
+
 
     private boolean checkForRationale(List<String> permissions) {
         for (int i = 0, size = permissions.size(); i < size; i++) {
@@ -422,11 +414,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
      */
     public void captureImageWithPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            final boolean isCameraGranted = ActivityCompat
-                    .checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
             final boolean isWriteGranted = !IS_EXTERNAL_STORAGE_LEGACY || ActivityCompat
                     .checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-            if (isCameraGranted && isWriteGranted) {
+            if (isWriteGranted) {
                 captureImage();
             } else {
                 logger.w("Camera permission is not granted. Requesting permission");
