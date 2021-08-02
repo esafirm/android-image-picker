@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Permet l\'accès a l\'emmagatzematge extern per seleccionar imatges</string>
+
+    <string name="ef_ok">OK</string>
+    <string name="ef_done">FET</string>
+    <string name="ef_camera">CÀMERA</string>
+
+    <string name="ef_title_folder">Carpeta</string>
+    <string name="ef_title_select_image">Toqueu per seleccionar imatges</string>
+    <string name="ef_ltitle_permission_denied">Permís denegat</string>
+
+    <string name="ef_selected">%d seleccionades</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d seleccionades</string>
+
+    <string name="ef_error_create_image_file">Error al crear el fitxer d\'imatge</string>
+    <string name="ef_error_no_camera">No s\'ha trobat cap càmera</string>
+    <string name="ef_error_null_cursor">Oops, alguna cosa no ha anat bé!</string>
+
+    <string name="ef_msg_empty_images">No s\'han trobat imatges</string>
+    <string name="ef_msg_no_write_external_permission">Si us plau, dona permisos d\'emmagatzematge per seleccionar imatges</string>
+    <string name="ef_msg_limit_images">Límit de selecció d\'imatges</string>
+
+    <!--Don't Translate-->
+    <string name="ef_gif" translatable="false">GIF</string>
+    <string name="ef_content_desc_folder" translatable="false">Folder</string>
+    <string name="ef_content_desc_image" translatable="false">Image</string>
+
+</resources>
