@@ -77,7 +77,7 @@ public class DefaultImageFileLoader implements ImageFileLoader {
         private boolean includeVideo;
         private boolean onlyVideo;
         private boolean includeAnimation;
-        private ArrayList<File> exlucedImages;
+        private ArrayList<File> excludedImages;
         private ImageLoaderListener listener;
 
         ImageLoadRunnable(
@@ -92,7 +92,7 @@ public class DefaultImageFileLoader implements ImageFileLoader {
             this.includeVideo = includeVideo;
             this.includeAnimation = includeAnimation;
             this.onlyVideo = onlyVideo;
-            this.exlucedImages = excludedImages;
+            this.excludedImages = excludedImages;
             this.listener = listener;
         }
 
@@ -142,7 +142,7 @@ public class DefaultImageFileLoader implements ImageFileLoader {
                         continue;
                     }
 
-                    if (exlucedImages != null && exlucedImages.contains(file))
+                    if (excludedImages != null && excludedImages.contains(file))
                         continue;
 
                     // Exclude GIF when we don't want it

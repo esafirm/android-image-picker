@@ -1,12 +1,17 @@
 package com.esafirm.imagepicker.model
 
 import android.content.ContentUris
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Parcelable
 import android.provider.MediaStore
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import java.io.File
 
 @Parcelize
 open class Image(
@@ -33,12 +38,23 @@ open class Image(
             }
         }
 
-    override fun equals(o: Any?): Boolean {
+    val file: File
+        get() = File(path)
+
+    fun asBitmap(context: Context): Bitmap {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
+        } else {
+            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+        }
+    }
+
+    override fun equals(other: Any?): Boolean {
         return when {
-            this === o -> true
-            o == null || javaClass != o.javaClass -> return false
+            this === other -> true
+            other == null || javaClass != other.javaClass -> return false
             else -> {
-                val image = o as Image
+                val image = other as Image
                 image.path.equals(path, ignoreCase = true)
             }
         }

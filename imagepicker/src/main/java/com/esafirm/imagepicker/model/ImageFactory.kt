@@ -6,11 +6,11 @@ import com.esafirm.imagepicker.helper.ImagePickerUtils
 
 object ImageFactory {
     @JvmStatic
-    fun singleImage(uri: Uri, path: String): List<Image> {
-        return listOf(Image(
+    fun singleImage(uri: Uri, path: String): Image {
+        return Image(
             id = ContentUris.parseId(uri),
             name = ImagePickerUtils.getNameFromFilePath(path),
             path = path
-        ))
+        )
     }
 }

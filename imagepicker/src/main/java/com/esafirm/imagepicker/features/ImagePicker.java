@@ -141,8 +141,18 @@ public abstract class ImagePicker {
         return this;
     }
 
-    public ImagePicker origin(ArrayList<Image> images) {
+    public ImagePicker select(ArrayList<Image> images) {
         config.setSelectedImages(images);
+        return this;
+    }
+
+    public ImagePicker selectFiles(ArrayList<File> images) {
+        config.setSelectedImageFiles(images);
+        return this;
+    }
+
+    public ImagePicker selectPaths(ArrayList<String> images) {
+        config.setSelectedImagePaths(images);
         return this;
     }
 
@@ -153,6 +163,11 @@ public abstract class ImagePicker {
 
     public ImagePicker excludeFiles(ArrayList<File> files) {
         config.setExcludedImageFiles(files);
+        return this;
+    }
+
+    public ImagePicker excludePaths(ArrayList<String> files) {
+        config.setExcludedImagePaths(files);
         return this;
     }
 

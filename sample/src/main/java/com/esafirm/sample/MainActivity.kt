@@ -12,10 +12,11 @@ import com.esafirm.imagepicker.model.Image
 import com.esafirm.rximagepicker.RxImagePicker
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.Observable
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
-    private val images = arrayListOf<Image>()
+    private val images = arrayListOf<File>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,9 +86,9 @@ class MainActivity : AppCompatActivity() {
                 imagePicker.multi() // multi mode (default mode)
             }
             if (isExclude) {
-                imagePicker.exclude(images) // don't show anything on this selected images
+                imagePicker.excludeFiles(images) // don't show anything on this selected images
             } else {
-                imagePicker.origin(images) // original selected images, used in multi mode
+                imagePicker.selectFiles(images) // original selected images, used in multi mode
             }
             return imagePicker.limit(10) // max images can be selected (99 by default)
                 .showCamera(true) // show camera or not (true by default)
@@ -112,9 +113,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            val selectedImages = ImagePicker.getImages(data)
             images.clear()
-            images.addAll(ImagePicker.getImages(data))
-            printImages(images)
+            images.addAll(selectedImages.mapNotNull { it.file })
+            printImages(selectedImages)
             return
         }
         super.onActivityResult(requestCode, resultCode, data)

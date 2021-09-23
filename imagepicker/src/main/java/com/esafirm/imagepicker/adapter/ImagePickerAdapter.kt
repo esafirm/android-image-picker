@@ -25,19 +25,20 @@ import java.util.HashMap
 class ImagePickerAdapter(
     context: Context,
     imageLoader: ImageLoader,
-    selectedImages: List<Image>,
+    selectedImages: List<File>,
     private val itemClickListener: OnImageClickListener
 ) : BaseListAdapter<ImageViewHolder>(context, imageLoader) {
 
     private val images: MutableList<Image> = mutableListOf()
     val selectedImages: MutableList<Image> = mutableListOf()
+    private val selectedImageFiles: MutableList<File> = mutableListOf()
 
     private var imageSelectedListener: OnImageSelectedListener? = null
     private val videoDurationHolder = HashMap<Long, String?>()
 
     init {
         if (selectedImages.isNotEmpty()) {
-            this.selectedImages.addAll(selectedImages)
+            this.selectedImageFiles.addAll(selectedImages)
         }
     }
 
@@ -66,9 +67,10 @@ class ImagePickerAdapter(
 
         if (ImagePickerUtils.isVideoFormat(image)) {
             if (!videoDurationHolder.containsKey(image.id)) {
-                val uri = Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), "" + image.id)
+                val uri =
+                    Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), "" + image.id)
                 videoDurationHolder[image.id] = ImagePickerUtils.getVideoDurationLabel(
-                    context,  uri
+                    context, uri
                 )
             }
 
@@ -97,7 +99,7 @@ class ImagePickerAdapter(
     }
 
     private fun isSelected(image: Image): Boolean {
-        return selectedImages.any { it.path == image.path }
+        return selectedImages.contains(image)
     }
 
     override fun getItemCount() = images.size
@@ -105,6 +107,14 @@ class ImagePickerAdapter(
     fun setData(images: List<Image>) {
         this.images.clear()
         this.images.addAll(images)
+
+        selectedImages.addAll(
+            images.filter { image ->
+                selectedImageFiles.any {
+                    it == image.file
+                }
+            }
+        )
     }
 
     private fun addSelected(image: Image, position: Int) {

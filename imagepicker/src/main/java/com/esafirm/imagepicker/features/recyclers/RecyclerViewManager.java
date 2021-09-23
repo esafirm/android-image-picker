@@ -21,6 +21,7 @@ import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.imagepicker.view.GridSpacingItemDecoration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class RecyclerViewManager {
         setItemDecoration(columns);
     }
 
-    public void setupAdapters(ArrayList<Image> selectedImages, OnImageClickListener onImageClickListener, OnFolderClickListener onFolderClickListener) {
+    public void setupAdapters(ArrayList<File> selectedImages, OnImageClickListener onImageClickListener, OnFolderClickListener onFolderClickListener) {
         if (config.getMode() == MODE_SINGLE && selectedImages != null && selectedImages.size() > 1) {
             selectedImages = null;
         }

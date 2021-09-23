@@ -88,7 +88,7 @@ class DefaultCameraModule : CameraModule, Serializable {
 
                 val finalPath = path ?: currentImagePath!!
                 val finalUri = uri ?: Uri.parse(currentUri)
-                imageReadyListener.onImageReady(ImageFactory.singleImage(finalUri, finalPath))
+                imageReadyListener.onImageReady(arrayListOf(ImageFactory.singleImage(finalUri, finalPath)))
                 ImagePickerUtils.revokeAppPermission(context, imageUri)
             }
         }

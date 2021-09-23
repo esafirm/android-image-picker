@@ -42,6 +42,7 @@ import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 import com.esafirm.imagepicker.view.SnackBarView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,9 +133,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
             View result = localInflater.inflate(R.layout.ef_fragment_image_picker, container, false);
             setupView(result);
             if (savedInstanceState == null) {
-                setupRecyclerView(config, config.getSelectedImages());
+                setupRecyclerView(config, config.getSelectedImages(), null);
             } else {
-                setupRecyclerView(config, savedInstanceState.getParcelableArrayList(STATE_KEY_SELECTED_IMAGES));
+                setupRecyclerView(config, null, savedInstanceState.getParcelableArrayList(STATE_KEY_SELECTED_IMAGES));
                 recyclerViewManager.onRestoreState(savedInstanceState.getParcelable(STATE_KEY_RECYCLER));
             }
             interactionListener.selectionChanged(recyclerViewManager.getSelectedImages());
@@ -185,14 +186,21 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         snackBarView = rootView.findViewById(R.id.ef_snackbar);
     }
 
-    private void setupRecyclerView(ImagePickerConfig config, ArrayList<Image> selectedImages) {
+    private void setupRecyclerView(ImagePickerConfig config, ArrayList<File> selectedImageFiles, ArrayList<Image> selectedImages) {
         recyclerViewManager = new RecyclerViewManager(
                 recyclerView,
                 config,
                 getResources().getConfiguration().orientation
         );
 
-        recyclerViewManager.setupAdapters(selectedImages, (isSelected) -> recyclerViewManager.selectImage(isSelected)
+        if (selectedImageFiles == null && selectedImages != null) {
+            selectedImageFiles = new ArrayList<>();
+            for (Image image : selectedImages) {
+                selectedImageFiles.add(image.getFile());
+            }
+        }
+
+        recyclerViewManager.setupAdapters(selectedImageFiles, (isSelected) -> recyclerViewManager.selectImage(isSelected)
                 , bucket -> setImageAdapter(bucket.getImages()));
 
         recyclerViewManager.setImageSelectedListener(selectedImage -> {
