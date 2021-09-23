@@ -25,7 +25,7 @@ import java.util.HashMap
 class ImagePickerAdapter(
     context: Context,
     imageLoader: ImageLoader,
-    selectedImages: List<File>,
+    selectedImages: List<File>?,
     private val itemClickListener: OnImageClickListener
 ) : BaseListAdapter<ImageViewHolder>(context, imageLoader) {
 
@@ -37,9 +37,7 @@ class ImagePickerAdapter(
     private val videoDurationHolder = HashMap<Long, String?>()
 
     init {
-        if (selectedImages.isNotEmpty()) {
-            this.selectedImageFiles.addAll(selectedImages)
-        }
+        selectedImageFiles.addAll(selectedImages.orEmpty())
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
