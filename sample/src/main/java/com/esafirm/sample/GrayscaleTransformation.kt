@@ -7,7 +7,12 @@ import java.security.MessageDigest
 
 class GrayscaleTransformation : BitmapTransformation() {
 
-    override fun transform(pool: BitmapPool, toTransform: Bitmap, outWidth: Int, outHeight: Int): Bitmap {
+    override fun transform(
+        pool: BitmapPool,
+        toTransform: Bitmap,
+        outWidth: Int,
+        outHeight: Int
+    ): Bitmap {
         val width = toTransform.width
         val height = toTransform.height
         val config = if (toTransform.config != null) toTransform.config else Bitmap.Config.ARGB_8888

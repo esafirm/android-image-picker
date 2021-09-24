@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.esafirm.imagepicker.model.Image
-import java.util.*
 
 class ImageViewerActivity : AppCompatActivity() {
 

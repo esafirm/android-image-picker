@@ -8,8 +8,6 @@ import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.features.common.BaseConfig;
 
-import java.io.Serializable;
-
 public class ConfigUtils {
 
     public static ImagePickerConfig checkConfig(ImagePickerConfig config) {

@@ -5,11 +5,15 @@ import android.content.res.Configuration;
 import android.os.Parcelable;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.esafirm.imagepicker.R;
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter;
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter;
 import com.esafirm.imagepicker.features.ImagePickerComponentHolder;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
+import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.features.imageloader.ImageLoader;
 import com.esafirm.imagepicker.helper.ConfigUtils;
@@ -24,13 +28,6 @@ import com.esafirm.imagepicker.view.GridSpacingItemDecoration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import static com.esafirm.imagepicker.features.IpCons.MAX_LIMIT;
-import static com.esafirm.imagepicker.features.IpCons.MODE_MULTIPLE;
-import static com.esafirm.imagepicker.features.IpCons.MODE_SINGLE;
 
 public class RecyclerViewManager {
 
@@ -80,7 +77,7 @@ public class RecyclerViewManager {
     }
 
     public void setupAdapters(ArrayList<File> selectedImages, OnImageClickListener onImageClickListener, OnFolderClickListener onFolderClickListener) {
-        if (config.getMode() == MODE_SINGLE && selectedImages != null && selectedImages.size() > 1) {
+        if (config.getMode() == IpCons.MODE_SINGLE && selectedImages != null && selectedImages.size() > 1) {
             selectedImages = null;
         }
         /* Init folder and image adapter */
@@ -124,7 +121,7 @@ public class RecyclerViewManager {
             return ConfigUtils.getFolderTitle(context, config);
         }
 
-        if (config.getMode() == MODE_SINGLE) {
+        if (config.getMode() == IpCons.MODE_SINGLE) {
             return ConfigUtils.getImageTitle(context, config);
         }
 
@@ -134,7 +131,7 @@ public class RecyclerViewManager {
         if (useDefaultTitle) {
             return ConfigUtils.getImageTitle(context, config);
         }
-        return config.getLimit() == MAX_LIMIT
+        return config.getLimit() == IpCons.MAX_LIMIT
                 ? String.format(context.getString(R.string.ef_selected), imageSize)
                 : String.format(context.getString(R.string.ef_selected_with_limit), imageSize, config.getLimit());
     }
@@ -177,12 +174,12 @@ public class RecyclerViewManager {
     }
 
     public boolean selectImage(boolean isSelected) {
-        if (config.getMode() == MODE_MULTIPLE) {
+        if (config.getMode() == IpCons.MODE_MULTIPLE) {
             if (imageAdapter.getSelectedImages().size() >= config.getLimit() && !isSelected) {
                 Toast.makeText(context, R.string.ef_msg_limit_images, Toast.LENGTH_SHORT).show();
                 return false;
             }
-        } else if (config.getMode() == MODE_SINGLE) {
+        } else if (config.getMode() == IpCons.MODE_SINGLE) {
             if (imageAdapter.getSelectedImages().size() > 0) {
                 imageAdapter.removeAllSelectedSingleClick();
             }
@@ -195,5 +192,4 @@ public class RecyclerViewManager {
                 && !imageAdapter.getSelectedImages().isEmpty()
                 && (config.getReturnMode() != ReturnMode.ALL && config.getReturnMode() != ReturnMode.GALLERY_ONLY);
     }
-
 }

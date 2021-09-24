@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.fragment.app.Fragment;
+
 import com.esafirm.imagepicker.features.ImagePickerActivity;
 import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
 import com.esafirm.imagepicker.features.IpCons;
-
-import androidx.fragment.app.Fragment;
 
 public class ImagePickerCameraOnly {
 

@@ -58,29 +58,41 @@ class DefaultCameraModule : CameraModule, Serializable {
                 put(MediaStore.Images.Media.DISPLAY_NAME, imageFile.name)
                 put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
             }
-            val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            val collection =
+                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
             return appContext.contentResolver.insert(collection, values)
         }
         return UriUtils.uriForFile(appContext, imageFile)
     }
 
-    override fun getImage(context: Context, intent: Intent?, imageReadyListener: OnImageReadyListener?) {
+    override fun getImage(
+        context: Context,
+        intent: Intent?,
+        imageReadyListener: OnImageReadyListener?
+    ) {
         checkNotNull(imageReadyListener) { "OnImageReadyListener must not be null" }
 
         if (currentImagePath == null) {
-            IpLogger.getInstance().w("currentImagePath null. " +
-                "This happen if you haven't call #getCameraIntent() or the activity is being recreated")
+            IpLogger.getInstance().w(
+                "currentImagePath null. " +
+                        "This happen if you haven't call #getCameraIntent() or the activity is being recreated"
+            )
             imageReadyListener.onImageReady(null)
             return
         }
 
         val imageUri = Uri.parse(currentImagePath)
         if (imageUri != null) {
-            MediaScannerConnection.scanFile(context.applicationContext, arrayOf(imageUri.path), null) { path: String?, uri: Uri? ->
+            MediaScannerConnection.scanFile(
+                context.applicationContext,
+                arrayOf(imageUri.path),
+                null
+            ) { path: String?, uri: Uri? ->
                 IpLogger.getInstance().d("File $path was scanned successfully: $uri")
 
                 if (path == null) {
-                    IpLogger.getInstance().d("This should not happen, go back to Immediate implementation")
+                    IpLogger.getInstance()
+                        .d("This should not happen, go back to Immediate implementation")
                 }
                 if (uri == null) {
                     IpLogger.getInstance().d("scanFile is failed. Uri is null")
@@ -88,7 +100,14 @@ class DefaultCameraModule : CameraModule, Serializable {
 
                 val finalPath = path ?: currentImagePath!!
                 val finalUri = uri ?: Uri.parse(currentUri)
-                imageReadyListener.onImageReady(arrayListOf(ImageFactory.singleImage(finalUri, finalPath)))
+                imageReadyListener.onImageReady(
+                    arrayListOf(
+                        ImageFactory.singleImage(
+                            finalUri,
+                            finalPath
+                        )
+                    )
+                )
                 ImagePickerUtils.revokeAppPermission(context, imageUri)
             }
         }

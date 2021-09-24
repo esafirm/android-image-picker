@@ -1,14 +1,10 @@
 package com.esafirm.imagepicker.view
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Interpolator
-import android.widget.Button
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator

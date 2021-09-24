@@ -45,9 +45,16 @@ class CameraOnlyTest {
         clickOn(R.id.text_view)
 
         val imageView = onView(
-            allOf(ViewMatchers.withParent(allOf(withId(R.id.container),
-                ViewMatchers.withParent(IsInstanceOf.instanceOf(ScrollView::class.java)))),
-                isDisplayed()))
+            allOf(
+                ViewMatchers.withParent(
+                    allOf(
+                        withId(R.id.container),
+                        ViewMatchers.withParent(IsInstanceOf.instanceOf(ScrollView::class.java))
+                    )
+                ),
+                isDisplayed()
+            )
+        )
 
         imageView.check(ViewAssertions.matches(isDisplayed()))
         imageView.check(ViewAssertions.matches(hasDrawable()))

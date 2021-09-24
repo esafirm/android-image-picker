@@ -9,7 +9,8 @@ import java.util.*
 object UriUtils {
     fun uriForFile(context: Context, file: File): Uri {
         val appContext = context.applicationContext
-        val providerName = String.format(Locale.ENGLISH, "%s%s", appContext.packageName, ".imagepicker.provider")
+        val providerName =
+            String.format(Locale.ENGLISH, "%s%s", appContext.packageName, ".imagepicker.provider")
         return FileProvider.getUriForFile(appContext, providerName, file)
     }
 }

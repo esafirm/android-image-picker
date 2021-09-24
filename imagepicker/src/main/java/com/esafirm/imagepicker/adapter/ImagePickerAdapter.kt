@@ -20,7 +20,6 @@ import com.esafirm.imagepicker.listeners.OnImageSelectedListener
 import com.esafirm.imagepicker.model.Image
 import kotlinx.android.synthetic.main.ef_imagepicker_item_image.view.*
 import java.io.File
-import java.util.HashMap
 
 class ImagePickerAdapter(
     context: Context,

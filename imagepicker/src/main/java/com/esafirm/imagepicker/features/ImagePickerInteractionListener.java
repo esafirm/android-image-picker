@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface ImagePickerInteractionListener {
     void setTitle(String title);
+
     void cancel();
+
     // Get this callback by calling an ImagePickerFragment's finishPickImages() method. It
     // removes Images whose files no longer exist.
     void finishPickImages(Intent result);

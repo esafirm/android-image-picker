@@ -3,6 +3,7 @@ package sample
 import android.app.Application
 import com.esafirm.sample.BuildConfig
 import com.squareup.leakcanary.LeakCanary
+import leakcanary.LeakCanary
 
 class SampleApplication : Application() {
     override fun onCreate() {

@@ -1,2 +1,2 @@
 before_install:
-           - ./setup.sh
+  - ./setup.sh

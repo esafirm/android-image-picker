@@ -1,6 +1,7 @@
 package com.esafirm.imagepicker.features;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -45,10 +46,6 @@ import com.esafirm.imagepicker.view.SnackBarView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
-import static com.esafirm.imagepicker.helper.ImagePickerPreferences.PREF_EXTERNAL_STORAGE_REQUESTED;
 
 public class ImagePickerFragment extends Fragment implements ImagePickerView {
     private static final String STATE_KEY_CAMERA_MODULE = "Key.CameraModule";
@@ -312,7 +309,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), REQUIRED_EXTERNAL_STORAGE_PERMISSION)) {
             requestPermissions(permissions, RC_PERMISSION_REQUEST_EXTERNAL_STORAGE);
         } else {
-            final String permission = PREF_EXTERNAL_STORAGE_REQUESTED;
+            final String permission = ImagePickerPreferences.PREF_EXTERNAL_STORAGE_REQUESTED;
             if (!preferences.isPermissionRequested(permission)) {
                 preferences.setPermissionRequested(permission);
                 requestPermissions(permissions, RC_PERMISSION_REQUEST_EXTERNAL_STORAGE);
@@ -408,9 +405,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_CAPTURE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 presenter.finishCaptureImage(getActivity(), data, getBaseConfig());
-            } else if (resultCode == RESULT_CANCELED && isCameraOnly) {
+            } else if (resultCode == Activity.RESULT_CANCELED && isCameraOnly) {
                 presenter.abortCaptureImage();
                 interactionListener.cancel();
             }

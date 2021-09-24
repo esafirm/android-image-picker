@@ -10,4 +10,4 @@ There's 4 mode available:
 
 4. `ReturnMode.GALLERY_ONLY` -> Same as CAMERA_ONLY but with Gallery
 
-You can define your selected mode with `setReturnMode()` method. 
+You can define your selected mode with `setReturnMode()` method.

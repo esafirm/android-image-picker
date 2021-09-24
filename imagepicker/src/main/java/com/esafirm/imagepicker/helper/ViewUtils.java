@@ -3,9 +3,10 @@ package com.esafirm.imagepicker.helper;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.ViewTreeObserver;
+
+import androidx.core.content.ContextCompat;
 
 import com.esafirm.imagepicker.R;
 
