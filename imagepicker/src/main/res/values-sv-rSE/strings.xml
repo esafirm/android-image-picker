@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Tillåt åtkomst extern lagring för att välja bilder</string>
+
+    <string name="ef_ok">OK</string>
+    <string name="ef_done">KLAR</string>
+    <string name="ef_camera">KAMERA</string>
+
+    <string name="ef_title_folder">Mapp</string>
+    <string name="ef_title_select_image">Tryck för att välja bilder</string>
+    <string name="ef_ltitle_permission_denied">Åtkomst nekad</string>
+
+    <string name="ef_selected">%d valda</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d valda</string>
+
+    <string name="ef_error_create_image_file">Misslyckades att skapa bildfil</string>
+    <string name="ef_error_no_camera">Ingen kamera hittades</string>
+    <string name="ef_error_null_cursor">Hopsan! Något gick fel!</string>
+
+    <string name="ef_msg_empty_images">Inga bilder hittades</string>
+    <string name="ef_msg_no_write_external_permission">Vänligen bevilja lagringsbehörighet för att välja bilder</string>
+    <string name="ef_msg_limit_images">Bildvalsgräns</string>
+</resources>
