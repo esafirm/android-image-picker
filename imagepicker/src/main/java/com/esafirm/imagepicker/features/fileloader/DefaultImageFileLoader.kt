@@ -27,21 +27,16 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
         config: ImagePickerConfig,
         listener: ImageLoaderListener
     ) {
-        val isFolderMode = config.isFolderMode
-        val includeVideo = config.isIncludeVideo
-        val onlyVideo = config.isOnlyVideo
-        val includeAnimation = config.isIncludeAnimation
-        val excludedImages = config.excludedImages
 
         getExecutorService().execute(
             ImageLoadRunnable(
-                context.applicationContext,
-                isFolderMode,
-                onlyVideo,
-                includeVideo,
-                includeAnimation,
-                excludedImages,
-                listener
+                context = context.applicationContext,
+                isFolderMode = config.isFolderMode,
+                onlyVideo = config.isOnlyVideo,
+                includeVideo = config.isIncludeVideo,
+                includeAnimation = config.isIncludeAnimation,
+                excludedImages = config.excludedImages,
+                listener = listener
             )
         )
     }
@@ -75,12 +70,16 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             private const val QUERY_LIMIT = "limit"
         }
 
-        private val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
-        )
+        enum class Projection(val column: String) {
+            ID(MediaStore.Images.Media._ID),
+            DISPLAY_NAME(MediaStore.Images.Media.DISPLAY_NAME),
+            DATA(MediaStore.Images.Media.DATA),
+            BUCKET_DISPLAY_NAME(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+            companion object {
+                fun columns() = values().map { it.column }.toTypedArray()
+            }
+        }
 
         @SuppressLint("InlinedApi")
         private fun queryData(limit: Int? = null): Cursor? {
@@ -124,7 +123,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                     }
                 }
 
-                return context.contentResolver.query(sourceUri, projection, args, null)
+                return context.contentResolver.query(sourceUri, Projection.columns(), args, null)
             }
 
             val sortOrder = "${MediaStore.Images.Media.DATE_MODIFIED} DESC".let {
@@ -132,7 +131,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             }
 
             return context.contentResolver.query(
-                sourceUri, projection,
+                sourceUri, Projection.columns(),
                 selection, null, sortOrder
             )
         }
@@ -144,7 +143,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
         }
 
         private fun cursorToImage(cursor: Cursor): Image? {
-            val path = cursor.getString(cursor.getColumnIndex(projection[2]))
+            val path = cursor.getString(cursor.getColumnIndex(Projection.DATA.column))
             val file = makeSafeFile(path) ?: return null
             if (excludedImages != null && excludedImages.contains(file)) return null
 
@@ -153,13 +152,12 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                 if (ImagePickerUtils.isGifFormat(path)) return null
             }
 
-            val id = cursor.getLong(cursor.getColumnIndex(projection[0]))
-            val name = cursor.getString(cursor.getColumnIndex(projection[1]))
+            val id = cursor.getLong(cursor.getColumnIndex(Projection.ID.column))
+            val name = cursor.getString(cursor.getColumnIndex(Projection.DISPLAY_NAME.column))
 
-            if (name != null) {
+            return if (name != null) {
                 return Image(id, name, path)
-            }
-            return null
+            } else null
         }
 
         private fun processData(cursor: Cursor?) {
@@ -180,7 +178,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
 
                         // Load folders
                         if (!isFolderMode) continue
-                        var bucket = cursor.getString(cursor.getColumnIndex(projection[3]))
+                        var bucket = cursor.getString(cursor.getColumnIndex(Projection.BUCKET_DISPLAY_NAME.column))
                         if (bucket == null) {
                             val parent = File(image.path).parentFile
                             bucket = if (parent != null) parent.name else DEFAULT_FOLDER_NAME

@@ -7,7 +7,7 @@ import android.widget.RelativeLayout
 import androidx.annotation.StringRes
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import com.esafirm.imagepicker.R
-import kotlinx.android.synthetic.main.ef_imagepikcer_snackbar.view.*
+import kotlinx.android.synthetic.main.ef_imagepicker_snackbar.view.*
 
 class SnackBarView @JvmOverloads constructor(
     context: Context,
@@ -19,7 +19,7 @@ class SnackBarView @JvmOverloads constructor(
     private val btnAction get() = ef_snackbar_btn_action
 
     init {
-        inflate(context, R.layout.ef_imagepikcer_snackbar, this)
+        inflate(context, R.layout.ef_imagepicker_snackbar, this)
         if (!isInEditMode) {
             val height = context.resources.getDimensionPixelSize(R.dimen.ef_height_snackbar)
             translationY = height.toFloat()

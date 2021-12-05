@@ -19,6 +19,7 @@
 
     <string name="ef_msg_empty_images">No images found</string>
     <string name="ef_msg_no_write_external_permission">Please grant storage permission to select images</string>
+    <string name="ef_msg_no_camera_permission">Please grant camera permission to take a photo</string>
     <string name="ef_msg_limit_images">Image selection limit</string>
 
     <!--Don't Translate-->
