@@ -55,7 +55,7 @@ class FolderPickerAdapter(
     override fun getItemCount() = folders.size
 
     class FolderViewHolder(itemView: View) : ViewHolder(itemView) {
-        val image: ImageView = itemView.image
+        val image: ImageView = itemView.image_view
         val name: TextView = itemView.tv_name
         val number: TextView = itemView.tv_number
     }

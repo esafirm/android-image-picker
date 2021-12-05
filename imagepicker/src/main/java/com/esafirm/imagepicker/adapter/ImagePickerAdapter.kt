@@ -5,10 +5,9 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.esafirm.imagepicker.R
@@ -27,6 +26,7 @@ class ImagePickerAdapter(
     context: Context,
     imageLoader: ImageLoader,
     selectedImages: List<Image>,
+    private val isShowImageNames: Boolean,
     private val itemClickListener: OnImageClickListener
 ) : BaseListAdapter<ImageViewHolder>(context, imageLoader) {
 
@@ -70,10 +70,9 @@ class ImagePickerAdapter(
 
         if (ImagePickerUtils.isVideoFormat(image)) {
             if (!videoDurationHolder.containsKey(image.id)) {
-                val uri =
-                    Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), "" + image.id)
                 videoDurationHolder[image.id] = ImagePickerUtils.getVideoDurationLabel(
-                    context, uri
+                    context = context,
+                    uri = Uri.withAppendedPath(MediaStore.Files.getContentUri("external"), "" + image.id)
                 )
             }
 
@@ -82,9 +81,15 @@ class ImagePickerAdapter(
         }
 
         viewHolder.apply {
+            if (isShowImageNames) {
+                nameView.text = image.name
+                bottomView.visibility = View.VISIBLE
+            } else {
+                bottomView.visibility = View.GONE
+            }
             fileTypeIndicator.text = fileTypeLabel
             fileTypeIndicator.visibility = if (showFileTypeIndicator) View.VISIBLE else View.GONE
-            alphaView.alpha = if (isSelected) 0.5f else 0f
+            selectedView.visibility = if (isSelected) View.VISIBLE else View.GONE
             itemView.setOnClickListener {
                 val shouldSelect = itemClickListener(isSelected)
 
@@ -94,21 +99,25 @@ class ImagePickerAdapter(
                     addSelected(image, position)
                 }
             }
-            container?.foreground = if (isSelected) ContextCompat.getDrawable(
-                context,
-                R.drawable.ef_ic_done_white
-            ) else null
         }
-    }
-
-    private fun isSelected(image: Image): Boolean {
-        return selectedImages.any { it.path == image.path }
     }
 
     override fun getItemCount() = listDiffer.currentList.size
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
     fun setData(images: List<Image>) {
         listDiffer.submitList(images)
+    }
+
+    private fun isSelected(image: Image): Boolean {
+        return selectedImages.any { it.path == image.path }
     }
 
     private fun addSelected(image: Image, position: Int) {
@@ -145,8 +154,9 @@ class ImagePickerAdapter(
 
     class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
         val imageView: ImageView = itemView.image_view
-        val alphaView: View = itemView.view_alpha
+        val nameView: TextView = itemView.tv_image_name
+        val bottomView: LinearLayout = itemView.ef_bottom_view
+        val selectedView: View = itemView.view_selected
         val fileTypeIndicator: TextView = itemView.ef_item_file_type_indicator
-        val container: FrameLayout? = itemView as? FrameLayout
     }
 }

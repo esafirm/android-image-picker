@@ -29,9 +29,11 @@ import com.esafirm.imagepicker.helper.ImagePickerPreferences
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.helper.state.fetch
+import com.esafirm.imagepicker.model.BaseItem
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import java.util.ArrayList
+import java.util.regex.Pattern
 
 class ImagePickerFragment : Fragment() {
 
@@ -139,13 +141,15 @@ class ImagePickerFragment : Fragment() {
             return@observe
         }
 
-        state.isFolder.fetch {
+        state.isFoldersMode.fetch {
+            config.searchQuery = null
             val isFolderMode = this
             if (isFolderMode) {
-                setFolderAdapter(state.folders)
+                setFolderAdapter(filter(state.folders))
             } else {
-                setImageAdapter(state.images)
+                setImageAdapter(filter(state.currentFolder?.images ?: emptyList()))
             }
+            interactionListener.isFolderModeChanged()
         }
 
         state.finishPickImage.fetch {
@@ -157,6 +161,17 @@ class ImagePickerFragment : Fragment() {
 
         state.showCapturedImage.fetch {
             loadDataWithPermission()
+        }
+    }
+
+    private fun <T : BaseItem> filter(list: List<T>): List<T> {
+        val regex = config.searchQuery?.let {
+            if (it.isNotBlank()) buildRegex(it) else null
+        }
+        return if (regex != null) {
+            list.filter { it.getItemName().matches(regex) }
+        } else {
+            list
         }
     }
 
@@ -176,7 +191,9 @@ class ImagePickerFragment : Fragment() {
         resources.configuration.orientation
     ).apply {
         val selectListener = { isSelected: Boolean -> selectImage(isSelected) }
-        val folderClick = { bucket: Folder -> setImageAdapter(bucket.images) }
+        val folderClick = { bucket: Folder ->
+            presenter.setFolder(bucket)
+        }
 
         setupAdapters(passedSelectedImages, selectListener, folderClick)
         setImageSelectedListener { selectedImages ->
@@ -210,12 +227,18 @@ class ImagePickerFragment : Fragment() {
      */
     private fun setImageAdapter(images: List<Image>) {
         recyclerViewManager.setImageAdapter(images)
+        checkDataIsEmpty(images)
         updateTitle()
     }
 
     private fun setFolderAdapter(folders: List<Folder>) {
         recyclerViewManager.setFolderAdapter(folders)
+        checkDataIsEmpty(folders)
         updateTitle()
+    }
+
+    private fun checkDataIsEmpty(data: List<*>) {
+        binding?.textViewEmpty?.visibility = if (data.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun updateTitle() {
@@ -256,6 +279,16 @@ class ImagePickerFragment : Fragment() {
     }
 
     private fun loadData() = presenter.loadData(config)
+
+    fun search(searchQuery: String?) {
+        config.searchQuery = searchQuery
+        val state = presenter.getUiState().get()
+        if (state.currentFolder == null) {
+            setFolderAdapter(filter(state.folders))
+        } else {
+            setImageAdapter(filter(state.currentFolder.images))
+        }
+    }
 
     /**
      * Request for permission
@@ -330,8 +363,8 @@ class ImagePickerFragment : Fragment() {
      */
     fun handleBack(): Boolean {
         if (recyclerViewManager.handleBack()) {
+            presenter.setFolder(null)
             // Handled.
-            updateTitle()
             return true
         }
         return false
@@ -389,6 +422,10 @@ class ImagePickerFragment : Fragment() {
             return ImagePickerFragment().apply {
                 arguments = args
             }
+        }
+
+        private fun buildRegex(query: String): Regex {
+            return Regex("(?is)" + ".*" + Pattern.quote(query) + ".*")
         }
     }
 }

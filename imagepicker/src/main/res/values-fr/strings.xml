@@ -9,6 +9,8 @@
     <string name="ef_title_folder">Dossier</string>
     <string name="ef_title_select_image">Toucher pour sélectionner des images</string>
     <string name="ef_ltitle_permission_denied">Permission refusée</string>
+    <string name="ef_search_query">Chercher</string>
+    <string name="ef_nothing_found">Rien n'a été trouvé</string>
 
     <string name="ef_selected">%d sélectionnées</string>
     <string name="ef_selected_with_limit">%1$d/%2$d sélectionnées</string>

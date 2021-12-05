@@ -82,8 +82,11 @@ class RecyclerViewManager(
         /* Init folder and image adapter */
         val imageLoader = ImagePickerComponentsHolder.imageLoader
         imageAdapter = ImagePickerAdapter(
-            context, imageLoader, selectedImages
-                ?: emptyList(), onImageClick
+            context = context,
+            imageLoader = imageLoader,
+            selectedImages = selectedImages ?: emptyList(),
+            isShowImageNames = config.isShowImageNames,
+            itemClickListener = onImageClick
         )
         folderAdapter = FolderPickerAdapter(context, imageLoader) {
             foldersState = recyclerView.layoutManager?.onSaveInstanceState()
@@ -111,7 +114,6 @@ class RecyclerViewManager(
     // Returns true if a back action was handled by going back a folder; false otherwise.
     fun handleBack(): Boolean {
         if (config.isFolderMode && !isDisplayingFolderView) {
-            setFolderAdapter(null)
             imageAdapter.setData(emptyList())
             return true
         }

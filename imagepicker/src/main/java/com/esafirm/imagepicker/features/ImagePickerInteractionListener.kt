@@ -16,4 +16,9 @@ interface ImagePickerInteractionListener {
      * May include Images whose files no longer exist.
      */
     fun selectionChanged(imageList: List<Image>?)
+
+    /**
+     * Called when the user select the bucket or move back to list of buckets.
+     */
+    fun isFolderModeChanged()
 }

@@ -13,7 +13,7 @@ class Image(
     val id: Long,
     val name: String,
     val path: String,
-) : Parcelable {
+) : Parcelable, BaseItem {
 
     @IgnoredOnParcel
     private var uriHolder: Uri? = null
@@ -32,6 +32,8 @@ class Image(
                 }
             }
         }
+
+    override fun getItemName() = name
 
     override fun equals(other: Any?): Boolean {
         return when {

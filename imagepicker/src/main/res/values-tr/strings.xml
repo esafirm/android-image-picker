@@ -8,6 +8,8 @@
     <string name="ef_title_folder">Klasör</string>
     <string name="ef_title_select_image">Resimleri seçmek için hafifçe dokunun</string>
     <string name="ef_ltitle_permission_denied">İzin reddedildi</string>
+    <string name="ef_search_query">Arama</string>
+    <string name="ef_nothing_found">Hiçbirşey Bulunamadı</string>
 
     <string name="ef_selected">%d seçili</string>
     <string name="ef_selected_with_limit">%1$d/%2$d seçili</string>
