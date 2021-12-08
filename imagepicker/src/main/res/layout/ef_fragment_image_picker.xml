@@ -13,13 +13,6 @@
         android:padding="@dimen/ef_spacing_double"
         android:text="@string/ef_msg_empty_images"
         android:textSize="@dimen/ef_font_medium"
-        android:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -28,15 +21,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/text_view_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerInParent="true"
-        android:gravity="center"
-        android:textColor="@color/ef_grey"
-        android:textSize="@dimen/ef_font_medium"
-        android:text="@string/ef_nothing_found"
         android:visibility="gone"
         tools:visibility="visible" />
 

@@ -12,6 +12,13 @@
     <string name="ef_search_query">Cari</string>
     <string name="ef_nothing_found">Tidak ada yang ditemukan</string>
 
+    <string name="ef_title_sort">Menyortir</string>
+    <string name="ef_title_sort_size">Ukuran</string>
+    <string name="ef_title_sort_date">Tanggal</string>
+    <string name="ef_title_sort_type">Jenis</string>
+    <string name="ef_title_sort_num">Nomor</string>
+    <string name="ef_title_sort_name">Nama</string>
+
     <string name="ef_selected">%d terpilih</string>
     <string name="ef_selected_with_limit">%1$d/%2$d terpilih</string>
 

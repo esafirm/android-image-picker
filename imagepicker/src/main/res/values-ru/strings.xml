@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ef_permission_write_external_rationale">Разрешите доступ к хранилищу, чтобы выбрать изображения</string>
+
     <string name="ef_ok">ОК</string>
     <string name="ef_done">ГОТОВО</string>
     <string name="ef_camera">КАМЕРА</string>
+
     <string name="ef_title_folder">Папка</string>
     <string name="ef_title_select_image">Коснитесь, чтобы выбрать</string>
     <string name="ef_ltitle_permission_denied">Доступ запрещён</string>
     <string name="ef_search_query">Поиск</string>
     <string name="ef_nothing_found">Ничего не найдено</string>
+
+    <string name="ef_title_sort">Сортировка</string>
+    <string name="ef_title_sort_name">Имя</string>
+    <string name="ef_title_sort_num">Количество</string>
+    <string name="ef_title_sort_type">Тип</string>
+    <string name="ef_title_sort_date">Дата</string>
+    <string name="ef_title_sort_size">Размер</string>
+
     <string name="ef_selected">%d выбрано</string>
     <string name="ef_selected_with_limit">%1$d/%2$d выбрано</string>
+
     <string name="ef_error_create_image_file">Не удалось создать файл</string>
     <string name="ef_error_no_camera">Камера недоступна</string>
     <string name="ef_error_null_cursor">Ой! Что-то пошло не так!</string>
+
     <string name="ef_msg_empty_images">Изображений не найдено</string>
     <string name="ef_msg_no_write_external_permission">Пожалуйста, разрешите доступ к хранилищу, чтобы выбрать изображения</string>
     <string name="ef_msg_no_camera_permission">Пожалуйста, разрешите доступ к камере, чтобы сделать снимок</string>

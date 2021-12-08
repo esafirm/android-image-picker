@@ -10,6 +10,13 @@
     <string name="ef_search_query">検索</string>
     <string name="ef_nothing_found">何も見つかりません</string>
 
+    <string name="ef_title_sort">選別</string>
+    <string name="ef_title_sort_size">サイズ</string>
+    <string name="ef_title_sort_date">日にち</string>
+    <string name="ef_title_sort_type">タイプ</string>
+    <string name="ef_title_sort_num">番号</string>
+    <string name="ef_title_sort_name">名前</string>
+
     <string name="ef_selected">%d 枚を選択済</string>
     <string name="ef_selected_with_limit">%1$d/%2$d 枚を選択済</string>
 

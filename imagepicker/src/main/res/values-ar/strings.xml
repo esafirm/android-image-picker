@@ -12,6 +12,13 @@
     <string name="ef_search_query">بحث</string>
     <string name="ef_nothing_found">لم يتم العثور على شيء</string>
 
+    <string name="ef_title_sort">نوع</string>
+    <string name="ef_title_sort_size">مقاس</string>
+    <string name="ef_title_sort_date">تاريخ</string>
+    <string name="ef_title_sort_type">نوع</string>
+    <string name="ef_title_sort_num">عدد</string>
+    <string name="ef_title_sort_name">اسم</string>
+
     <string name="ef_selected">إخترت %d</string>
     <string name="ef_selected_with_limit">إخترت %1$d/%2$d</string>
 

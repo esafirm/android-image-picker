@@ -30,7 +30,9 @@ class ImagePickerConfig(
     var showDoneButtonAlways: Boolean = false,
     var isShowSearch: Boolean = false,
     var searchQuery: String? = null,
-    var isShowImageNames: Boolean = false
+    var isShowImageNames: Boolean = false,
+    var foldersSortMode: FolderSortMode = FolderSortMode.NONE,
+    var imagesSortMode: ImageSortMode = ImageSortMode.NONE
 ) : BaseConfig(), Parcelable {
 
     @Transient

@@ -3,11 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <item
-        android:id="@+id/action_search"
+        android:id="@+id/menu_search"
         android:title="@string/ef_search_query"
         android:icon="@drawable/ef_ic_search_white"
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+
+    <item
+        android:id="@+id/menu_sort"
+        android:title="@string/ef_title_sort"
+        android:icon="@drawable/ef_ic_sort_white"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/menu_camera"

@@ -11,6 +11,13 @@
     <string name="ef_search_query">Arama</string>
     <string name="ef_nothing_found">Hiçbirşey Bulunamadı</string>
 
+    <string name="ef_title_sort">Sıralama</string>
+    <string name="ef_title_sort_size">Boyut</string>
+    <string name="ef_title_sort_date">Tarih</string>
+    <string name="ef_title_sort_type">Bir çeşit</string>
+    <string name="ef_title_sort_num">Miktar</string>
+    <string name="ef_title_sort_name">İsim</string>
+
     <string name="ef_selected">%d seçili</string>
     <string name="ef_selected_with_limit">%1$d/%2$d seçili</string>
 

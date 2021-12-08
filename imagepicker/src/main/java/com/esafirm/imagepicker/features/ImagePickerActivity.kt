@@ -120,6 +120,10 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
             imagePickerFragment.captureImage()
             return true
         }
+        if (id == R.id.menu_sort) {
+            imagePickerFragment.showSortPopupMenu(item)
+            return true
+        }
         return super.onOptionsItemSelected(item)
     }
 
@@ -161,8 +165,10 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
         }
     }
 
+    //region Search
+
     private fun initSearchView(menu: Menu) {
-        searchView = menu.findItem(R.id.action_search).actionView as? SearchView
+        searchView = menu.findItem(R.id.menu_search).actionView as? SearchView
         if (config?.isShowSearch == true) {
             searchView?.setIconifiedByDefault(true)
             searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -198,6 +204,8 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
         searchView?.isIconified = true
         isNeedSearch = true
     }
+
+    //endregion Search
 
     /* --------------------------------------------------- */
     /* > ImagePickerInteractionListener Methods  */

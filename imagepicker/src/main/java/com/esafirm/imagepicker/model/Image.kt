@@ -7,12 +7,16 @@ import android.provider.MediaStore
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 class Image(
     val id: Long,
     val name: String,
     val path: String,
+    val type: String? = null,
+    val dateModified: Date? = null,
+    val size: Long? = null
 ) : Parcelable, BaseItem {
 
     @IgnoredOnParcel
@@ -51,6 +55,9 @@ class Image(
         result = 31 * result + name.hashCode()
         result = 31 * result + path.hashCode()
         result = 31 * result + (uriHolder?.hashCode() ?: 0)
+        result = 31 * result + (type?.hashCode() ?: 0)
+        result = 31 * result + (dateModified?.hashCode() ?: 0)
+        result = 31 * result + (size?.hashCode() ?: 0)
         return result
     }
 }

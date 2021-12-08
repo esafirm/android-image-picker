@@ -12,6 +12,13 @@
     <string name="ef_search_query">Search</string>
     <string name="ef_nothing_found">Nothing found</string>
 
+    <string name="ef_title_sort">Sort</string>
+    <string name="ef_title_sort_name">Name</string>
+    <string name="ef_title_sort_num">Number</string>
+    <string name="ef_title_sort_type">Type</string>
+    <string name="ef_title_sort_date">Date</string>
+    <string name="ef_title_sort_size">Size</string>
+
     <string name="ef_selected">%d selected</string>
     <string name="ef_selected_with_limit">%1$d/%2$d selected</string>
 
@@ -25,7 +32,7 @@
     <string name="ef_msg_limit_images">Image selection limit</string>
 
     <!--Don't Translate-->
-    <string name="ef_gif" translatable="false">GIF</string>
+    <string name="ef_gif">GIF</string>
     <string name="ef_content_desc_folder" translatable="false">Folder</string>
     <string name="ef_content_desc_image" translatable="false">Image</string>
 

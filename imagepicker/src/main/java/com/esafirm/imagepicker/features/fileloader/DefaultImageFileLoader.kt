@@ -9,12 +9,13 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import com.esafirm.imagepicker.features.ImagePickerConfig
+import com.esafirm.imagepicker.features.ImageSortMode
 import com.esafirm.imagepicker.features.common.ImageLoaderListener
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -36,6 +37,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                 includeVideo = config.isIncludeVideo,
                 includeAnimation = config.isIncludeAnimation,
                 excludedImages = config.excludedImages,
+                sortMode = config.imagesSortMode,
                 listener = listener
             )
         )
@@ -60,6 +62,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
         private val includeVideo: Boolean,
         private val includeAnimation: Boolean,
         private val excludedImages: List<File>?,
+        private val sortMode: ImageSortMode,
         private val listener: ImageLoaderListener
     ) : Runnable {
 
@@ -74,7 +77,10 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             ID(MediaStore.Images.Media._ID),
             DISPLAY_NAME(MediaStore.Images.Media.DISPLAY_NAME),
             DATA(MediaStore.Images.Media.DATA),
-            BUCKET_DISPLAY_NAME(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            BUCKET_DISPLAY_NAME(MediaStore.Images.Media.BUCKET_DISPLAY_NAME),
+            MIME_TYPE(MediaStore.Images.Media.MIME_TYPE),
+            DATE_MODIFIED(MediaStore.Images.Media.DATE_MODIFIED),
+            SIZE(MediaStore.Images.Media.SIZE);
 
             companion object {
                 fun columns() = values().map { it.column }.toTypedArray()
@@ -101,39 +107,55 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                 else -> ""
             }
 
-            if (useNewApi) {
+            val sortColumn = when (sortMode) {
+                ImageSortMode.NAME_ASC,
+                ImageSortMode.NAME_DESC -> MediaStore.Files.FileColumns.DISPLAY_NAME
+                ImageSortMode.TYPE_ASC,
+                ImageSortMode.TYPE_DESC -> MediaStore.Files.FileColumns.MIME_TYPE
+                ImageSortMode.DATE_MODIFIED_ASC,
+                ImageSortMode.DATE_MODIFIED_DESC -> MediaStore.Files.FileColumns.DATE_MODIFIED
+                ImageSortMode.SIZE_ASC,
+                ImageSortMode.SIZE_DESC -> MediaStore.Files.FileColumns.SIZE
+                else -> MediaStore.Files.FileColumns.DATE_MODIFIED
+            }
+            val sortDirection = when (sortMode) {
+                ImageSortMode.NAME_ASC,
+                ImageSortMode.TYPE_ASC,
+                ImageSortMode.DATE_MODIFIED_ASC,
+                ImageSortMode.SIZE_ASC -> ContentResolver.QUERY_SORT_DIRECTION_ASCENDING
+                ImageSortMode.NAME_DESC,
+                ImageSortMode.TYPE_DESC,
+                ImageSortMode.DATE_MODIFIED_DESC,
+                ImageSortMode.SIZE_DESC -> ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
+                else -> ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
+            }
+
+            return if (useNewApi) {
                 val args = Bundle().apply {
                     // Sort function
-                    putStringArray(
-                        ContentResolver.QUERY_ARG_SORT_COLUMNS,
-                        arrayOf(MediaStore.Files.FileColumns.DATE_MODIFIED)
-                    )
-                    putInt(
-                        ContentResolver.QUERY_ARG_SORT_DIRECTION,
-                        ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
-                    )
+                    putStringArray(ContentResolver.QUERY_ARG_SORT_COLUMNS, arrayOf(sortColumn))
+                    putInt(ContentResolver.QUERY_ARG_SORT_DIRECTION, sortDirection)
                     // Selection
-                    putString(
-                        ContentResolver.QUERY_ARG_SQL_SELECTION,
-                        selection
-                    )
+                    putString(ContentResolver.QUERY_ARG_SQL_SELECTION, selection)
                     // Limit
                     if (limit != null) {
                         putInt(ContentResolver.QUERY_ARG_LIMIT, limit)
                     }
                 }
 
-                return context.contentResolver.query(sourceUri, Projection.columns(), args, null)
-            }
+                context.contentResolver.query(sourceUri, Projection.columns(), args, null)
+            } else {
+                val oldSortDirection = if (sortDirection == ContentResolver.QUERY_SORT_DIRECTION_ASCENDING) "ASC" else "DESC"
 
-            val sortOrder = "${MediaStore.Images.Media.DATE_MODIFIED} DESC".let {
-                if (limit != null) "$it LIMIT $limit" else it
-            }
+                val sortOrder = "$sortColumn $oldSortDirection".let {
+                    if (limit != null) "$it LIMIT $limit" else it
+                }
 
-            return context.contentResolver.query(
-                sourceUri, Projection.columns(),
-                selection, null, sortOrder
-            )
+                context.contentResolver.query(
+                    sourceUri, Projection.columns(),
+                    selection, null, sortOrder
+                )
+            }
         }
 
         private fun getSourceUri(): Uri {
@@ -154,9 +176,13 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
 
             val id = cursor.getLong(cursor.getColumnIndex(Projection.ID.column))
             val name = cursor.getString(cursor.getColumnIndex(Projection.DISPLAY_NAME.column))
+            val type = cursor.getString(cursor.getColumnIndex(Projection.MIME_TYPE.column))
+            val dateString = cursor.getString(cursor.getColumnIndex(Projection.DATE_MODIFIED.column))
+            val date = Date(dateString.toLong())
+            val size = cursor.getLong(cursor.getColumnIndex(Projection.SIZE.column))
 
             return if (name != null) {
-                return Image(id, name, path)
+                return Image(id, name, path, type, date, size)
             } else null
         }
 

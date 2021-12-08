@@ -12,6 +12,13 @@
     <string name="ef_search_query">찾다</string>
     <string name="ef_nothing_found">아무것도 찾을 수 없음何も見つかりません</string>
 
+    <string name="ef_title_sort">종류</string>
+    <string name="ef_title_sort_name">이름</string>
+    <string name="ef_title_sort_num">숫자</string>
+    <string name="ef_title_sort_type">유형</string>
+    <string name="ef_title_sort_date">날짜</string>
+    <string name="ef_title_sort_size">크기</string>
+
     <string name="ef_selected">%d 선택됨</string>
     <string name="ef_selected_with_limit">%1$d/%2$d 선택됨</string>
 

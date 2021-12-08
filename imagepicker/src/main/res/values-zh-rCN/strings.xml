@@ -10,6 +10,13 @@
     <string name="ef_search_query">搜索</string>
     <string name="ef_nothing_found">沒有發現</string>
 
+    <string name="ef_title_sort">種類</string>
+    <string name="ef_title_sort_name">姓名</string>
+    <string name="ef_title_sort_num">數字</string>
+    <string name="ef_title_sort_type">類型</string>
+    <string name="ef_title_sort_date">日期</string>
+    <string name="ef_title_sort_size">尺寸</string>
+
     <string name="ef_selected">已选择 %d</string>
     <string name="ef_selected_with_limit">已选择 %1$d/%2$d</string>
 
