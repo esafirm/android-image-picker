@@ -134,7 +134,7 @@ class ImagePickerFragment : Fragment() {
     }
 
     private fun subscribeToUiState() = presenter.getUiState().observe(this) { state ->
-        showLoading(state.isLoading)
+        showLoading(state.isLoading, true)
 
         state.error.fetch {
             showError(this)
@@ -258,7 +258,10 @@ class ImagePickerFragment : Fragment() {
         filter(images)
             .let { sortImages(it) }
             .let {
-                recyclerViewManager.setImageAdapter(it)
+                showLoading(true)
+                recyclerViewManager.setImageAdapter(it) {
+                    showLoading(false)
+                }
                 checkDataIsEmpty(it)
                 updateTitle()
             }
@@ -268,7 +271,10 @@ class ImagePickerFragment : Fragment() {
         filter(folders)
             .let { sortFolders(it) }
             .let {
-                recyclerViewManager.setFolderAdapter(it)
+                showLoading(true)
+                recyclerViewManager.setFolderAdapter(it) {
+                    showLoading(false)
+                }
                 checkDataIsEmpty(it)
                 updateTitle()
             }
@@ -555,10 +561,12 @@ class ImagePickerFragment : Fragment() {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun showLoading(isLoading: Boolean) {
+    private fun showLoading(isLoading: Boolean, hideRecyclerView: Boolean = false) {
         binding?.run {
             progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
+            if (hideRecyclerView) {
+                recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
+            }
             tvEmptyImages.visibility = View.GONE
         }
     }

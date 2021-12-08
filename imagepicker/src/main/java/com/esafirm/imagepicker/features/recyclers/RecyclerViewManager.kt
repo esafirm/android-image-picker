@@ -37,6 +37,7 @@ class RecyclerViewManager(
     private lateinit var folderAdapter: FolderPickerAdapter
 
     private var foldersState: Parcelable? = null
+    private var imagesState: Parcelable? = null
 
     private var imageColumns = 0
     private var folderColumns = 0
@@ -147,20 +148,27 @@ class RecyclerViewManager(
         }
     }
 
-    fun setImageAdapter(images: List<Image> = emptyList()) {
-        imageAdapter.setData(images)
+    fun setImageAdapter(images: List<Image> = emptyList(), commitCallback: (() -> Unit)? = null) {
+        imagesState = recyclerView.layoutManager?.onSaveInstanceState()
+        imageAdapter.setData(images) {
+            imagesState?.let {
+                recyclerView.layoutManager!!.onRestoreInstanceState(it)
+            }
+            commitCallback?.invoke()
+        }
         setItemDecoration(imageColumns)
         recyclerView.adapter = imageAdapter
     }
 
-    fun setFolderAdapter(folders: List<Folder>?) {
+    fun setFolderAdapter(folders: List<Folder>?, commitCallback: (() -> Unit)? = null) {
         folderAdapter.setData(folders)
         setItemDecoration(folderColumns)
         recyclerView.adapter = folderAdapter
-        if (foldersState != null) {
+        foldersState?.let {
             layoutManager!!.spanCount = folderColumns
-            recyclerView.layoutManager!!.onRestoreInstanceState(foldersState)
+            recyclerView.layoutManager!!.onRestoreInstanceState(it)
         }
+        commitCallback?.invoke()
     }
 
     /* --------------------------------------------------- */

@@ -112,8 +112,10 @@ class ImagePickerAdapter(
         return position.toLong()
     }
 
-    fun setData(images: List<Image>) {
-        listDiffer.submitList(images)
+    fun setData(images: List<Image>, commitCallback: (() -> Unit)? = null) {
+        listDiffer.submitList(images) {
+            commitCallback?.invoke()
+        }
     }
 
     private fun isSelected(image: Image): Boolean {
