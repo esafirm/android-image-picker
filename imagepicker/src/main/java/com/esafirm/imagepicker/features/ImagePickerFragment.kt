@@ -242,7 +242,8 @@ class ImagePickerFragment : Fragment() {
     }
 
     private fun updateTitle() {
-        interactionListener.setTitle(recyclerViewManager.title)
+        val state = presenter.getUiState().get()
+        interactionListener.setTitle(recyclerViewManager.getTitle(state.currentFolder?.folderName))
     }
 
     /**

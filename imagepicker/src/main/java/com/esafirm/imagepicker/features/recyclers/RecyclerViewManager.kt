@@ -123,29 +123,29 @@ class RecyclerViewManager(
     private val isDisplayingFolderView: Boolean
         get() = recyclerView.adapter == null || recyclerView.adapter is FolderPickerAdapter
 
-    val title: String
-        get() {
-            if (isDisplayingFolderView) {
-                return ConfigUtils.getFolderTitle(context, config)
+    fun getTitle(currentFolderName: String?): String {
+        val selectedNum = imageAdapter.selectedImages.size
+        return when {
+            isDisplayingFolderView -> {
+                ConfigUtils.getFolderTitle(context, config)
             }
-            if (config.mode == ImagePickerMode.SINGLE) {
-                return ConfigUtils.getImageTitle(context, config)
+            config.mode == ImagePickerMode.SINGLE -> {
+                ConfigUtils.getImageTitle(context, config)
             }
-            val imageSize = imageAdapter.selectedImages.size
-            val useDefaultTitle = config.imageTitle.isNullOrBlank().not() && imageSize == 0
-            if (useDefaultTitle) {
-                return ConfigUtils.getImageTitle(context, config)
+            selectedNum == 0 && config.imageTitle?.isNotBlank() == true -> {
+                ConfigUtils.getImageTitle(context, config)
             }
-            return if (config.limit == IpCons.MAX_LIMIT) {
-                String.format(context.getString(R.string.ef_selected), imageSize)
-            } else {
-                String.format(
-                    context.getString(R.string.ef_selected_with_limit),
-                    imageSize,
-                    config.limit
-                )
+            selectedNum == 0 && currentFolderName != null -> {
+                currentFolderName
+            }
+            config.limit == IpCons.MAX_LIMIT -> {
+                context.getString(R.string.ef_selected).format(selectedNum)
+            }
+            else -> {
+                context.getString(R.string.ef_selected_with_limit).format(selectedNum, config.limit)
             }
         }
+    }
 
     fun setImageAdapter(images: List<Image> = emptyList()) {
         imageAdapter.setData(images)
