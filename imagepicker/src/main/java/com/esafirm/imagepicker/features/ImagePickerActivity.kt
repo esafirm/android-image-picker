@@ -175,4 +175,9 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
         setResult(RESULT_OK, result)
         finish()
     }
+
+    override fun finishPickDocuments(result: Intent?) {
+        setResult(IpCons.DOCUMENT_PICKED_OK, result)
+        finish()
+    }
 }

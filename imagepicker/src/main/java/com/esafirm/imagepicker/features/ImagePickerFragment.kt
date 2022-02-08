@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,13 +25,13 @@ import com.esafirm.imagepicker.databinding.EfFragmentImagePickerBinding
 import com.esafirm.imagepicker.features.camera.CameraHelper.checkCameraAvailability
 import com.esafirm.imagepicker.features.fileloader.DefaultImageFileLoader
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager
-import com.esafirm.imagepicker.helper.ConfigUtils
-import com.esafirm.imagepicker.helper.ImagePickerPreferences
-import com.esafirm.imagepicker.helper.ImagePickerUtils
-import com.esafirm.imagepicker.helper.IpLogger
+import com.esafirm.imagepicker.helper.*
 import com.esafirm.imagepicker.helper.state.fetch
+import com.esafirm.imagepicker.model.Document
 import com.esafirm.imagepicker.model.Folder
+import com.esafirm.imagepicker.model.FolderType
 import com.esafirm.imagepicker.model.Image
+import kotlinx.android.synthetic.main.ef_imagepicker_item_folder.*
 import java.util.ArrayList
 
 class ImagePickerFragment : Fragment() {
@@ -127,6 +128,7 @@ class ImagePickerFragment : Fragment() {
     }
 
     private fun subscribeToUiState() = presenter.getUiState().observe(this) { state ->
+
         showLoading(state.isLoading)
 
         state.error.fetch {
@@ -176,7 +178,13 @@ class ImagePickerFragment : Fragment() {
         resources.configuration.orientation
     ).apply {
         val selectListener = { isSelected: Boolean -> selectImage(isSelected) }
-        val folderClick = { bucket: Folder -> setImageAdapter(bucket.images) }
+        val folderClick = { bucket: Folder ->
+            if (bucket.type == FolderType.Shared) {
+                openDocumentsPickerPhotos()
+            } else {
+                setImageAdapter(bucket.images)
+            }
+        }
 
         setupAdapters(passedSelectedImages, selectListener, folderClick)
         setImageSelectedListener { selectedImages ->
@@ -186,6 +194,16 @@ class ImagePickerFragment : Fragment() {
                 onDone()
             }
         }
+    }
+
+    private fun openDocumentsPickerPhotos() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+
+        }
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        startActivityForResult(intent, RC_DOCUMENTS_PICKER)
     }
 
     override fun onResume() {
@@ -306,7 +324,23 @@ class ImagePickerFragment : Fragment() {
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 presenter.abortCaptureImage(requireContext())
             }
+        } else if (requestCode == RC_DOCUMENTS_PICKER) {
+            handleDocumentsPicker(data)
         }
+    }
+
+    private fun handleDocumentsPicker(data: Intent?) {
+        val documents =  mutableListOf<Document>()
+        data?.data?.also {
+            documents.add(Document(uri = it))
+        } ?: run {
+            val clipData = data?.clipData ?: return
+            for (clipIndex in 0 until clipData.itemCount) {
+                val uriAtIndex = clipData.getItemAt(clipIndex).uri
+                documents.add(Document(uriAtIndex))
+            }
+        }
+        interactionListener.finishPickDocuments(ImagePickerUtils.createResultIntentDocuments(documents))
     }
 
     /**
@@ -380,6 +414,7 @@ class ImagePickerFragment : Fragment() {
         private const val STATE_KEY_SELECTED_IMAGES = "Key.SelectedImages"
 
         private const val RC_CAPTURE = 2000
+        private const val RC_DOCUMENTS_PICKER = 2001
         private const val RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23
 
         fun newInstance(config: ImagePickerConfig): ImagePickerFragment {

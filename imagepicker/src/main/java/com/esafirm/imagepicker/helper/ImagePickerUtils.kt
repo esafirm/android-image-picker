@@ -12,6 +12,7 @@ import android.webkit.MimeTypeMap
 import com.esafirm.imagepicker.features.ImagePickerSavePath
 import com.esafirm.imagepicker.features.IpCons
 import com.esafirm.imagepicker.helper.IpLogger.d
+import com.esafirm.imagepicker.model.Document
 import com.esafirm.imagepicker.model.Image
 import java.io.File
 import java.net.URLConnection
@@ -143,6 +144,13 @@ object ImagePickerUtils {
         val data = Intent()
         val imageArrayList = ArrayList(images ?: emptyList())
         data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, imageArrayList)
+        return data
+    }
+
+    fun createResultIntentDocuments(documents: List<Document>): Intent {
+        val data = Intent()
+        val documentsList = ArrayList(documents)
+        data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_DOCUMENTS, documentsList)
         return data
     }
 }

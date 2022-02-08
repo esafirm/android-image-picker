@@ -14,6 +14,7 @@ import com.esafirm.imagepicker.helper.state.LiveDataObservableState
 import com.esafirm.imagepicker.helper.state.ObservableState
 import com.esafirm.imagepicker.helper.state.asSingleEvent
 import com.esafirm.imagepicker.model.Folder
+import com.esafirm.imagepicker.model.FolderType
 import com.esafirm.imagepicker.model.Image
 import java.io.File
 
@@ -42,10 +43,14 @@ internal class ImagePickerPresenter(
         imageLoader.abortLoadImages()
         imageLoader.loadDeviceImages(config, object : ImageLoaderListener {
             override fun onImageLoaded(images: List<Image>, folders: List<Folder>) {
+                val otherFolder = Folder("More ...")
+                otherFolder.type  = FolderType.Shared
+                val modifiedFolders = folders.toMutableList()
+                modifiedFolders.add(otherFolder)
                 setState {
                     ImagePickerState(
                         images = images,
-                        folders = folders,
+                        folders = modifiedFolders,
                         isLoading = false,
                         isFolder = config.isFolderMode.asSingleEvent()
                     )

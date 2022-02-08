@@ -1,5 +1,6 @@
 package com.esafirm.imagepicker.features
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import androidx.activity.ComponentActivity
@@ -10,6 +11,7 @@ import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.features.common.BaseConfig
 import com.esafirm.imagepicker.helper.ConfigUtils.checkConfig
 import com.esafirm.imagepicker.helper.LocaleManager
+import com.esafirm.imagepicker.model.Document
 import com.esafirm.imagepicker.model.Image
 
 /* --------------------------------------------------- */
@@ -28,6 +30,7 @@ class ImagePickerLauncher(
 }
 
 typealias ImagePickerCallback = (List<Image>) -> Unit
+typealias DocumentPickerCallback = (List<Document>) -> Unit
 
 fun Fragment.registerImagePicker(
     context: () -> Context = { requireContext() },
@@ -38,9 +41,10 @@ fun Fragment.registerImagePicker(
 
 fun ComponentActivity.registerImagePicker(
     context: () -> Context = { this },
-    callback: ImagePickerCallback
+    callback: ImagePickerCallback,
+    documentCallback: DocumentPickerCallback? = null
 ): ImagePickerLauncher {
-    return ImagePickerLauncher(context, createLauncher(callback))
+    return ImagePickerLauncher(context, createLauncher(documentCallback, callback))
 }
 
 fun createImagePickerIntent(context: Context, config: BaseConfig): Intent {
@@ -67,8 +71,13 @@ private fun Fragment.createLauncher(callback: ImagePickerCallback) =
         callback(images)
     }
 
-private fun ComponentActivity.createLauncher(callback: ImagePickerCallback) =
+private fun ComponentActivity.createLauncher(documentCallback: DocumentPickerCallback?, callback: ImagePickerCallback) =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val images = ImagePicker.getImages(it.data) ?: emptyList()
-        callback(images)
+        if (it.resultCode == RESULT_OK) {
+            val images = ImagePicker.getImages(it.data) ?: emptyList()
+            callback(images)
+        } else if (it.resultCode == IpCons.DOCUMENT_PICKED_OK) {
+            val documents = ImagePicker.getDocuments(it.data) ?: emptyList()
+            documentCallback?.invoke(documents)
+        }
     }
