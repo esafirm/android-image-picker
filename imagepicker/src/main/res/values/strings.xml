@@ -21,6 +21,8 @@
     <string name="ef_msg_no_write_external_permission">Please grant storage permission to select images</string>
     <string name="ef_msg_limit_images">Image selection limit</string>
 
+    <string name="ef_pick_external_caption">Pick from Google Photos, Dropbox and other storages</string>
+
     <!--Don't Translate-->
     <string name="ef_gif" translatable="false">GIF</string>
     <string name="ef_content_desc_folder" translatable="false">Folder</string>

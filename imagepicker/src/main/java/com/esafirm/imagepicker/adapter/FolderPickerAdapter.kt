@@ -1,7 +1,6 @@
 package com.esafirm.imagepicker.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -39,11 +38,11 @@ class FolderPickerAdapter(
         holder.apply {
             name.text = folder.folderName
 
-            if (folder.type == FolderType.Local) {
+            if (folder.type == FolderType.LOCAL) {
                 imageLoader.loadImage(folder.images.first(), holder.image, ImageType.FOLDER)
                 number.text = folder.images.size.toString()
             } else {
-                number.text = "Pick from Google Photos, Dropbox and other storages"
+                number.text = context.getString(R.string.ef_pick_external_caption)
             }
             itemView.setOnClickListener { folderClickListener(folder) }
         }

@@ -24,7 +24,10 @@ import com.esafirm.imagepicker.databinding.EfFragmentImagePickerBinding
 import com.esafirm.imagepicker.features.camera.CameraHelper.checkCameraAvailability
 import com.esafirm.imagepicker.features.fileloader.DefaultImageFileLoader
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager
-import com.esafirm.imagepicker.helper.*
+import com.esafirm.imagepicker.helper.ConfigUtils
+import com.esafirm.imagepicker.helper.ImagePickerPreferences
+import com.esafirm.imagepicker.helper.ImagePickerUtils
+import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.helper.state.fetch
 import com.esafirm.imagepicker.model.Document
 import com.esafirm.imagepicker.model.Folder
@@ -177,7 +180,7 @@ class ImagePickerFragment : Fragment() {
     ).apply {
         val selectListener = { isSelected: Boolean -> selectImage(isSelected) }
         val folderClick = { bucket: Folder ->
-            if (bucket.type == FolderType.Shared) {
+            if (bucket.type == FolderType.SHARED) {
                 openDocumentsPickerPhotos()
             } else {
                 setImageAdapter(bucket.images)

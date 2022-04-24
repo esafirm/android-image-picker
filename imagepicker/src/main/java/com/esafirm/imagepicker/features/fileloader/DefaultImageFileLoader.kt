@@ -205,7 +205,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
         }
 
         override fun run() {
-            // We're gonna load two times for faster load if the devices has many images
+            // We're going to load two times for faster load if the devices has many images
             val cursor = queryData(FIRST_LIMIT)
             val isLoadDataAgain = cursor?.count == FIRST_LIMIT
             processData(cursor)
@@ -225,27 +225,6 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             } catch (ignored: Exception) {
                 null
             }
-        }
-
-        fun getImageFromURI(context: Context, uri: Uri): Image? {
-             val projection = arrayOf(
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME
-            )
-
-            val cursor = context.contentResolver.query(
-                uri, projection, null, null, null
-            )
-            cursor?.let {
-                it.moveToFirst()
-                val idIndex = cursor.getColumnIndex(projection[0])
-                val nameIndex = cursor.getColumnIndex(projection[1])
-                val id = cursor.getLong(idIndex)
-                val name = cursor.getString(nameIndex)
-                it.close()
-                return Image(id, name, uri.path ?: "")
-            }
-            return null
         }
     }
 }

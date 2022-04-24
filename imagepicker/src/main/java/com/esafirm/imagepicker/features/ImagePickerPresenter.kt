@@ -43,10 +43,15 @@ internal class ImagePickerPresenter(
         imageLoader.abortLoadImages()
         imageLoader.loadDeviceImages(config, object : ImageLoaderListener {
             override fun onImageLoaded(images: List<Image>, folders: List<Folder>) {
-                val otherFolder = Folder("More ...")
-                otherFolder.type  = FolderType.Shared
-                val modifiedFolders = folders.toMutableList()
-                modifiedFolders.add(otherFolder)
+
+                val otherFolder = Folder(
+                    folderName = "More ...",
+                    type = FolderType.SHARED
+                )
+                val modifiedFolders = folders.toMutableList().apply {
+                    add(0, otherFolder)
+                }
+
                 setState {
                     ImagePickerState(
                         images = images,

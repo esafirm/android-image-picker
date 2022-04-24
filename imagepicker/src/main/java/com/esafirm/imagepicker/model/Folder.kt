@@ -1,11 +1,12 @@
 package com.esafirm.imagepicker.model
 
 enum class FolderType {
-    Local,
-    Shared
+    LOCAL,
+    SHARED
 }
 
-class Folder(var folderName: String) {
-    var images: MutableList<Image> = mutableListOf()
-    var type: FolderType = FolderType.Local
-}
+class Folder(
+    val folderName: String,
+    val images: MutableList<Image> = mutableListOf(),
+    val type: FolderType = FolderType.LOCAL
+)
