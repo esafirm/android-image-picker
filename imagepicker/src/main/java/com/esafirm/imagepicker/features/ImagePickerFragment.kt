@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,6 @@ import com.esafirm.imagepicker.model.Document
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.FolderType
 import com.esafirm.imagepicker.model.Image
-import kotlinx.android.synthetic.main.ef_imagepicker_item_folder.*
 import java.util.ArrayList
 
 class ImagePickerFragment : Fragment() {
@@ -330,7 +328,7 @@ class ImagePickerFragment : Fragment() {
     }
 
     private fun handleDocumentsPicker(data: Intent?) {
-        val documents =  mutableListOf<Document>()
+        val documents = mutableListOf<Document>()
         data?.data?.also {
             documents.add(Document(uri = it))
         } ?: run {

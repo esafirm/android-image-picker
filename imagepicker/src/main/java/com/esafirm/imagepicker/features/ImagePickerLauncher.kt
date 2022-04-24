@@ -39,10 +39,26 @@ fun Fragment.registerImagePicker(
     return ImagePickerLauncher(context, createLauncher(callback))
 }
 
+/**
+ * Launcher for image picker.
+ * Usually you just want to specify the listener when images is picked
+ *
+ * ```kotlin
+ * val launcher = registerImagePicker {
+ *  println(it.images)
+ * }
+ *
+ * launcher.launch(config)
+ * ```
+ *
+ * @param context The context for the launcher in form of lambda
+ * @param documentCallback callback when images from document picker is selected
+ * @param callback callback when images from internal picker is selected
+ */
 fun ComponentActivity.registerImagePicker(
     context: () -> Context = { this },
+    documentCallback: DocumentPickerCallback? = null,
     callback: ImagePickerCallback,
-    documentCallback: DocumentPickerCallback? = null
 ): ImagePickerLauncher {
     return ImagePickerLauncher(context, createLauncher(documentCallback, callback))
 }

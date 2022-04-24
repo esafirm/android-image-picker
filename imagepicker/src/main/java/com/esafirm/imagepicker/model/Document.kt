@@ -5,4 +5,4 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Document (val uri: Uri) : Parcelable
+data class Document(val uri: Uri) : Parcelable
