@@ -22,7 +22,7 @@ internal class ImagePickerPresenter(
 ) : ImagePickerAction {
 
     private val cameraModule: CameraModule = ImagePickerComponentsHolder.cameraModule
-
+    private val videoModule: CameraModule = ImagePickerComponentsHolder.videoModule
     private val stateObs = LiveDataObservableState(
         ImagePickerState(isLoading = true),
         usePostValue = true
@@ -84,6 +84,20 @@ internal class ImagePickerPresenter(
     fun captureImage(fragment: Fragment, config: BaseConfig, requestCode: Int) {
         val context = fragment.requireContext().applicationContext
         val intent = cameraModule.getCameraIntent(fragment.requireContext(), config)
+        if (intent == null) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.ef_error_create_image_file),
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+        fragment.startActivityForResult(intent, requestCode)
+    }
+
+    fun captureVideo(fragment: Fragment, config: BaseConfig, requestCode: Int) {
+        val context = fragment.requireContext().applicationContext
+        val intent = videoModule.getVideoIntent(fragment.requireContext(), config)
         if (intent == null) {
             Toast.makeText(
                 context,
