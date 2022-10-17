@@ -248,7 +248,7 @@ class ImagePickerFragment : Fragment() {
             requireContext(),
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-        if (rc == PackageManager.PERMISSION_GRANTED) {
+        if (rc == PackageManager.PERMISSION_GRANTED || presenter.isCameraCapture) {
             loadData()
         } else {
             requestWriteExternalPermission()

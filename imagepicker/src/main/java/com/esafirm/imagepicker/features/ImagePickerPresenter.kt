@@ -23,6 +23,8 @@ internal class ImagePickerPresenter(
 
     private val cameraModule: CameraModule = ImagePickerComponentsHolder.cameraModule
 
+    var isCameraCapture = false
+
     private val stateObs = LiveDataObservableState(
         ImagePickerState(isLoading = true),
         usePostValue = true
@@ -96,6 +98,7 @@ internal class ImagePickerPresenter(
     }
 
     fun finishCaptureImage(context: Context, data: Intent?, config: BaseConfig?) {
+        isCameraCapture = true
         cameraModule.getImage(context, data) { images ->
             if (ConfigUtils.shouldReturn(config!!, true)) {
                 setState {
