@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,9 +81,9 @@ class ImagePickerFragment : Fragment() {
         if (::interactionListener.isInitialized.not()) {
             throw RuntimeException(
                 "ImagePickerFragment needs an " +
-                    "ImagePickerInteractionListener. This will be set automatically if the " +
-                    "activity implements ImagePickerInteractionListener, and can be set manually " +
-                    "with fragment.setInteractionListener(listener)."
+                "ImagePickerInteractionListener. This will be set automatically if the " +
+                "activity implements ImagePickerInteractionListener, and can be set manually " +
+                "with fragment.setInteractionListener(listener)."
             )
         }
 
@@ -176,7 +177,10 @@ class ImagePickerFragment : Fragment() {
         resources.configuration.orientation
     ).apply {
         val selectListener = { isSelected: Boolean -> selectImage(isSelected) }
-        val folderClick = { bucket: Folder -> setImageAdapter(bucket.images) }
+        val folderClick = { bucket: Folder ->
+            setImageAdapter(bucket.images)
+            updateTitle()
+        }
 
         setupAdapters(passedSelectedImages, selectListener, folderClick)
         setImageSelectedListener { selectedImages ->
