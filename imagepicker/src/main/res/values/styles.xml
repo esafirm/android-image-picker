@@ -10,6 +10,7 @@
         <item name="colorPrimary">@color/ef_colorPrimary</item>
         <item name="colorPrimaryDark">@color/ef_colorPrimaryDark</item>
         <item name="colorAccent">@color/ef_colorAccent</item>
+        <item name="ef_selected_image_overlay">@drawable/ef_ic_done_white</item>
     </style>
 
     <style name="ef_CustomToolbarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">

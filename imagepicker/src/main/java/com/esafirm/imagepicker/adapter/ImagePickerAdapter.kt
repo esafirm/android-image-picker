@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.adapter
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -94,10 +95,12 @@ class ImagePickerAdapter(
                     addSelected(image, position)
                 }
             }
-            container?.foreground = if (isSelected) ContextCompat.getDrawable(
-                context,
-                R.drawable.ef_ic_done_white
-            ) else null
+            container?.foreground = if (isSelected) {
+                val typedValue = TypedValue()
+                context.theme.resolveAttribute(R.attr.ef_selected_image_overlay, typedValue, true)
+                val imageResId = typedValue.resourceId
+                ContextCompat.getDrawable(context, imageResId) ?: throw IllegalArgumentException("Cannot load drawable $imageResId")
+            } else null
         }
     }
 
