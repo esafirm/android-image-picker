@@ -48,7 +48,7 @@ dependencies {
     /* Development */
     implementation project(':imagepicker')
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
     implementation "androidx.core:core-ktx:$core_ktx_version"
 
     /* UI Test */

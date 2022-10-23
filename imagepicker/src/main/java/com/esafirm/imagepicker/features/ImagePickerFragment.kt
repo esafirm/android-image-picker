@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
@@ -46,6 +47,13 @@ class ImagePickerFragment : Fragment() {
         requireArguments().getParcelable(ImagePickerConfig::class.java.simpleName)!!
     }
 
+    private val permission: String
+        get() {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Manifest.permission.READ_MEDIA_IMAGES
+            } else Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }
+
     private val requestPermissionLauncher =
         registerForActivityResult(RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -80,9 +88,9 @@ class ImagePickerFragment : Fragment() {
         if (::interactionListener.isInitialized.not()) {
             throw RuntimeException(
                 "ImagePickerFragment needs an " +
-                    "ImagePickerInteractionListener. This will be set automatically if the " +
-                    "activity implements ImagePickerInteractionListener, and can be set manually " +
-                    "with fragment.setInteractionListener(listener)."
+                        "ImagePickerInteractionListener. This will be set automatically if the " +
+                        "activity implements ImagePickerInteractionListener, and can be set manually " +
+                        "with fragment.setInteractionListener(listener)."
             )
         }
 
@@ -244,14 +252,11 @@ class ImagePickerFragment : Fragment() {
      * Check permission
      */
     private fun loadDataWithPermission() {
-        val rc = ActivityCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
+        val rc = ActivityCompat.checkSelfPermission(requireContext(), permission)
         if (rc == PackageManager.PERMISSION_GRANTED) {
             loadData()
         } else {
-            requestWriteExternalPermission()
+            requestWriteExternalOrReadImagesPermission()
         }
     }
 
@@ -262,9 +267,8 @@ class ImagePickerFragment : Fragment() {
      * If permission denied or app is first launched, request for permission
      * If permission denied and user choose 'Never Ask Again', show snackbar with an action that navigate to app settings
      */
-    private fun requestWriteExternalPermission() {
-        IpLogger.w("Write External permission is not granted. Requesting permission")
-        val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private fun requestWriteExternalOrReadImagesPermission() {
+        IpLogger.w("Write External permission or Read Media Images is not granted. Requesting permission")
         when {
             shouldShowRequestPermissionRationale(permission) -> {
                 requestPermissionLauncher.launch(permission)
