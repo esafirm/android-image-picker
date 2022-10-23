@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +32,6 @@ import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.helper.state.fetch
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
-import java.util.ArrayList
 
 class ImagePickerFragment : Fragment() {
 
@@ -89,9 +87,9 @@ class ImagePickerFragment : Fragment() {
         if (::interactionListener.isInitialized.not()) {
             throw RuntimeException(
                 "ImagePickerFragment needs an " +
-                        "ImagePickerInteractionListener. This will be set automatically if the " +
-                        "activity implements ImagePickerInteractionListener, and can be set manually " +
-                        "with fragment.setInteractionListener(listener)."
+                    "ImagePickerInteractionListener. This will be set automatically if the " +
+                    "activity implements ImagePickerInteractionListener, and can be set manually " +
+                    "with fragment.setInteractionListener(listener)."
             )
         }
 
@@ -277,6 +275,7 @@ class ImagePickerFragment : Fragment() {
             shouldShowRequestPermissionRationale(permission) -> {
                 requestPermissionLauncher.launch(permission)
             }
+
             else -> {
                 if (!preferences.isPermissionRequested()) {
                     preferences.setPermissionIsRequested()
@@ -388,7 +387,6 @@ class ImagePickerFragment : Fragment() {
         private const val STATE_KEY_SELECTED_IMAGES = "Key.SelectedImages"
 
         private const val RC_CAPTURE = 2000
-        private const val RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23
 
         fun newInstance(config: ImagePickerConfig): ImagePickerFragment {
             val args = Bundle().apply {
