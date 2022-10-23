@@ -38,20 +38,22 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
 
     private val isCameraOnly by lazy { cameraOnlyConfig != null }
 
-    private val startForCameraResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+    private val startForCameraResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             val intent = result.data
             // Handle the Intent
-            if(intent?.extras?.isEmpty == true){
+            if (intent?.extras?.isEmpty == true) {
                 cameraModule.removeImage(this)
                 setResult(RESULT_CANCELED)
                 finish()
-            }else {
+            } else {
                 cameraModule.getImage(this, intent) { images ->
                     finishPickImages(ImagePickerUtils.createResultIntent(images))
                 }
             }
-        }else{
+        } else {
             cameraModule.removeImage(this)
             setResult(RESULT_CANCELED)
             finish()
@@ -139,7 +141,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
             if (!imagePickerFragment.handleBack()) {
                 super.onBackPressed()
             }
-        }else {
+        } else {
             super.onBackPressed()
         }
     }
