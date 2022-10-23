@@ -2,6 +2,6 @@
 <manifest xmlns:tools="http://schemas.android.com/tools"
     package="com.esafirm.sample">
 
-    <uses-sdk tools:overrideLibrary="com.schibsted.spain.barista,android_libs.ub_uiautomator" />
+    <uses-sdk tools:overrideLibrary="com.adevinta.android.barista,android_libs.ub_uiautomator" />
 
 </manifest>

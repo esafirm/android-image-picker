@@ -18,9 +18,9 @@ import androidx.test.runner.AndroidJUnit4
 import com.esafirm.sample.matchers.hasDrawable
 import com.esafirm.sample.utils.ViewAsserts
 import com.esafirm.sample.utils.Views
-import com.schibsted.spain.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
-import com.schibsted.spain.barista.intents.BaristaIntents.mockAndroidCamera
-import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
+import com.adevinta.android.barista.intents.BaristaIntents.mockAndroidCamera
+import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
