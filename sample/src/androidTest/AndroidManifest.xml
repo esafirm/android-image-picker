@@ -5,34 +5,34 @@
 
     <uses-sdk tools:overrideLibrary="com.adevinta.android.barista,android_libs.ub_uiautomator" />
 
-    <application>
-        <activity
-            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
-            android:theme="@android:style/Theme"
-            tools:replace="android:theme"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
-            android:theme="@android:style/Theme"
-            tools:replace="android:theme"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
-            android:theme="@android:style/Theme.Dialog"
-            tools:replace="android:theme"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-    </application>
+<!--    <application>-->
+<!--        <activity-->
+<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"-->
+<!--            android:theme="@android:style/Theme"-->
+<!--            tools:replace="android:theme"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+<!--        <activity-->
+<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"-->
+<!--            android:theme="@android:style/Theme"-->
+<!--            tools:replace="android:theme"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+<!--        <activity-->
+<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"-->
+<!--            android:theme="@android:style/Theme.Dialog"-->
+<!--            tools:replace="android:theme"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
+<!--    </application>-->
 
 </manifest>
