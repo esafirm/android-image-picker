@@ -22,6 +22,8 @@
         <activity
             android:name=".ImageViewerActivity"
             android:theme="@style/ef_AppTheme" />
+
+
     </application>
 
 </manifest>
