@@ -48,7 +48,7 @@ dependencies {
     /* Development */
     implementation project(':imagepicker')
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
     implementation "androidx.core:core-ktx:$core_ktx_version"
 
     /* UI Test */
@@ -58,7 +58,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test:rules:$runnerVersion"
-    androidTestImplementation('com.schibsted.spain:barista:3.7.0') {
+    androidTestImplementation('com.adevinta.android:barista:3.10.0') {
         exclude group: 'org.jetbrains.kotlin'
     }
 }

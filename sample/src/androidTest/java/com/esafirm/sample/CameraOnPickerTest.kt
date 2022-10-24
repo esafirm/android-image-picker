@@ -11,9 +11,9 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.esafirm.sample.utils.ViewAsserts
 import com.esafirm.sample.utils.Views
-import com.schibsted.spain.barista.intents.BaristaIntents.mockAndroidCamera
-import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
-import com.schibsted.spain.barista.interaction.BaristaMenuClickInteractions
+import com.adevinta.android.barista.intents.BaristaIntents.mockAndroidCamera
+import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
+import com.adevinta.android.barista.interaction.BaristaMenuClickInteractions
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

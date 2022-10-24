@@ -11,7 +11,7 @@ import androidx.test.rule.GrantPermissionRule
 import androidx.test.runner.AndroidJUnit4
 import com.esafirm.sample.utils.ViewAsserts
 import com.esafirm.sample.utils.Views
-import com.schibsted.spain.barista.interaction.BaristaClickInteractions.clickOn
+import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

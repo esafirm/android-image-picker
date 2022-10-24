@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Cho phép truy cập bộ nhớ ngoài để chọn hình ảnh</string>
+
+    <string name="ef_ok">Đồng Ý</string>
+    <string name="ef_done">XONG</string>
+    <string name="ef_camera">CAMERA</string>
+
+    <string name="ef_title_folder">Thư mục</string>
+    <string name="ef_title_select_image">Nhấn để chọn hình ảnh</string>
+    <string name="ef_ltitle_permission_denied">Quyền bị từ chối</string>
+
+    <string name="ef_selected">%d đã chọn</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d đã chọn</string>
+
+    <string name="ef_error_create_image_file">Không tạo được tệp hình ảnh</string>
+    <string name="ef_error_no_camera">Không tìm thấy máy ảnh</string>
+    <string name="ef_error_null_cursor">Rất tiếc, đã xảy ra lỗi!</string>
+
+    <string name="ef_msg_empty_images">Không tìm thấy hình ảnh</string>
+    <string name="ef_msg_no_write_external_permission">Vui lòng cấp quyền lưu trữ để chọn hình ảnh</string>
+    <string name="ef_msg_limit_images">Giới hạn chọn hình ảnh</string>
+
+    <string name = "ef_msg_no_camera_permission">Vui lòng cấp quyền cho máy ảnh để chụp ảnh </string>
+</resources>

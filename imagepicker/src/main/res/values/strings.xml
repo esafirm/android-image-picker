@@ -20,6 +20,7 @@
     <string name="ef_msg_empty_images">No images found</string>
     <string name="ef_msg_no_write_external_permission">Please grant storage permission to select images</string>
     <string name="ef_msg_limit_images">Image selection limit</string>
+    <string name="ef_msg_no_camera_permission">You have to give the app permission to use the camera to be able to take pictures</string>
 
     <!--Don't Translate-->
     <string name="ef_gif" translatable="false">GIF</string>
