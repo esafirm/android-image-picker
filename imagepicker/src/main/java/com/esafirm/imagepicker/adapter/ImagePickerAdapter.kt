@@ -21,12 +21,12 @@ import com.esafirm.imagepicker.listeners.OnImageClickListener
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener
 import com.esafirm.imagepicker.model.Image
 import kotlinx.android.synthetic.main.ef_imagepicker_item_image.view.*
-import java.util.HashMap
 
 class ImagePickerAdapter(
     context: Context,
     imageLoader: ImageLoader,
     selectedImages: List<Image>,
+    private val overlayViewColor: Int,
     private val itemClickListener: OnImageClickListener
 ) : BaseListAdapter<ImageViewHolder>(context, imageLoader) {
 
@@ -84,6 +84,7 @@ class ImagePickerAdapter(
         viewHolder.apply {
             fileTypeIndicator.text = fileTypeLabel
             fileTypeIndicator.visibility = if (showFileTypeIndicator) View.VISIBLE else View.GONE
+            alphaView.setBackgroundColor(overlayViewColor)
             alphaView.alpha = if (isSelected) 0.5f else 0f
             itemView.setOnClickListener {
                 val shouldSelect = itemClickListener(isSelected)

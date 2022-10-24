@@ -1,5 +1,6 @@
 package com.esafirm.imagepicker.features
 
+import android.graphics.Color
 import android.os.Parcelable
 import androidx.annotation.StyleRes
 import com.esafirm.imagepicker.features.common.BaseConfig
@@ -27,7 +28,8 @@ class ImagePickerConfig(
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.NONE,
     override var isSaveImage: Boolean = true,
-    var showDoneButtonAlways: Boolean = false
+    var showDoneButtonAlways: Boolean = false,
+    var overlayViewColor: Int = Color.WHITE,
 ) : BaseConfig(), Parcelable {
 
     @Transient

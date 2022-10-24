@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             isShowCamera = true // show camera or not (true by default)
             savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)
             savePath = ImagePickerSavePath(Environment.getExternalStorageDirectory().path, isRelative = false) // can be a full path
-
+            overlayViewColor = Color.RED
             if (isExclude) {
                 excludedImages = images.toFiles() // don't show anything on this selected images
             } else {
