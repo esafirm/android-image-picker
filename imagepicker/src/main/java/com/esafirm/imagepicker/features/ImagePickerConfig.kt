@@ -2,6 +2,7 @@ package com.esafirm.imagepicker.features
 
 import android.os.Parcelable
 import androidx.annotation.StyleRes
+import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.features.common.BaseConfig
 import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.model.Image
@@ -27,7 +28,8 @@ class ImagePickerConfig(
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.NONE,
     override var isSaveImage: Boolean = true,
-    var showDoneButtonAlways: Boolean = false
+    var showDoneButtonAlways: Boolean = false,
+    var iconSelected: Int = R.drawable.ef_ic_done_white
 ) : BaseConfig(), Parcelable {
 
     @Transient

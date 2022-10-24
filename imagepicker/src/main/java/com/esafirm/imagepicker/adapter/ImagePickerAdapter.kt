@@ -21,12 +21,12 @@ import com.esafirm.imagepicker.listeners.OnImageClickListener
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener
 import com.esafirm.imagepicker.model.Image
 import kotlinx.android.synthetic.main.ef_imagepicker_item_image.view.*
-import java.util.HashMap
 
 class ImagePickerAdapter(
     context: Context,
     imageLoader: ImageLoader,
     selectedImages: List<Image>,
+    private val iconSelected: Int,
     private val itemClickListener: OnImageClickListener
 ) : BaseListAdapter<ImageViewHolder>(context, imageLoader) {
 
@@ -96,7 +96,7 @@ class ImagePickerAdapter(
             }
             container?.foreground = if (isSelected) ContextCompat.getDrawable(
                 context,
-                R.drawable.ef_ic_done_white
+                iconSelected
             ) else null
         }
     }
