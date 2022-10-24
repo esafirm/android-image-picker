@@ -14,7 +14,6 @@ import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import java.io.File
-import java.util.ArrayList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

@@ -87,9 +87,9 @@ class ImagePickerFragment : Fragment() {
         if (::interactionListener.isInitialized.not()) {
             throw RuntimeException(
                 "ImagePickerFragment needs an " +
-                    "ImagePickerInteractionListener. This will be set automatically if the " +
-                    "activity implements ImagePickerInteractionListener, and can be set manually " +
-                    "with fragment.setInteractionListener(listener)."
+                        "ImagePickerInteractionListener. This will be set automatically if the " +
+                        "activity implements ImagePickerInteractionListener, and can be set manually " +
+                        "with fragment.setInteractionListener(listener)."
             )
         }
 

@@ -63,7 +63,7 @@ class DefaultCameraModule : CameraModule {
         if (currentImagePath == null) {
             IpLogger.w(
                 "currentImagePath null. " +
-                    "This happen if you haven't call #getCameraIntent() or the activity is being recreated"
+                        "This happen if you haven't call #getCameraIntent() or the activity is being recreated"
             )
             imageReadyListener.invoke(null)
             return

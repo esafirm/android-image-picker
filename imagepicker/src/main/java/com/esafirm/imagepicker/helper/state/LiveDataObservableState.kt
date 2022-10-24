@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
 class LiveDataObservableState<T>(
-        value: T,
-        private val usePostValue: Boolean = false
+    value: T,
+    private val usePostValue: Boolean = false
 ) : ObservableState<T> {
 
     private val backingField: MutableLiveData<T> = MutableLiveData(value)

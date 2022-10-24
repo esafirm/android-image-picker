@@ -2,7 +2,6 @@ package com.esafirm.imagepicker.features
 
 import com.esafirm.imagepicker.helper.state.ObservableState
 import com.esafirm.imagepicker.helper.state.SingleEvent
-import com.esafirm.imagepicker.helper.state.asSingleEvent
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 

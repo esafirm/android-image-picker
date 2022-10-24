@@ -16,9 +16,7 @@ import com.esafirm.imagepicker.model.Image
 import java.io.File
 import java.net.URLConnection
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 object ImagePickerUtils {
 

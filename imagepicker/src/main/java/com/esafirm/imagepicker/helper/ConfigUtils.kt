@@ -10,9 +10,11 @@ import com.esafirm.imagepicker.features.common.BaseConfig
 
 object ConfigUtils {
     fun checkConfig(config: ImagePickerConfig): ImagePickerConfig {
-        check(!(config.mode != ImagePickerMode.SINGLE
-            && (config.returnMode === ReturnMode.GALLERY_ONLY
-            || config.returnMode === ReturnMode.ALL))) { "ReturnMode.GALLERY_ONLY and ReturnMode.ALL is only applicable in Single Mode!" }
+        check(
+            !(config.mode != ImagePickerMode.SINGLE
+                    && (config.returnMode === ReturnMode.GALLERY_ONLY
+                    || config.returnMode === ReturnMode.ALL))
+        ) { "ReturnMode.GALLERY_ONLY and ReturnMode.ALL is only applicable in Single Mode!" }
         return config
     }
 
