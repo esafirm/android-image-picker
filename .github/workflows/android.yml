@@ -29,7 +29,7 @@ jobs:
             gradle-
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -x lint
 
       - name: Build test
         run: ./gradlew sample:assembleAndroidTest
