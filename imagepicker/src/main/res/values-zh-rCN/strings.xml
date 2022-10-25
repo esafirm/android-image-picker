@@ -4,6 +4,7 @@
     <string name="ef_ok">好</string>
     <string name="ef_done">完成</string>
     <string name="ef_camera">相机</string>
+    <string name="ef_video">视频</string>
 
     <string name="ef_title_folder">文件夹</string>
     <string name="ef_title_select_image">选择照片</string>

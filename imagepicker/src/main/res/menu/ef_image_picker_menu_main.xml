@@ -10,6 +10,12 @@
         tools:ignore="AlwaysShowAction" />
 
     <item
+        android:id="@+id/menu_video"
+        android:icon="@drawable/ef_video_placeholder"
+        android:title="@string/ef_video"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/menu_done"
         android:title="@string/ef_done"
         app:showAsAction="always" />

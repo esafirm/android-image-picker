@@ -4,6 +4,7 @@
     <string name="ef_ok">OK</string>
     <string name="ef_done">完了</string>
     <string name="ef_camera">カメラ</string>
+    <string name="ef_video">ビデオ</string>
 
     <string name="ef_title_folder">フォルダ</string>
     <string name="ef_title_select_image">画像を選択</string>

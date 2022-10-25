@@ -5,6 +5,7 @@
     <string name="ef_ok">OK</string>
     <string name="ef_done">KLAR</string>
     <string name="ef_camera">KAMERA</string>
+    <string name="ef_video">VIDEO</string>
 
     <string name="ef_title_folder">Mapp</string>
     <string name="ef_title_select_image">Tryck för att välja bilder</string>

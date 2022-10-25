@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             showDoneButtonAlways = true // Show done button always or not
             limit = 10 // max images can be selected (99 by default)
             isShowCamera = true // show camera or not (true by default)
+            isShowVideo = true // show video or not (true by default)
             savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)
             savePath = ImagePickerSavePath(Environment.getExternalStorageDirectory().path, isRelative = false) // can be a full path
 

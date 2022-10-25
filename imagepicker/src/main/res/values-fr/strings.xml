@@ -5,6 +5,7 @@
     <string name="ef_ok">OK</string>
     <string name="ef_done">TERMINER</string>
     <string name="ef_camera">CAMERA</string>
+    <string name="ef_video">VIDÉO</string>
 
     <string name="ef_title_folder">Dossier</string>
     <string name="ef_title_select_image">Toucher pour sélectionner des images</string>

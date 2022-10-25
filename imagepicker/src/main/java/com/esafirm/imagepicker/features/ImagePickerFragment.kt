@@ -324,6 +324,13 @@ class ImagePickerFragment : Fragment() {
         }
     }
 
+    fun captureVideo() {
+        if (!checkCameraAvailability(requireActivity())) {
+            return
+        }
+        presenter.captureVideo(this, config, RC_CAPTURE)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.abortLoad()

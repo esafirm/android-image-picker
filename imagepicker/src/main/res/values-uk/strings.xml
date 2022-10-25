@@ -4,6 +4,8 @@
     <string name="ef_ok">ОК</string>
     <string name="ef_done">ГОТОВО</string>
     <string name="ef_camera">КАМЕРА</string>
+    <string name="ef_video">ВІДЕО</string>
+
     <string name="ef_title_folder">Папка</string>
     <string name="ef_title_select_image">Торкніться, щоб обрати</string>
     <string name="ef_ltitle_permission_denied">Доступ заборонено</string>

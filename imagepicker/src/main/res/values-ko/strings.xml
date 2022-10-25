@@ -5,6 +5,7 @@
     <string name="ef_ok">확인</string>
     <string name="ef_done">완료</string>
     <string name="ef_camera">카메라</string>
+    <string name="ef_video">동영상</string>
 
     <string name="ef_title_folder">사진첩</string>
     <string name="ef_title_select_image">이미지를 선택하세요</string>
