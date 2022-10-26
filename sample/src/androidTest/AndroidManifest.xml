@@ -3,5 +3,4 @@
     package="com.esafirm.sample">
 
     <uses-sdk tools:overrideLibrary="com.adevinta.android.barista,android_libs.ub_uiautomator" />
-
 </manifest>

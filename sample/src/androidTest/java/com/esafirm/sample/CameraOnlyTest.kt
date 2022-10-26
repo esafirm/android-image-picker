@@ -10,28 +10,27 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.runner.AndroidJUnit4
-import com.esafirm.sample.matchers.hasDrawable
-import com.esafirm.sample.utils.ViewAsserts
-import com.esafirm.sample.utils.Views
 import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.adevinta.android.barista.intents.BaristaIntents.mockAndroidCamera
 import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
+import com.esafirm.sample.matchers.hasDrawable
+import com.esafirm.sample.utils.ViewAsserts
+import com.esafirm.sample.utils.Views
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
-@RunWith(AndroidJUnit4ClassRunner::class)
+@RunWith(AndroidJUnit4::class)
 class CameraOnlyTest {
 
     @Rule
     @JvmField
-    var testRule = ActivityTestRule(MainActivity::class.java)
+    var testRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField

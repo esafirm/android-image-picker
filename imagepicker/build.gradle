@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     final sdk = rootProject.ext.sdk
@@ -11,8 +10,6 @@ android {
     defaultConfig {
         minSdkVersion sdk.minSdk
         targetSdkVersion sdk.targetSdk
-        versionCode 1
-        versionName "1.0"
     }
 
     buildFeatures {
@@ -31,16 +28,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 
     resourcePrefix "ef_"
 }
 
-task sourcesJar(type: Jar) {
+tasks.register("sourcesJar", Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 artifacts {

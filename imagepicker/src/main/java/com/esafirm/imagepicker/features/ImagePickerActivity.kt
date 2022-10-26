@@ -41,22 +41,18 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
     private val startForCameraResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val intent = result.data
-            // Handle the Intent
-            if (intent?.extras?.isEmpty == true) {
-                cameraModule.removeImage(this)
-                setResult(RESULT_CANCELED)
-                finish()
-            } else {
-                cameraModule.getImage(this, intent) { images ->
-                    finishPickImages(ImagePickerUtils.createResultIntent(images))
-                }
-            }
-        } else {
+        val resultCode = result.resultCode
+        if (resultCode == Activity.RESULT_CANCELED) {
             cameraModule.removeImage(this)
             setResult(RESULT_CANCELED)
             finish()
+            return@registerForActivityResult
+        }
+        if (resultCode == Activity.RESULT_OK) {
+            cameraModule.getImage(this, result.data) { images ->
+                val resultIntent = ImagePickerUtils.createResultIntent(images)
+                finishPickImages(resultIntent)
+            }
         }
     }
 

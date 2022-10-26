@@ -1,10 +1,10 @@
 package com.esafirm.sample.helper
 
 
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.runner.AndroidJUnit4
 import com.esafirm.sample.MainActivity
 import com.esafirm.sample.utils.ImageGenerator
 import org.junit.Ignore
@@ -22,7 +22,7 @@ class ImageGeneratorScenario {
 
     @Rule
     @JvmField
-    var testRule = ActivityTestRule(MainActivity::class.java)
+    var testRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField

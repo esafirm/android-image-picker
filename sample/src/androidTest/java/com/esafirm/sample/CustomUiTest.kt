@@ -4,25 +4,24 @@ package com.esafirm.sample
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.runner.AndroidJUnit4
+import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
 import com.esafirm.sample.utils.ViewAsserts
 import com.esafirm.sample.utils.Views
-import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
-@RunWith(AndroidJUnit4ClassRunner::class)
+@RunWith(AndroidJUnit4::class)
 class CustomUiTest {
 
     @Rule
     @JvmField
-    var testRule = ActivityTestRule(MainActivity::class.java)
+    var testRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField
