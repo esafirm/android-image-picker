@@ -4,13 +4,12 @@ apply plugin: 'kotlin-android'
 android {
     final sdk = rootProject.ext.sdk
 
-    compileSdkVersion sdk.compileSdk
-
     buildFeatures {
         viewBinding = true
     }
 
     defaultConfig {
+        compileSdk sdk.compileSdk
         minSdkVersion sdk.minSdk
         targetSdkVersion sdk.targetSdk
 

@@ -9,7 +9,7 @@ import com.esafirm.imagepicker.R
 
 object ViewUtils {
     fun getArrowIcon(context: Context): Drawable? {
-        val backResourceId: Int = if (Build.VERSION.SDK_INT >= 17 && context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+        val backResourceId: Int = if (context.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
             // For right-to-left layouts, pick the drawable that points to the right (forward).
             R.drawable.ef_ic_arrow_forward
         } else {

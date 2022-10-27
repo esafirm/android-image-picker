@@ -18,13 +18,8 @@ object LocaleManager {
         val res = resultContext.resources
         val config = Configuration(res.configuration)
 
-        if (Build.VERSION.SDK_INT >= 17) {
-            config.setLocale(locale)
-            resultContext = resultContext.createConfigurationContext(config)
-        } else {
-            config.locale = locale
-            res.updateConfiguration(config, res.displayMetrics)
-        }
+        config.setLocale(locale)
+        resultContext = resultContext.createConfigurationContext(config)
 
         return resultContext
     }
@@ -43,6 +38,7 @@ object LocaleManager {
                 )
                 locale
             }
+
             newLocaleLanguage == ZH -> {
                 locale = if (Locale.getDefault().country == TW) {
                     Locale(ZH, TW)
@@ -51,6 +47,7 @@ object LocaleManager {
                 }
                 locale
             }
+
             else -> {
                 localeLanguage
             }
