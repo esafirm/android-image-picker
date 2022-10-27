@@ -6,6 +6,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.features.imageloader.ImageType
+import com.esafirm.imagepicker.helper.getImageSize
 import com.esafirm.imagepicker.model.Image
 
 class GrayscaleImageLoader : ImageLoader {
@@ -13,6 +14,7 @@ class GrayscaleImageLoader : ImageLoader {
         Glide.with(imageView)
             .asBitmap()
             .load(image.path)
+            .override(imageView.context.getImageSize())
             .transition(BitmapTransitionOptions.withCrossFade())
             .apply(REQUEST_OPTIONS)
             .into(imageView)

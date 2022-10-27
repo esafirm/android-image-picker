@@ -9,12 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter
-import com.esafirm.imagepicker.features.ImagePickerComponentsHolder
-import com.esafirm.imagepicker.features.ImagePickerConfig
-import com.esafirm.imagepicker.features.ImagePickerMode
-import com.esafirm.imagepicker.features.IpCons
-import com.esafirm.imagepicker.features.ReturnMode
+import com.esafirm.imagepicker.features.*
 import com.esafirm.imagepicker.helper.ConfigUtils
+import com.esafirm.imagepicker.helper.getRecyclerViewColumn
 import com.esafirm.imagepicker.listeners.OnFolderClickListener
 import com.esafirm.imagepicker.listeners.OnImageClickListener
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener
@@ -56,7 +53,7 @@ class RecyclerViewManager(
      * Set item size, column size base on the screen orientation
      */
     fun changeOrientation(orientation: Int) {
-        imageColumns = if (orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 5
+        imageColumns = context.getRecyclerViewColumn()
         folderColumns = if (orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
         val shouldShowFolder = config.isFolderMode && isDisplayingFolderView
         val columns = if (shouldShowFolder) folderColumns else imageColumns
