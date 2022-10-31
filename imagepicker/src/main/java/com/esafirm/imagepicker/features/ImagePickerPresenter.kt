@@ -22,7 +22,6 @@ internal class ImagePickerPresenter(
 ) : ImagePickerAction {
 
     private val cameraModule: CameraModule = ImagePickerComponentsHolder.cameraModule
-    private val videoModule: CameraModule = ImagePickerComponentsHolder.videoModule
     private val stateObs = LiveDataObservableState(
         ImagePickerState(isLoading = true),
         usePostValue = true
@@ -97,7 +96,7 @@ internal class ImagePickerPresenter(
 
     fun captureVideo(fragment: Fragment, config: BaseConfig, requestCode: Int) {
         val context = fragment.requireContext().applicationContext
-        val intent = videoModule.getVideoIntent(fragment.requireContext(), config)
+        val intent = cameraModule.getVideoCameraIntent(fragment.requireContext(), config)
         if (intent == null) {
             Toast.makeText(
                 context,

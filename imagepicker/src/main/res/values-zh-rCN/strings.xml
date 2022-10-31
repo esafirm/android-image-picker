@@ -13,6 +13,8 @@
     <string name="ef_selected_with_limit">已选择 %1$d/%2$d</string>
 
     <string name="ef_error_create_image_file">建立照片文件失败</string>
+    <string name="ef_error_create_video_file">创建视频文件失败</string>
+
     <string name="ef_error_no_camera">找不到相机</string>
     <string name="ef_error_null_cursor">啊哦，发生错误！</string>
 

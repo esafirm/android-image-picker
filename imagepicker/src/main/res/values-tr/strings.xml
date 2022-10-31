@@ -9,6 +9,7 @@
 
     <string name="ef_title_folder">Klasör</string>
     <string name="ef_title_select_image">Resimleri seçmek için hafifçe dokunun</string>
+    <string name="ef_error_create_video_file">Video dosyası oluşturulamadı</string>
     <string name="ef_ltitle_permission_denied">İzin reddedildi</string>
 
     <string name="ef_selected">%d seçili</string>

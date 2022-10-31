@@ -87,14 +87,13 @@ class CustomUIActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        if (config == null) super.onPrepareOptionsMenu(menu)
         val menuCamera = menu.findItem(com.esafirm.imagepicker.R.id.menu_camera)
         if (menuCamera != null) {
             menuCamera.isVisible = config?.isShowCamera == true && config?.isOnlyVideo == false
         }
         val menuVideo = menu.findItem(com.esafirm.imagepicker.R.id.menu_video)
         if (menuVideo != null) {
-            menuVideo.isVisible = config!!.isShowVideo
+            menuVideo.isVisible = config?.isShowVideoCamera == true
         }
         val menuDone = menu.findItem(com.esafirm.imagepicker.R.id.menu_done)
         if (menuDone != null) {

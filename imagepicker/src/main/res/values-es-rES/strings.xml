@@ -15,6 +15,7 @@
     <string name="ef_selected_with_limit">%1$d/%2$d seleccionadas</string>
 
     <string name="ef_error_create_image_file">Error al crear el fichero de imágen</string>
+    <string name="ef_error_create_video_file">No se pudo crear el archivo de video</string>
     <string name="ef_error_no_camera">No se encontró la cámara</string>
     <string name="ef_error_null_cursor">Oops, algo ha ido mal!</string>
 

@@ -13,7 +13,6 @@ interface ImagePickerComponents {
     val imageLoader: ImageLoader
     val imageFileLoader: ImageFileLoader
     val cameraModule: CameraModule
-    val videoModule: CameraModule
 }
 
 open class DefaultImagePickerComponents(context: Context) : ImagePickerComponents {
@@ -21,7 +20,6 @@ open class DefaultImagePickerComponents(context: Context) : ImagePickerComponent
     override val imageLoader: ImageLoader by lazy { DefaultImageLoader() }
     override val imageFileLoader: ImageFileLoader by lazy { DefaultImageFileLoader(context.applicationContext) }
     override val cameraModule: CameraModule by lazy { DefaultCameraModule() }
-    override val videoModule: CameraModule by lazy { DefaultCameraModule() }
 }
 
 object ImagePickerComponentsHolder : ImagePickerComponents {
@@ -39,9 +37,6 @@ object ImagePickerComponentsHolder : ImagePickerComponents {
 
     override val cameraModule: CameraModule
         get() = internalComponents.cameraModule
-
-    override val videoModule: CameraModule
-        get() = internalComponents.videoModule
 
     fun setInternalComponent(components: ImagePickerComponents) {
         internalComponents = components

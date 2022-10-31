@@ -319,7 +319,7 @@ class ImagePickerFragment : Fragment() {
         }
         if (config.isOnlyVideo) {
             presenter.captureVideo(this, config, RC_CAPTURE)
-        } else{
+        } else {
             presenter.captureImage(this, config, RC_CAPTURE)
         }
     }

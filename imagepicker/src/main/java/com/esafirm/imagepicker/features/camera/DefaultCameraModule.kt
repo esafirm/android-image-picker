@@ -35,7 +35,7 @@ class DefaultCameraModule : CameraModule {
         return intent
     }
 
-    override fun getVideoIntent(context: Context, config: BaseConfig): Intent? {
+    override fun getVideoCameraIntent(context: Context, config: BaseConfig): Intent? {
         prepareForNewIntent()
 
         val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)

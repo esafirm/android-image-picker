@@ -89,7 +89,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
         if (!isCameraOnly) {
             menu.findItem(R.id.menu_camera).isVisible =
                 config?.isShowCamera == true && config?.isOnlyVideo == false
-            menu.findItem(R.id.menu_video).isVisible = config?.isShowVideo ?: true
+            menu.findItem(R.id.menu_video).isVisible = config?.isShowVideoCamera ?: true
             menu.findItem(R.id.menu_done).apply {
                 title = ConfigUtils.getDoneButtonText(this@ImagePickerActivity, config!!)
                 isVisible = imagePickerFragment.isShowDoneButton
