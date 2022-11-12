@@ -39,7 +39,7 @@ And add this to your module's `build.gradle`
 
 ```groovy
 dependencies {
-  implementation 'com.github.esafirm:android-image-picker:x.y.z'
+    implementation 'com.github.esafirm:android-image-picker:x.y.z'
 }
 ```
 
@@ -49,7 +49,8 @@ change `x.y.z` to version in the [release page](https://github.com/esafirm/andro
 
 For full example, please refer to the `sample` app.
 
-Also you can browse the issue labeled as question [here](https://github.com/esafirm/android-image-picker/issues?utf8=%E2%9C%93&q=label%3Aquestion+)
+Also you can browse the issue labeled as
+question [here](https://github.com/esafirm/android-image-picker/issues?utf8=%E2%9C%93&q=label%3Aquestion+)
 
 ## Start image picker activity
 
@@ -57,7 +58,7 @@ The simplest way to start
 
 ```kotlin
 val launcher = registerImagePicker {
-  // handle result here
+    // handle result here
 }
 
 launcher.launch()
@@ -67,33 +68,35 @@ Complete features of what you can do with ImagePicker
 
 ```kotlin
 val config = ImagePickerConfig {
-  mode = ImagePickerMode.SINGLE // default is multi image mode
-  language = "in" // Set image picker language
-  theme = R.style.ImagePickerTheme
+    mode = ImagePickerMode.SINGLE // default is multi image mode
+    language = "in" // Set image picker language
+    theme = R.style.ImagePickerTheme
 
-  // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
-  returnMode = if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE
+    // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
+    returnMode = if (returnAfterCapture) ReturnMode.ALL else ReturnMode.NONE
 
-  isFolderMode = folderMode // set folder mode (false by default)
-  isIncludeVideo = includeVideo // include video (false by default)
-  isOnlyVideo = onlyVideo // include video (false by default)
-  arrowColor = Color.RED // set toolbar arrow up color
-  folderTitle = "Folder" // folder selection title
-  imageTitle = "Tap to select" // image selection title
-  doneButtonText = "DONE" // done button text
-  limit = 10 // max images can be selected (99 by default)
-  isShowCamera = true // show camera or not (true by default)
-  savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)
-  savePath = ImagePickerSavePath(Environment.getExternalStorageDirectory().path, isRelative = false) // can be a full path
+    isFolderMode = folderMode // set folder mode (false by default)
+    isIncludeVideo = includeVideo // include video (false by default)
+    isOnlyVideo = onlyVideo // include video (false by default)
+    arrowColor = Color.RED // set toolbar arrow up color
+    folderTitle = "Folder" // folder selection title
+    imageTitle = "Tap to select" // image selection title
+    doneButtonText = "DONE" // done button text
+    limit = 10 // max images can be selected (99 by default)
+    isShowCamera = true // show camera or not (true by default)
+    savePath = ImagePickerSavePath("Camera") // captured image directory name ("Camera" folder by default)
+    savePath =
+        ImagePickerSavePath(Environment.getExternalStorageDirectory().path, isRelative = false) // can be a full path
 
-  excludedImages = images.toFiles() // don't show anything on this selected images
-  selectedImages = images  // original selected images, used in multi mode
+    excludedImages = images.toFiles() // don't show anything on this selected images
+    selectedImages = images  // original selected images, used in multi mode
 }
 ```
 
 If you want to call it outside `Activity` or `Fragment`, you can get the `Intent` with `createImagePickerIntent`
 
-> Please note: handling in `onActivityResult` is not recommended since it's already deprecated in favor of the new result API
+> Please note: handling in `onActivityResult` is not recommended since it's already deprecated in favor of the new
+> result API
 
 ```kotlin
 val intent = createImagePickerIntent(context, ImagePickerConfig())
@@ -102,13 +105,14 @@ startActivityForResult(intent, RC_IMAGE_PICKER)
 
 ## Receive result
 
-when you're done picking images, result will be returned on launcher callback with type `List<Image>`. This list cannot be null but can be empty
+when you're done picking images, result will be returned on launcher callback with type `List<Image>`. This list cannot
+be null but can be empty
 
 ```kotlin
 val launcher = registerImagePicker { result: List<Image> ->
-  result.forEach { image ->
-    println(image)
-  }
+    result.forEach { image ->
+        println(image)
+    }
 }    
 ```
 
@@ -130,10 +134,10 @@ You also still can use the `DefaultCameraModule` but discouraged to do it.
 - [Return mode](https://github.com/esafirm/android-image-picker/blob/master/docs/return_mode.md)
 - [Save location](https://github.com/esafirm/android-image-picker/blob/master/docs/save_location.md)
 
-
 # Version 2.x.x
 
-If you still use the previous version, you can check `2.x` branch in [here](https://github.com/esafirm/android-image-picker/tree/2.x)
+If you still use the previous version, you can check `2.x` branch
+in [here](https://github.com/esafirm/android-image-picker/tree/2.x)
 
 # Support Me!
 
