@@ -2,6 +2,7 @@
 
 You also can change how to process the image and how to get the image files through `ImageLoader` and `ImageFileLoader`
 To change this, first, create custom `ImagePickerComponents`.
+You could inherit from `DefaultImagePickerComponents` or directly implements from `ImagePickerComponents` interface.
 
 ```kotlin
 class CustomImagePickerComponents(
