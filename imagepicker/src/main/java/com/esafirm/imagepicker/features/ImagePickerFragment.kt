@@ -9,13 +9,14 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -46,15 +47,21 @@ class ImagePickerFragment : Fragment() {
         requireArguments().getParcelable(ImagePickerConfig::class.java.simpleName)!!
     }
 
-    private val permission: String
-        get() {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                Manifest.permission.READ_MEDIA_IMAGES
-            } else Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private val permissions: Array<String> by lazy {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
+                arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
+
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                || Environment.isExternalStorageLegacy() -> arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+            else -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
+    }
 
     private val requestPermissionLauncher =
-        registerForActivityResult(RequestPermission()) { isGranted ->
+        registerForActivityResult(RequestMultiplePermissions()) { resultMap ->
+            val isGranted = resultMap.values.all { it }
             if (isGranted) {
                 IpLogger.d("Write External permission granted")
                 loadData()
@@ -254,8 +261,10 @@ class ImagePickerFragment : Fragment() {
      * Check permission
      */
     private fun loadDataWithPermission() {
-        val rc = ActivityCompat.checkSelfPermission(requireContext(), permission)
-        if (rc == PackageManager.PERMISSION_GRANTED) {
+        val allGranted = permissions.all {
+            ActivityCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+        }
+        if (allGranted) {
             loadData()
         } else {
             requestWriteExternalOrReadImagesPermission()
@@ -271,20 +280,19 @@ class ImagePickerFragment : Fragment() {
      */
     private fun requestWriteExternalOrReadImagesPermission() {
         IpLogger.w("Write External permission or Read Media Images is not granted. Requesting permission")
-        when {
-            shouldShowRequestPermissionRationale(permission) -> {
-                requestPermissionLauncher.launch(permission)
-            }
 
-            else -> {
-                if (!preferences.isPermissionRequested()) {
-                    preferences.setPermissionIsRequested()
-                    requestPermissionLauncher.launch(permission)
-                } else {
-                    binding?.efSnackbar?.show(R.string.ef_msg_no_write_external_permission) {
-                        openAppSettings()
-                    }
-                }
+        val shouldProvideRationale = permissions.any { permission -> shouldShowRequestPermissionRationale(permission) }
+        if (shouldProvideRationale) {
+            requestPermissionLauncher.launch(permissions)
+            return
+        }
+
+        if (!preferences.isPermissionRequested()) {
+            preferences.setPermissionIsRequested()
+            requestPermissionLauncher.launch(permissions)
+        } else {
+            binding?.efSnackbar?.show(R.string.ef_msg_no_write_external_permission) {
+                openAppSettings()
             }
         }
     }
