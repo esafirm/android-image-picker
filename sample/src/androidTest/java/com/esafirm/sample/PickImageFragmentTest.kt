@@ -6,10 +6,10 @@ import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.GrantPermissionRule
 import com.adevinta.android.barista.assertion.BaristaImageViewAssertions.assertHasAnyDrawable
 import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
+import com.esafirm.sample.utils.Rules
 import com.esafirm.sample.utils.Views
 import org.junit.Rule
 import org.junit.Test
@@ -25,8 +25,7 @@ class PickImageFragmentTest {
 
     @Rule
     @JvmField
-    val grantPermissionRule =
-        GrantPermissionRule.grant("android.permission.WRITE_EXTERNAL_STORAGE")
+    val grantPermissionRule = Rules.AIP_PERMISSIONS
 
     @Test
     fun pickImage() {

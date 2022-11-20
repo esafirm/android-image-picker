@@ -13,11 +13,11 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.GrantPermissionRule
 import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.adevinta.android.barista.intents.BaristaIntents.mockAndroidCamera
 import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
 import com.esafirm.sample.matchers.hasDrawable
+import com.esafirm.sample.utils.Rules
 import com.esafirm.sample.utils.ViewAsserts
 import com.esafirm.sample.utils.Views
 import org.junit.Rule
@@ -34,9 +34,7 @@ class CameraOnlyTest {
 
     @Rule
     @JvmField
-    val grantPermissionRule = GrantPermissionRule.grant(
-        "android.permission.WRITE_EXTERNAL_STORAGE"
-    )
+    val grantPermissionRule = Rules.AIP_PERMISSIONS
 
     private fun runCameraOnly() {
         Intents.init()

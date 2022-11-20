@@ -12,6 +12,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.adevinta.android.barista.intents.BaristaIntents.mockAndroidCamera
 import com.adevinta.android.barista.interaction.BaristaClickInteractions.clickOn
 import com.adevinta.android.barista.interaction.BaristaMenuClickInteractions
+import com.esafirm.sample.utils.Rules
 import com.esafirm.sample.utils.ViewAsserts
 import com.esafirm.sample.utils.Views
 import org.junit.Rule
@@ -28,9 +29,7 @@ class CameraOnPickerTest {
 
     @Rule
     @JvmField
-    val grantPermissionRule = GrantPermissionRule.grant(
-        "android.permission.WRITE_EXTERNAL_STORAGE"
-    )
+    val grantPermissionRule = Rules.AIP_PERMISSIONS
 
     private fun callCamera() {
         Intents.init()
