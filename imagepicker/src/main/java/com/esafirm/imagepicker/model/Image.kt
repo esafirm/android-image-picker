@@ -5,8 +5,8 @@ import android.net.Uri
 import android.os.Parcelable
 import android.provider.MediaStore
 import com.esafirm.imagepicker.helper.ImagePickerUtils
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class Image(

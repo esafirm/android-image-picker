@@ -1,5 +1,7 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+}
 
 android {
     final sdk = rootProject.ext.sdk
@@ -39,10 +41,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-    implementation "com.github.bumptech.glide:glide:4.10.0"
-    implementation "androidx.appcompat:appcompat:1.2.0"
+    implementation "com.github.bumptech.glide:glide:4.14.2"
+    implementation "androidx.appcompat:appcompat:1.5.1"
 
     /* Development */
     implementation project(':imagepicker')
@@ -51,15 +51,15 @@ dependencies {
     implementation "androidx.core:core-ktx:$core_ktx_version"
 
     /* UI Test */
-    final espressoVersion = '3.3.0'
-    final runnerVersion = '1.3.0'
+    final espressoVersion = '3.5.0'
+    final runnerVersion = '1.5.1'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
-    androidTestImplementation "androidx.test:rules:$runnerVersion"
-    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.3'
-    androidTestImplementation "androidx.test:core:1.5.0-beta01"
-    androidTestImplementation('com.adevinta.android:barista:3.10.0') {
+    androidTestImplementation "androidx.test:rules:1.5.0"
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.4'
+    androidTestImplementation "androidx.test:core:1.5.0"
+    androidTestImplementation('com.adevinta.android:barista:4.2.0') {
         exclude group: 'org.jetbrains.kotlin'
         exclude group: 'org.hamcrest'
     }
