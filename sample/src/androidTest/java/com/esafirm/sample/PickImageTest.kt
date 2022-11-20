@@ -13,8 +13,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.GrantPermissionRule
 import com.esafirm.sample.matchers.hasDrawable
+import com.esafirm.sample.utils.Rules
 import com.esafirm.sample.utils.Views
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Rule
@@ -31,7 +31,7 @@ class PickImageTest {
 
     @Rule
     @JvmField
-    var mGrantPermissionRule = GrantPermissionRule.grant("android.permission.WRITE_EXTERNAL_STORAGE")
+    val grantPermissionRule = Rules.AIP_PERMISSIONS
 
     @Test
     fun pickImage() {
