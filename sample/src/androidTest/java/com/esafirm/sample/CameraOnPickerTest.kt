@@ -24,7 +24,7 @@ class CameraOnPickerTest {
 
     @Rule
     @JvmField
-    val testRule = ActivityScenarioRule(MainActivity::class.java)
+    val activityTestRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField

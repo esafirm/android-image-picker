@@ -21,11 +21,11 @@ class PickImageFolderMode {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityScenarioRule(MainActivity::class.java)
+    val activityTestRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField
-    var mGrantPermissionRule = GrantPermissionRule.grant("android.permission.WRITE_EXTERNAL_STORAGE")
+    val grantPermissionRule = GrantPermissionRule.grant("android.permission.WRITE_EXTERNAL_STORAGE")
 
     @Test
     fun pickImage() {

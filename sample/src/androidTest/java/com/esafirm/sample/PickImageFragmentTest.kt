@@ -21,11 +21,11 @@ class PickImageFragmentTest {
 
     @Rule
     @JvmField
-    val mActivityTestRule = ActivityScenarioRule(MainActivity::class.java)
+    val activityTestRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField
-    val mGrantPermissionRule =
+    val grantPermissionRule =
         GrantPermissionRule.grant("android.permission.WRITE_EXTERNAL_STORAGE")
 
     @Test

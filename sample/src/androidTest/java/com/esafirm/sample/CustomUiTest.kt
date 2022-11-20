@@ -21,11 +21,11 @@ class CustomUiTest {
 
     @Rule
     @JvmField
-    var testRule = ActivityScenarioRule(MainActivity::class.java)
+    val activityTestRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField
-    var grantPermissionRule = GrantPermissionRule.grant(
+    val grantPermissionRule = GrantPermissionRule.grant(
         "android.permission.WRITE_EXTERNAL_STORAGE"
     )
 
