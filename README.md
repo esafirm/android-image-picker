@@ -129,10 +129,10 @@ You also still can use the `DefaultCameraModule` but discouraged to do it.
 
 # Wiki
 
-- [Custom components](https://github.com/esafirm/android-image-picker/blob/master/docs/custom_components.md)
-- [Using another image library](https://github.com/esafirm/android-image-picker/blob/master/docs/another_image_library.md)
-- [Return mode](https://github.com/esafirm/android-image-picker/blob/master/docs/return_mode.md)
-- [Save location](https://github.com/esafirm/android-image-picker/blob/master/docs/save_location.md)
+- [Custom components](https://github.com/esafirm/android-image-picker/blob/main/docs/custom_components.md)
+- [Using another image library](https://github.com/esafirm/android-image-picker/blob/main/docs/another_image_library.md)
+- [Return mode](https://github.com/esafirm/android-image-picker/blob/main/docs/return_mode.md)
+- [Save location](https://github.com/esafirm/android-image-picker/blob/main/docs/save_location.md)
 
 # Version 2.x.x
 
