@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.esafirm.imagepicker.features.ImagePickerSavePath
 import com.esafirm.imagepicker.features.ReturnMode
 import com.esafirm.imagepicker.features.common.BaseConfig
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class CameraOnlyConfig(

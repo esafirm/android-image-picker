@@ -21,7 +21,7 @@ class CustomUiTest {
 
     @Rule
     @JvmField
-    var testRule = ActivityScenarioRule(MainActivity::class.java)
+    val activityTestRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField

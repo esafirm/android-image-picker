@@ -3,16 +3,16 @@ package com.esafirm.imagepicker.adapter
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.adapter.ImagePickerAdapter.ImageViewHolder
+import com.esafirm.imagepicker.databinding.EfImagepickerItemImageBinding
 import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.features.imageloader.ImageType
 import com.esafirm.imagepicker.helper.ImagePickerUtils
@@ -20,8 +20,6 @@ import com.esafirm.imagepicker.helper.diff.SimpleDiffUtilCallBack
 import com.esafirm.imagepicker.listeners.OnImageClickListener
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener
 import com.esafirm.imagepicker.model.Image
-import kotlinx.android.synthetic.main.ef_imagepicker_item_image.view.*
-import java.util.HashMap
 
 class ImagePickerAdapter(
     context: Context,
@@ -46,12 +44,12 @@ class ImagePickerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val layout = inflater.inflate(
-            R.layout.ef_imagepicker_item_image,
+        val binding = EfImagepickerItemImageBinding.inflate(
+            LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return ImageViewHolder(layout)
+        return ImageViewHolder(binding)
     }
 
     override fun onBindViewHolder(viewHolder: ImageViewHolder, position: Int) {
@@ -94,7 +92,7 @@ class ImagePickerAdapter(
                     addSelected(image, position)
                 }
             }
-            container?.foreground = if (isSelected) ContextCompat.getDrawable(
+            container.foreground = if (isSelected) ContextCompat.getDrawable(
                 context,
                 R.drawable.ef_ic_done_white
             ) else null
@@ -143,10 +141,10 @@ class ImagePickerAdapter(
 
     private fun getItem(position: Int) = listDiffer.currentList.getOrNull(position)
 
-    class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
-        val imageView: ImageView = itemView.image_view
-        val alphaView: View = itemView.view_alpha
-        val fileTypeIndicator: TextView = itemView.ef_item_file_type_indicator
-        val container: FrameLayout? = itemView as? FrameLayout
+    class ImageViewHolder(binding: EfImagepickerItemImageBinding) : ViewHolder(binding.root) {
+        val imageView = binding.imageView
+        val alphaView = binding.viewAlpha
+        val fileTypeIndicator = binding.efItemFileTypeIndicator
+        val container = binding.root as FrameLayout
     }
 }

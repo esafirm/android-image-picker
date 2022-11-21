@@ -21,7 +21,7 @@ class PickImageFragmentTest {
 
     @Rule
     @JvmField
-    val mActivityTestRule = ActivityScenarioRule(MainActivity::class.java)
+    val activityTestRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField

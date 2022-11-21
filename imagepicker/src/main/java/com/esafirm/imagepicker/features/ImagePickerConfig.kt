@@ -5,7 +5,8 @@ import androidx.annotation.StyleRes
 import com.esafirm.imagepicker.features.common.BaseConfig
 import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.model.Image
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.io.File
 
 @Parcelize
@@ -30,6 +31,7 @@ class ImagePickerConfig(
     var showDoneButtonAlways: Boolean = false
 ) : BaseConfig(), Parcelable {
 
+    @IgnoredOnParcel
     @Transient
     var language: String? = null
 
