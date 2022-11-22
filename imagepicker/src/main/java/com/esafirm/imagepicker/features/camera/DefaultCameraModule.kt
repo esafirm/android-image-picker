@@ -35,6 +35,22 @@ class DefaultCameraModule : CameraModule {
         return intent
     }
 
+    override fun getVideoCameraIntent(context: Context, config: BaseConfig): Intent? {
+        prepareForNewIntent()
+
+        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        val imageFile = ImagePickerUtils.createVideoFile(config.savePath, context)
+
+        if (config.isSaveVideo && imageFile != null) {
+            val appContext = context.applicationContext
+            val uri = createVideoUri(appContext, imageFile)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            ImagePickerUtils.grantAppPermission(context, intent, uri)
+            currentUri = uri.toString()
+        }
+        return intent
+    }
+
     private fun prepareForNewIntent() {
         currentImagePath = null
         currentUri = null
@@ -53,6 +69,21 @@ class DefaultCameraModule : CameraModule {
             return appContext.contentResolver.insert(collection, values)
         }
         return UriUtils.uriForFile(appContext, imageFile)
+    }
+
+    private fun createVideoUri(appContext: Context, videoFile: File): Uri? {
+        currentImagePath = "file:" + videoFile.absolutePath
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
+            val values = ContentValues().apply {
+                put(MediaStore.Video.Media.DISPLAY_NAME, videoFile.name)
+                put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+            }
+            val collection =
+                MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            return appContext.contentResolver.insert(collection, values)
+        }
+        return UriUtils.uriForFile(appContext, videoFile)
     }
 
     override fun getImage(

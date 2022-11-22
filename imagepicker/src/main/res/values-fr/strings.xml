@@ -5,6 +5,7 @@
     <string name="ef_ok">OK</string>
     <string name="ef_done">TERMINER</string>
     <string name="ef_camera">CAMERA</string>
+    <string name="ef_video">VIDÉO</string>
 
     <string name="ef_title_folder">Dossier</string>
     <string name="ef_title_select_image">Toucher pour sélectionner des images</string>
@@ -14,6 +15,7 @@
     <string name="ef_selected_with_limit">%1$d/%2$d sélectionnées</string>
 
     <string name="ef_error_create_image_file">Impossible de créer le fichier photo</string>
+    <string name="ef_error_create_video_file">Échec de la création du fichier vidéo</string>
     <string name="ef_error_no_camera">Aucune caméra détectée</string>
     <string name="ef_error_null_cursor">Oups, quelque chose s\'est mal déroulé!</string>
 

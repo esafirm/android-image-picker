@@ -5,6 +5,7 @@
     <string name="ef_ok">OK</string>
     <string name="ef_done">TERMINAT</string>
     <string name="ef_camera">CAMERA</string>
+    <string name="ef_video">VIDEO</string>
 
     <string name="ef_title_folder">Fișier</string>
     <string name="ef_title_select_image">Atingeți pentru a selecta imagini</string>
@@ -13,6 +14,7 @@
     <string name="ef_selected_with_limit">%1$d/%2$d selectate</string>
 
     <string name="ef_error_create_image_file">Nu am putut crea imaginea</string>
+    <string name="ef_error_create_video_file">Nu s-a putut crea fișierul video</string>
     <string name="ef_error_no_camera">Camera foto nu a fost găsită</string>
     <string name="ef_error_null_cursor">Hopa, ceva a mers prost!</string>
 

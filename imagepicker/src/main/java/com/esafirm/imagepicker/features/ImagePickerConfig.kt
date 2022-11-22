@@ -23,11 +23,13 @@ class ImagePickerConfig(
     var isOnlyVideo: Boolean = false,
     var isIncludeAnimation: Boolean = false,
     var isShowCamera: Boolean = true,
+    var isShowVideoCamera: Boolean = false,
     var selectedImages: List<Image> = emptyList(),
     var excludedImages: List<File> = emptyList(),
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.NONE,
     override var isSaveImage: Boolean = true,
+    override var isSaveVideo: Boolean = true,
     var showDoneButtonAlways: Boolean = false
 ) : BaseConfig(), Parcelable {
 

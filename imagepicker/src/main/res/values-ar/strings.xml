@@ -5,6 +5,7 @@
     <string name="ef_ok">وافق</string>
     <string name="ef_done">انهي</string>
     <string name="ef_camera">كاميرا</string>
+    <string name="ef_video">فيديو</string>
 
     <string name="ef_title_folder">دليل</string>
     <string name="ef_title_select_image">أنقر لإختيار الصور</string>
@@ -14,6 +15,7 @@
     <string name="ef_selected_with_limit">إخترت %1$d/%2$d</string>
 
     <string name="ef_error_create_image_file">حدث خطأ في تسجيل الصوره</string>
+    <string name="ef_error_create_video_file">فشل إنشاء ملف الفيديو</string>
     <string name="ef_error_no_camera">لا يوجد كاميرا</string>
     <string name="ef_error_null_cursor">عذراً، هناك خطأ ما!</string>
 

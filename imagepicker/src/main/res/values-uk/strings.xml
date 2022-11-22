@@ -4,8 +4,11 @@
     <string name="ef_ok">ОК</string>
     <string name="ef_done">ГОТОВО</string>
     <string name="ef_camera">КАМЕРА</string>
+    <string name="ef_video">ВІДЕО</string>
+
     <string name="ef_title_folder">Папка</string>
     <string name="ef_title_select_image">Торкніться, щоб обрати</string>
+    <string name="ef_error_create_video_file">Не вдалося створити відеофайл</string>
     <string name="ef_ltitle_permission_denied">Доступ заборонено</string>
     <string name="ef_selected">%d обрано</string>
     <string name="ef_selected_with_limit">%1$d/%2$d обрано</string>

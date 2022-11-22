@@ -4,6 +4,7 @@
     <string name="ef_ok">OK</string>
     <string name="ef_done">完了</string>
     <string name="ef_camera">カメラ</string>
+    <string name="ef_video">ビデオ</string>
 
     <string name="ef_title_folder">フォルダ</string>
     <string name="ef_title_select_image">画像を選択</string>
@@ -16,6 +17,7 @@
     <string name="ef_error_null_cursor">エラーが発生しました</string>
 
     <string name="ef_msg_empty_images">画像が見つかりません</string>
+    <string name="ef_error_create_video_file">動画ファイルの作成に失敗しました</string>
     <string name="ef_msg_no_write_external_permission">端末のファイルへのアクセスを許可してください</string>
     <string name="ef_msg_no_camera_permission">端末のカメラへのアクセスを許可してください</string>
     <string name="ef_msg_limit_images">選択できる画像の上限です</string>

@@ -4,12 +4,15 @@
     <string name="ef_ok">ОК</string>
     <string name="ef_done">ГОТОВО</string>
     <string name="ef_camera">КАМЕРА</string>
+    <string name="ef_video">ВИДЕО</string>
+
     <string name="ef_title_folder">Папка</string>
     <string name="ef_title_select_image">Коснитесь, чтобы выбрать</string>
     <string name="ef_ltitle_permission_denied">Доступ запрещён</string>
     <string name="ef_selected">%d выбрано</string>
     <string name="ef_selected_with_limit">%1$d/%2$d выбрано</string>
     <string name="ef_error_create_image_file">Не удалось создать файл</string>
+    <string name="ef_error_create_video_file">Не удалось создать видеофайл</string>
     <string name="ef_error_no_camera">Камера недоступна</string>
     <string name="ef_error_null_cursor">Ой! Что-то пошло не так!</string>
     <string name="ef_msg_empty_images">Изображений не найдено</string>
