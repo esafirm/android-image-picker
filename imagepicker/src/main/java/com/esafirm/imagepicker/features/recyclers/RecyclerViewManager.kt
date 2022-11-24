@@ -140,10 +140,10 @@ class RecyclerViewManager(
                 currentFolderName
             }
             config.limit == IpCons.MAX_LIMIT -> {
-                context.getString(R.string.ef_selected).format(selectedNum)
+                context.getString(R.string.ef_selected, selectedNum)
             }
             else -> {
-                context.getString(R.string.ef_selected_with_limit).format(selectedNum, config.limit)
+                context.getString(R.string.ef_selected_with_limit, selectedNum, config.limit)
             }
         }
     }
