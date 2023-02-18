@@ -60,8 +60,9 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
         }
 
         if (isCameraOnly) {
-            val cameraIntent = cameraModule.getCameraIntent(this, cameraOnlyConfig!!)
-            startActivityForResult(cameraIntent, RC_CAMERA)
+            cameraModule.getCameraIntent(this, cameraOnlyConfig!!)?.let { cameraIntent ->
+                startActivityForResult(cameraIntent, RC_CAMERA)
+            }
             return
         }
 
