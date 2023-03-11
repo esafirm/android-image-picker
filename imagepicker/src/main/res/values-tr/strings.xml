@@ -20,4 +20,5 @@
     <string name="ef_msg_no_write_external_permission">Lütfen resim seçmek için depolama iznini verin</string>
     <string name="ef_msg_no_camera_permission">Resim çekmek için lütfen kamera iznini verin</string>
     <string name="ef_msg_limit_images">Resim seçimi sınırı</string>
+    <string name="ef_all">Tüm</string>
 </resources>

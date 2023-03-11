@@ -22,4 +22,5 @@
     <string name="ef_msg_limit_images">Giới hạn chọn hình ảnh</string>
 
     <string name = "ef_msg_no_camera_permission">Vui lòng cấp quyền cho máy ảnh để chụp ảnh </string>
+    <string name="ef_all">Tất cả</string>
 </resources>

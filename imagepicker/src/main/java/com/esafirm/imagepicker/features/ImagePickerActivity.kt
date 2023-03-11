@@ -108,6 +108,10 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
                 title = ConfigUtils.getDoneButtonText(this@ImagePickerActivity, config!!)
                 isVisible = imagePickerFragment.isShowDoneButton
             }
+            menu.findItem(R.id.menu_select_all).apply {
+                title = ConfigUtils.getAllButtonText(this@ImagePickerActivity, config!!)
+                isVisible = imagePickerFragment.isShowAllButton
+            }
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -123,6 +127,10 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
         }
         if (id == R.id.menu_done) {
             imagePickerFragment.onDone()
+            return true
+        }
+        if (id == R.id.menu_select_all) {
+            imagePickerFragment.onSelectAll()
             return true
         }
         if (id == R.id.menu_camera) {

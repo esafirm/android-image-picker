@@ -248,6 +248,14 @@ class ImagePickerFragment : Fragment() {
     }
 
     /**
+     * On select all images clicked
+     * Select all images in the current folder
+     */
+    fun onSelectAll() {
+        recyclerViewManager.selectAllImages()
+    }
+
+    /**
      * Config recyclerView when configuration changed
      */
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -354,6 +362,9 @@ class ImagePickerFragment : Fragment() {
 
     val isShowDoneButton: Boolean
         get() = recyclerViewManager.isShowDoneButton
+
+    val isShowAllButton: Boolean
+        get() = recyclerViewManager.isShowAllButton
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

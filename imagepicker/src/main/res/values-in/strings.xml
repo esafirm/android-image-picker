@@ -21,4 +21,5 @@
     <string name="ef_msg_no_write_external_permission">Mohon berikan izin terhadap penyimpanan untuk memilih gambar</string>
     <string name="ef_msg_no_camera_permission">Mohon berikan izin terhadap kamera untuk mengambil gambar</string>
     <string name="ef_msg_limit_images">Gambar yang terpilih sudah mencapai batas maksimal</string>
+    <string name="ef_all">Semua</string>
 </resources>
