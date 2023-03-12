@@ -49,8 +49,12 @@ class ImagePickerFragment : Fragment() {
 
     private val permissions: Array<String> by lazy {
         when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
-                arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                if (config.isIncludeVideo)
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
+                else
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
+            }
 
             Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
                 || Environment.isExternalStorageLegacy() -> arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
