@@ -1,1 +1,1 @@
-include ':imagepicker', ':rximagepicker', ':sample'
+include ':imagepicker', ':sample'

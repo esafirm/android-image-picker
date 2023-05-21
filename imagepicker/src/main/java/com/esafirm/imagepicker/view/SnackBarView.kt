@@ -4,19 +4,18 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.animation.Interpolator
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import com.esafirm.imagepicker.R
-import kotlinx.android.synthetic.main.ef_imagepicker_snackbar.view.*
 
 class SnackBarView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : RelativeLayout(context, attrs, defStyle) {
-
-    private val txtCaption get() = ef_snackbar_txt_bottom_caption
-    private val btnAction get() = ef_snackbar_btn_action
+    private val txtCaption get() = findViewById<TextView>(R.id.ef_snackbar_txt_bottom_caption)
+    private val btnAction get() = findViewById<TextView>(R.id.ef_snackbar_btn_action)
 
     init {
         inflate(context, R.layout.ef_imagepicker_snackbar, this)

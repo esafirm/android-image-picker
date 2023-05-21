@@ -1,6 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id "com.android.library"
+    id "kotlin-android"
+    id "kotlin-parcelize"
+}
 
 android {
     final sdk = rootProject.ext.sdk
@@ -10,8 +12,6 @@ android {
     defaultConfig {
         minSdkVersion sdk.minSdk
         targetSdkVersion sdk.targetSdk
-        versionCode 1
-        versionName "1.0"
     }
 
     buildFeatures {
@@ -30,16 +30,23 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
+
     resourcePrefix "ef_"
+    namespace 'com.esafirm.imagepicker'
 }
 
-task sourcesJar(type: Jar) {
+tasks.register("sourcesJar", Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 artifacts {
@@ -47,17 +54,15 @@ artifacts {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.github.bumptech.glide:glide:4.11.0"
+    implementation "com.github.bumptech.glide:glide:4.14.2"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
     implementation "androidx.core:core-ktx:$core_ktx_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    testImplementation platform("org.junit:junit-bom:5.7.1")
+    testImplementation platform("org.junit:junit-bom:5.9.1")
     testImplementation "org.junit.jupiter:junit-jupiter"
     testImplementation 'com.natpryce:hamkrest:1.8.0.1'
 }

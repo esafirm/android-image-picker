@@ -1,18 +1,15 @@
 package com.esafirm.imagepicker.adapter
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.adapter.FolderPickerAdapter.FolderViewHolder
+import com.esafirm.imagepicker.databinding.EfImagepickerItemFolderBinding
 import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.features.imageloader.ImageType
 import com.esafirm.imagepicker.listeners.OnFolderClickListener
 import com.esafirm.imagepicker.model.Folder
-import kotlinx.android.synthetic.main.ef_imagepicker_item_folder.view.*
 
 class FolderPickerAdapter(
     context: Context,
@@ -23,12 +20,12 @@ class FolderPickerAdapter(
     private val folders: MutableList<Folder> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderViewHolder {
-        val layout = inflater.inflate(
-            R.layout.ef_imagepicker_item_folder,
+        val binding = EfImagepickerItemFolderBinding.inflate(
+            LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return FolderViewHolder(layout)
+        return FolderViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
@@ -54,9 +51,9 @@ class FolderPickerAdapter(
 
     override fun getItemCount() = folders.size
 
-    class FolderViewHolder(itemView: View) : ViewHolder(itemView) {
-        val image: ImageView = itemView.image_view
-        val name: TextView = itemView.tv_name
-        val number: TextView = itemView.tv_number
+    class FolderViewHolder(binding: EfImagepickerItemFolderBinding) : ViewHolder(binding.root) {
+        val image = binding.imageView
+        val name = binding.tvName
+        val number = binding.tvNumber
     }
 }

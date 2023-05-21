@@ -8,7 +8,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -16,7 +18,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.view.menu.MenuPopupHelper
@@ -53,8 +55,21 @@ class ImagePickerFragment : Fragment() {
         requireArguments().getParcelable(ImagePickerConfig::class.java.simpleName)!!
     }
 
+    private val permissions: Array<String> by lazy {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
+                arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
+
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+                || Environment.isExternalStorageLegacy() -> arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+            else -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+    }
+
     private val requestPermissionLauncher =
-        registerForActivityResult(RequestPermission()) { isGranted ->
+        registerForActivityResult(RequestMultiplePermissions()) { resultMap ->
+            val isGranted = resultMap.values.all { it }
             if (isGranted) {
                 IpLogger.d("Write External permission granted")
                 loadData()
@@ -134,7 +149,7 @@ class ImagePickerFragment : Fragment() {
     }
 
     private fun subscribeToUiState() = presenter.getUiState().observe(this) { state ->
-        showLoading(state.isLoading, true)
+        showLoading(state.isLoading, hideRecyclerView = true)
 
         state.error.fetch {
             showError(this)
@@ -222,6 +237,7 @@ class ImagePickerFragment : Fragment() {
         val selectListener = { isSelected: Boolean -> selectImage(isSelected) }
         val folderClick = { bucket: Folder ->
             presenter.setFolder(bucket)
+            updateTitle()
         }
 
         setupAdapters(passedSelectedImages, selectListener, folderClick)
@@ -311,14 +327,13 @@ class ImagePickerFragment : Fragment() {
      * Check permission
      */
     private fun loadDataWithPermission() {
-        val rc = ActivityCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (rc == PackageManager.PERMISSION_GRANTED) {
+        val allGranted = permissions.all {
+            ActivityCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+        }
+        if (allGranted) {
             loadData()
         } else {
-            requestWriteExternalPermission()
+            requestWriteExternalOrReadImagesPermission()
         }
     }
 
@@ -348,7 +363,7 @@ class ImagePickerFragment : Fragment() {
 
     //region Sort
 
-    @android.annotation.SuppressLint("NonConstantResourceId")
+    @SuppressLint("NonConstantResourceId")
     fun showSortPopupMenu(menuItem: MenuItem) {
         val view: View = requireActivity().findViewById(menuItem.itemId)
         val popupMenu = PopupMenu(requireContext(), view)
@@ -461,22 +476,21 @@ class ImagePickerFragment : Fragment() {
      * If permission denied or app is first launched, request for permission
      * If permission denied and user choose 'Never Ask Again', show snackbar with an action that navigate to app settings
      */
-    private fun requestWriteExternalPermission() {
-        IpLogger.w("Write External permission is not granted. Requesting permission")
-        val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-        when {
-            shouldShowRequestPermissionRationale(permission) -> {
-                requestPermissionLauncher.launch(permission)
-            }
-            else -> {
-                if (!preferences.isPermissionRequested()) {
-                    preferences.setPermissionIsRequested()
-                    requestPermissionLauncher.launch(permission)
-                } else {
-                    binding?.efSnackbar?.show(R.string.ef_msg_no_write_external_permission) {
-                        openAppSettings()
-                    }
-                }
+    private fun requestWriteExternalOrReadImagesPermission() {
+        IpLogger.w("Write External permission or Read Media Images is not granted. Requesting permission")
+
+        val shouldProvideRationale = permissions.any { permission -> shouldShowRequestPermissionRationale(permission) }
+        if (shouldProvideRationale) {
+            requestPermissionLauncher.launch(permissions)
+            return
+        }
+
+        if (!preferences.isPermissionRequested()) {
+            preferences.setPermissionIsRequested()
+            requestPermissionLauncher.launch(permissions)
+        } else {
+            binding?.efSnackbar?.show(R.string.ef_msg_no_write_external_permission) {
+                openAppSettings()
             }
         }
     }
@@ -584,7 +598,6 @@ class ImagePickerFragment : Fragment() {
         private const val STATE_KEY_SELECTED_IMAGES = "Key.SelectedImages"
 
         private const val RC_CAPTURE = 2000
-        private const val RC_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 23
 
         fun newInstance(config: ImagePickerConfig): ImagePickerFragment {
             val args = Bundle().apply {

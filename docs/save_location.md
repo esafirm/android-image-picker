@@ -2,14 +2,21 @@
 
 By default, ImagePicker will try to save the image generated from camera to `Environment.DIRECTORY_PICTURES` with directory name `"Camera"`. 
 
-You can change the directory name only by using:
+You can change the directory name by using:
 
-```java
-ImagePicker.create(activity).imageDirectory(String dirName)
-``` 
+```kotlin
+val config = ImagePickerConfig {
+    savePath = ImagePickerSavePath(dirName)
+}
+```
 
 Or you can change the full path of the save location by using:
 
-```java
-ImagePicker.create(activity).imageFullDirectory(String fullPath)
+```kotlin
+val config = ImagePickerConfig {
+    savePath = ImagePickerSavePath(
+        path = fullPath, 
+        isRelative = false,
+    )
+}
 ```
