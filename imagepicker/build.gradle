@@ -56,8 +56,9 @@ artifacts {
 dependencies {
     implementation "com.github.bumptech.glide:glide:4.14.2"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 
     implementation "androidx.core:core-ktx:$core_ktx_version"
 

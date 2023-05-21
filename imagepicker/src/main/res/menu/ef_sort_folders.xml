@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_sort_folder_name_asc"
+        android:orderInCategory="10"
+        android:title="@string/ef_title_sort_name"
+        android:icon="@drawable/ef_ic_arrow_down_gray"
+        android:checkable="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort_folder_name_desc"
+        android:orderInCategory="20"
+        android:title="@string/ef_title_sort_name"
+        android:icon="@drawable/ef_ic_arrow_up_gray"
+        android:checkable="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort_num_asc"
+        android:orderInCategory="30"
+        android:title="@string/ef_title_sort_num"
+        android:icon="@drawable/ef_ic_arrow_down_gray"
+        android:checkable="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sort_num_desc"
+        android:orderInCategory="40"
+        android:title="@string/ef_title_sort_num"
+        android:icon="@drawable/ef_ic_arrow_up_gray"
+        android:checkable="true"
+        app:showAsAction="never" />
+</menu>

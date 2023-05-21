@@ -1,38 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.esafirm.imagepicker.view.SquareFrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:foregroundGravity="center">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/ef_content_desc_image"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
 
-    <View
-        android:id="@+id/view_alpha"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"/>
+    <LinearLayout
+        android:id="@+id/ef_bottom_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/ef_black_alpha_50"
+        android:orientation="vertical"
+        android:padding="@dimen/ef_padding_small"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ef_item_file_type_indicator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tv_image_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="3"
+            android:textColor="@color/ef_white"
+            android:textSize="@dimen/ef_font_small"
+            tools:text="@tools:sample/full_names" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/ef_item_file_type_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:background="@color/ef_black_alpha_aa"
-        android:paddingBottom="@dimen/ef_spacing_half"
         android:paddingLeft="@dimen/ef_spacing_double"
-        android:paddingRight="@dimen/ef_spacing_double"
         android:paddingTop="@dimen/ef_spacing_half"
+        android:paddingRight="@dimen/ef_spacing_double"
+        android:paddingBottom="@dimen/ef_spacing_half"
         android:text="@string/ef_gif"
         android:textColor="@color/ef_white"
         android:textSize="@dimen/ef_font_small"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ef_bottom_view"
+        tools:visibility="visible" />
 
-</com.esafirm.imagepicker.view.SquareFrameLayout>
+    <ImageView
+        android:id="@+id/view_selected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ef_white_alpha_50"
+        android:src="@drawable/ef_ic_done_white"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/ef_content_desc_image"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

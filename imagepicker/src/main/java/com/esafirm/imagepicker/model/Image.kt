@@ -7,13 +7,17 @@ import android.provider.MediaStore
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 @Parcelize
 class Image(
     val id: Long,
     val name: String,
     val path: String,
-) : Parcelable {
+    val type: String? = null,
+    val dateModified: Date? = null,
+    val size: Long? = null
+) : Parcelable, BaseItem {
 
     @IgnoredOnParcel
     private var uriHolder: Uri? = null
@@ -33,6 +37,8 @@ class Image(
             }
         }
 
+    override fun getItemName() = name
+
     override fun equals(other: Any?): Boolean {
         return when {
             this === other -> true
@@ -49,6 +55,9 @@ class Image(
         result = 31 * result + name.hashCode()
         result = 31 * result + path.hashCode()
         result = 31 * result + (uriHolder?.hashCode() ?: 0)
+        result = 31 * result + (type?.hashCode() ?: 0)
+        result = 31 * result + (dateModified?.hashCode() ?: 0)
+        result = 31 * result + (size?.hashCode() ?: 0)
         return result
     }
 }

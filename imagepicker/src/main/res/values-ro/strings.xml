@@ -8,6 +8,15 @@
 
     <string name="ef_title_folder">Fișier</string>
     <string name="ef_title_select_image">Atingeți pentru a selecta imagini</string>
+    <string name="ef_search_query">Căutare</string>
+    <string name="ef_nothing_found">Nimic gasit</string>
+
+    <string name="ef_title_sort">Triere</string>
+    <string name="ef_title_sort_name">Nume</string>
+    <string name="ef_title_sort_num">Cantitate</string>
+    <string name="ef_title_sort_type">Tip de</string>
+    <string name="ef_title_sort_date">Data</string>
+    <string name="ef_title_sort_size">Marimea</string>
 
     <string name="ef_selected">%d selectate</string>
     <string name="ef_selected_with_limit">%1$d/%2$d selectate</string>

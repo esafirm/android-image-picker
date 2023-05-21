@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.esafirm.imagepicker.view.SquareFrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:background="@drawable/ef_folder_placeholder"
         android:contentDescription="@string/ef_content_desc_folder"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
 
     <LinearLayout
+        android:id="@+id/ef_bottom_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:background="@color/ef_black_alpha_50"
         android:orientation="vertical"
-        android:padding="@dimen/ef_padding_small">
+        android:padding="@dimen/ef_padding_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/tv_name"
@@ -30,7 +39,8 @@
             android:includeFontPadding="false"
             android:maxLines="3"
             android:textColor="@color/ef_white"
-            android:textSize="@dimen/ef_font_small"/>
+            android:textSize="@dimen/ef_font_small"
+            tools:text="@tools:sample/full_names" />
 
         <TextView
             android:id="@+id/tv_number"
@@ -38,7 +48,8 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:textColor="@color/ef_grey"
-            android:textSize="@dimen/ef_font_small"/>
+            android:textSize="@dimen/ef_font_small"
+            tools:text="@tools:sample/us_zipcodes" />
     </LinearLayout>
 
-</com.esafirm.imagepicker.view.SquareFrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

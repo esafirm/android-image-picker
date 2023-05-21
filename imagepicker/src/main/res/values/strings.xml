@@ -9,6 +9,15 @@
     <string name="ef_title_folder">Folder</string>
     <string name="ef_title_select_image">Tap to select images</string>
     <string name="ef_ltitle_permission_denied">Permission denied</string>
+    <string name="ef_search_query">Search</string>
+    <string name="ef_nothing_found">Nothing found</string>
+
+    <string name="ef_title_sort">Sort</string>
+    <string name="ef_title_sort_name">Name</string>
+    <string name="ef_title_sort_num">Number</string>
+    <string name="ef_title_sort_type">Type</string>
+    <string name="ef_title_sort_date">Date</string>
+    <string name="ef_title_sort_size">Size</string>
 
     <string name="ef_selected">%d selected</string>
     <string name="ef_selected_with_limit">%1$d/%2$d selected</string>

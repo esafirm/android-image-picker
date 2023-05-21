@@ -9,8 +9,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import com.esafirm.imagepicker.R
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
@@ -26,6 +28,9 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
     private val cameraModule = ImagePickerComponentsHolder.cameraModule
 
     private var actionBar: ActionBar? = null
+    private var optionsMenu: Menu? = null
+    private var searchView: SearchView? = null
+    private var isNeedSearch = true
     private lateinit var imagePickerFragment: ImagePickerFragment
 
     private val config: ImagePickerConfig? by lazy {
@@ -98,6 +103,8 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.ef_image_picker_menu_main, menu)
+        this.optionsMenu = menu
+        initSearchView(menu)
         return true
     }
 
@@ -129,6 +136,10 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
             imagePickerFragment.captureImage()
             return true
         }
+        if (id == R.id.menu_sort) {
+            imagePickerFragment.showSortPopupMenu(item)
+            return true
+        }
         return super.onOptionsItemSelected(item)
     }
 
@@ -158,13 +169,57 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
         }
     }
 
+    //region Search
+
+    private fun initSearchView(menu: Menu) {
+        searchView = menu.findItem(R.id.menu_search).actionView as? SearchView
+        if (config?.isShowSearch == true) {
+            searchView?.setIconifiedByDefault(true)
+            searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    search(query)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    search(newText)
+                    return true
+                }
+            })
+            searchView?.setOnCloseListener {
+                search(null)
+                false
+            }
+        } else {
+            searchView?.visibility = View.GONE
+        }
+    }
+
+    private fun search(query: String?) {
+        if (isNeedSearch) {
+            imagePickerFragment.search(query)
+        }
+    }
+
+    private fun closeSearchView() {
+        // at the same time the onClose event is triggered, so isNeedSearch must be avoided reloading
+        isNeedSearch = false
+        searchView?.setQuery(null, false)
+        searchView?.isIconified = true
+        isNeedSearch = true
+    }
+
+    //endregion Search
+
     /* --------------------------------------------------- */
     /* > ImagePickerInteractionListener Methods  */
     /* --------------------------------------------------- */
 
     override fun setTitle(title: String?) {
         actionBar?.title = title
-        invalidateOptionsMenu()
+        if (optionsMenu != null) {
+            onPrepareOptionsMenu(optionsMenu!!)
+        }
     }
 
     override fun cancel() {
@@ -178,5 +233,9 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
     override fun finishPickImages(result: Intent?) {
         setResult(RESULT_OK, result)
         finish()
+    }
+
+    override fun isFolderModeChanged() {
+        closeSearchView()
     }
 }

@@ -1,6 +1,7 @@
 package com.esafirm.imagepicker.features
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -13,11 +14,15 @@ import android.os.Environment
 import android.os.Parcelable
 import android.provider.Settings
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -31,8 +36,11 @@ import com.esafirm.imagepicker.helper.ImagePickerPreferences
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger
 import com.esafirm.imagepicker.helper.state.fetch
+import com.esafirm.imagepicker.model.BaseItem
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
+import java.util.ArrayList
+import java.util.regex.Pattern
 
 class ImagePickerFragment : Fragment() {
 
@@ -141,7 +149,7 @@ class ImagePickerFragment : Fragment() {
     }
 
     private fun subscribeToUiState() = presenter.getUiState().observe(this) { state ->
-        showLoading(state.isLoading)
+        showLoading(state.isLoading, hideRecyclerView = true)
 
         state.error.fetch {
             showError(this)
@@ -153,13 +161,15 @@ class ImagePickerFragment : Fragment() {
             return@observe
         }
 
-        state.isFolder.fetch {
+        state.isFoldersMode.fetch {
+            config.searchQuery = null
             val isFolderMode = this
             if (isFolderMode) {
                 setFolderAdapter(state.folders)
             } else {
-                setImageAdapter(state.images)
+                setImageAdapter(state.currentFolder?.images ?: emptyList())
             }
+            interactionListener.isFolderModeChanged()
         }
 
         state.finishPickImage.fetch {
@@ -171,6 +181,41 @@ class ImagePickerFragment : Fragment() {
 
         state.showCapturedImage.fetch {
             loadDataWithPermission()
+        }
+    }
+
+    private fun <T : BaseItem> filter(list: List<T>): List<T> {
+        val regex = config.searchQuery?.let {
+            if (it.isNotBlank()) buildRegex(it) else null
+        }
+        return if (regex != null) {
+            list.filter { it.getItemName().matches(regex) }
+        } else {
+            list
+        }
+    }
+
+    private fun sortFolders(list: List<Folder>): List<Folder> {
+        return when (config.foldersSortMode) {
+            FolderSortMode.NAME_ASC -> list.sortedBy { it.folderName }
+            FolderSortMode.NAME_DESC -> list.sortedByDescending { it.folderName }
+            FolderSortMode.NUMBER_ASC -> list.sortedBy { it.images.size }
+            FolderSortMode.NUMBER_DESC -> list.sortedByDescending { it.images.size }
+            else -> list
+        }
+    }
+
+    private fun sortImages(list: List<Image>): List<Image> {
+        return when (config.imagesSortMode) {
+            ImageSortMode.NAME_ASC -> list.sortedBy { it.name }
+            ImageSortMode.NAME_DESC -> list.sortedByDescending { it.name }
+            ImageSortMode.TYPE_ASC -> list.sortedBy { it.type }
+            ImageSortMode.TYPE_DESC -> list.sortedByDescending { it.type }
+            ImageSortMode.DATE_MODIFIED_ASC -> list.sortedBy { it.dateModified }
+            ImageSortMode.DATE_MODIFIED_DESC -> list.sortedByDescending { it.dateModified }
+            ImageSortMode.SIZE_ASC -> list.sortedBy { it.size }
+            ImageSortMode.SIZE_DESC -> list.sortedByDescending { it.size }
+            else -> list
         }
     }
 
@@ -191,7 +236,7 @@ class ImagePickerFragment : Fragment() {
     ).apply {
         val selectListener = { isSelected: Boolean -> selectImage(isSelected) }
         val folderClick = { bucket: Folder ->
-            setImageAdapter(bucket.images)
+            presenter.setFolder(bucket)
             updateTitle()
         }
 
@@ -226,17 +271,38 @@ class ImagePickerFragment : Fragment() {
      * 3. Update title
      */
     private fun setImageAdapter(images: List<Image>) {
-        recyclerViewManager.setImageAdapter(images)
-        updateTitle()
+        filter(images)
+            .let { sortImages(it) }
+            .let {
+                showLoading(true)
+                recyclerViewManager.setImageAdapter(it) {
+                    showLoading(false)
+                }
+                checkDataIsEmpty(it)
+                updateTitle()
+            }
     }
 
     private fun setFolderAdapter(folders: List<Folder>) {
-        recyclerViewManager.setFolderAdapter(folders)
-        updateTitle()
+        filter(folders)
+            .let { sortFolders(it) }
+            .let {
+                showLoading(true)
+                recyclerViewManager.setFolderAdapter(it) {
+                    showLoading(false)
+                }
+                checkDataIsEmpty(it)
+                updateTitle()
+            }
+    }
+
+    private fun checkDataIsEmpty(data: List<*>) {
+        binding?.tvEmptyImages?.visibility = if (data.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun updateTitle() {
-        interactionListener.setTitle(recyclerViewManager.title)
+        val state = presenter.getUiState().get()
+        interactionListener.setTitle(recyclerViewManager.getTitle(state.currentFolder?.folderName))
     }
 
     /**
@@ -272,6 +338,138 @@ class ImagePickerFragment : Fragment() {
     }
 
     private fun loadData() = presenter.loadData(config)
+
+    fun search(searchQuery: String?) {
+        config.searchQuery = searchQuery
+        val state = presenter.getUiState().get()
+        if (state.currentFolder == null) {
+            setFolderAdapter(state.folders)
+        } else {
+            setImageAdapter(state.currentFolder.images)
+        }
+    }
+
+    fun sortFolders(sortMode: FolderSortMode) {
+        config.foldersSortMode = sortMode
+        val state = presenter.getUiState().get()
+        setFolderAdapter(state.folders)
+    }
+
+    fun sortImages(sortMode: ImageSortMode) {
+        config.imagesSortMode = sortMode
+        val state = presenter.getUiState().get()
+        setImageAdapter(state.currentFolder?.images ?: emptyList())
+    }
+
+    //region Sort
+
+    @SuppressLint("NonConstantResourceId")
+    fun showSortPopupMenu(menuItem: MenuItem) {
+        val view: View = requireActivity().findViewById(menuItem.itemId)
+        val popupMenu = PopupMenu(requireContext(), view)
+        val isFoldersMode = isFoldersMode
+        popupMenu.inflate(if (isFoldersMode) R.menu.ef_sort_folders else R.menu.ef_sort_images)
+
+        // select the current sort mode
+        val selectedMenuItemId = if (isFoldersMode) {
+            when (config.foldersSortMode) {
+                FolderSortMode.NAME_ASC -> R.id.action_sort_folder_name_asc
+                FolderSortMode.NAME_DESC -> R.id.action_sort_folder_name_desc
+                FolderSortMode.NUMBER_ASC -> R.id.action_sort_num_asc
+                FolderSortMode.NUMBER_DESC -> R.id.action_sort_num_desc
+                else -> R.id.action_sort_num_desc
+            }
+        } else {
+            when (config.imagesSortMode) {
+                ImageSortMode.NAME_ASC -> R.id.action_sort_name_asc
+                ImageSortMode.NAME_DESC -> R.id.action_sort_name_desc
+                ImageSortMode.TYPE_ASC -> R.id.action_sort_type_asc
+                ImageSortMode.TYPE_DESC -> R.id.action_sort_type_desc
+                ImageSortMode.DATE_MODIFIED_ASC -> R.id.action_sort_date_asc
+                ImageSortMode.DATE_MODIFIED_DESC -> R.id.action_sort_date_desc
+                ImageSortMode.SIZE_ASC -> R.id.action_sort_size_asc
+                ImageSortMode.SIZE_DESC -> R.id.action_sort_size_desc
+                else -> R.id.action_sort_date_desc
+            }
+        }
+
+        val selectedItem = popupMenu.menu.findItem(selectedMenuItemId)
+        selectedItem.isChecked = true
+
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            val result = when (item.itemId) {
+                // folders
+                R.id.action_sort_folder_name_asc -> {
+                    sortFolders(FolderSortMode.NAME_ASC)
+                    true
+                }
+                R.id.action_sort_folder_name_desc -> {
+                    sortFolders(FolderSortMode.NAME_DESC)
+                    true
+                }
+                R.id.action_sort_num_asc -> {
+                    sortFolders(FolderSortMode.NUMBER_ASC)
+                    true
+                }
+                R.id.action_sort_num_desc -> {
+                    sortFolders(FolderSortMode.NUMBER_DESC)
+                    true
+                }
+                // images
+                R.id.action_sort_name_asc -> {
+                    sortImages(ImageSortMode.NAME_ASC)
+                    true
+                }
+                R.id.action_sort_name_desc -> {
+                    sortImages(ImageSortMode.NAME_DESC)
+                    true
+                }
+                R.id.action_sort_type_asc -> {
+                    sortImages(ImageSortMode.TYPE_ASC)
+                    true
+                }
+                R.id.action_sort_type_desc -> {
+                    sortImages(ImageSortMode.TYPE_DESC)
+                    true
+                }
+                R.id.action_sort_date_asc -> {
+                    sortImages(ImageSortMode.DATE_MODIFIED_ASC)
+                    true
+                }
+                R.id.action_sort_date_desc -> {
+                    sortImages(ImageSortMode.DATE_MODIFIED_DESC)
+                    true
+                }
+                R.id.action_sort_size_asc -> {
+                    sortImages(ImageSortMode.SIZE_ASC)
+                    true
+                }
+                R.id.action_sort_size_desc -> {
+                    sortImages(ImageSortMode.SIZE_DESC)
+                    true
+                }
+                else -> false
+            }
+            if (result) {
+                selectedItem.isChecked = false
+                item.isChecked = true
+            }
+            return@setOnMenuItemClickListener result
+        }
+
+        (popupMenu.menu as? MenuBuilder)?.let {
+            setForceShowMenuIcons(view, it)
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun setForceShowMenuIcons(v: View, menu: MenuBuilder) {
+        val menuHelper = MenuPopupHelper(requireContext(), menu, v)
+        menuHelper.setForceShowIcon(true)
+        menuHelper.show()
+    }
+
+    //endregion Sort
 
     /**
      * Request for permission
@@ -345,8 +543,8 @@ class ImagePickerFragment : Fragment() {
      */
     fun handleBack(): Boolean {
         if (recyclerViewManager.handleBack()) {
+            presenter.setFolder(null)
             // Handled.
-            updateTitle()
             return true
         }
         return false
@@ -354,6 +552,9 @@ class ImagePickerFragment : Fragment() {
 
     val isShowDoneButton: Boolean
         get() = recyclerViewManager.isShowDoneButton
+
+    val isFoldersMode: Boolean
+        get() = presenter.getUiState().get().currentFolder == null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -374,10 +575,12 @@ class ImagePickerFragment : Fragment() {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun showLoading(isLoading: Boolean) {
+    private fun showLoading(isLoading: Boolean, hideRecyclerView: Boolean = false) {
         binding?.run {
             progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
+            if (hideRecyclerView) {
+                recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
+            }
             tvEmptyImages.visibility = View.GONE
         }
     }
@@ -403,6 +606,10 @@ class ImagePickerFragment : Fragment() {
             return ImagePickerFragment().apply {
                 arguments = args
             }
+        }
+
+        private fun buildRegex(query: String): Regex {
+            return Regex("(?is)" + ".*" + Pattern.quote(query) + ".*")
         }
     }
 }

@@ -32,6 +32,13 @@ internal class ImagePickerPresenter(
         stateObs.set(newState(stateObs.get()))
     }
 
+    fun setFolder(folder: Folder?) {
+        setState { copy(
+                isFoldersMode = (folder == null).asSingleEvent(),
+                currentFolder = folder
+            ) }
+    }
+
     fun abortLoad() {
         imageLoader.abortLoadImages()
     }
@@ -47,7 +54,7 @@ internal class ImagePickerPresenter(
                         images = images,
                         folders = folders,
                         isLoading = false,
-                        isFolder = config.isFolderMode.asSingleEvent()
+                        isFoldersMode = config.isFolderMode.asSingleEvent()
                     )
                 }
             }

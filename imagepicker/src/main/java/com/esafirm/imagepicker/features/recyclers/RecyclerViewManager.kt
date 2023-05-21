@@ -37,6 +37,7 @@ class RecyclerViewManager(
     private lateinit var folderAdapter: FolderPickerAdapter
 
     private var foldersState: Parcelable? = null
+    private var imagesState: Parcelable? = null
 
     private var imageColumns = 0
     private var folderColumns = 0
@@ -82,8 +83,11 @@ class RecyclerViewManager(
         /* Init folder and image adapter */
         val imageLoader = ImagePickerComponentsHolder.imageLoader
         imageAdapter = ImagePickerAdapter(
-            context, imageLoader, selectedImages
-                ?: emptyList(), onImageClick
+            context = context,
+            imageLoader = imageLoader,
+            selectedImages = selectedImages ?: emptyList(),
+            isShowImageNames = config.isShowImageNames,
+            itemClickListener = onImageClick
         )
         folderAdapter = FolderPickerAdapter(context, imageLoader) {
             foldersState = recyclerView.layoutManager?.onSaveInstanceState()
@@ -111,7 +115,6 @@ class RecyclerViewManager(
     // Returns true if a back action was handled by going back a folder; false otherwise.
     fun handleBack(): Boolean {
         if (config.isFolderMode && !isDisplayingFolderView) {
-            setFolderAdapter(null)
             imageAdapter.setData(emptyList())
             return true
         }
@@ -121,44 +124,51 @@ class RecyclerViewManager(
     private val isDisplayingFolderView: Boolean
         get() = recyclerView.adapter == null || recyclerView.adapter is FolderPickerAdapter
 
-    val title: String
-        get() {
-            if (isDisplayingFolderView) {
-                return ConfigUtils.getFolderTitle(context, config)
+    fun getTitle(currentFolderName: String?): String {
+        val selectedNum = imageAdapter.selectedImages.size
+        return when {
+            isDisplayingFolderView -> {
+                ConfigUtils.getFolderTitle(context, config)
             }
-            if (config.mode == ImagePickerMode.SINGLE) {
-                return ConfigUtils.getImageTitle(context, config)
+            config.mode == ImagePickerMode.SINGLE -> {
+                ConfigUtils.getImageTitle(context, config)
             }
-            val imageSize = imageAdapter.selectedImages.size
-            val useDefaultTitle = config.imageTitle.isNullOrBlank().not() && imageSize == 0
-            if (useDefaultTitle) {
-                return ConfigUtils.getImageTitle(context, config)
+            selectedNum == 0 && config.imageTitle?.isNotBlank() == true -> {
+                ConfigUtils.getImageTitle(context, config)
             }
-            return if (config.limit == IpCons.MAX_LIMIT) {
-                String.format(context.getString(R.string.ef_selected), imageSize)
-            } else {
-                String.format(
-                    context.getString(R.string.ef_selected_with_limit),
-                    imageSize,
-                    config.limit
-                )
+            selectedNum == 0 && currentFolderName != null -> {
+                currentFolderName
+            }
+            config.limit == IpCons.MAX_LIMIT -> {
+                context.getString(R.string.ef_selected, selectedNum)
+            }
+            else -> {
+                context.getString(R.string.ef_selected_with_limit, selectedNum, config.limit)
             }
         }
+    }
 
-    fun setImageAdapter(images: List<Image> = emptyList()) {
-        imageAdapter.setData(images)
+    fun setImageAdapter(images: List<Image> = emptyList(), commitCallback: (() -> Unit)? = null) {
+        imagesState = recyclerView.layoutManager?.onSaveInstanceState()
+        imageAdapter.setData(images) {
+            imagesState?.let {
+                recyclerView.layoutManager!!.onRestoreInstanceState(it)
+            }
+            commitCallback?.invoke()
+        }
         setItemDecoration(imageColumns)
         recyclerView.adapter = imageAdapter
     }
 
-    fun setFolderAdapter(folders: List<Folder>?) {
+    fun setFolderAdapter(folders: List<Folder>?, commitCallback: (() -> Unit)? = null) {
         folderAdapter.setData(folders)
         setItemDecoration(folderColumns)
         recyclerView.adapter = folderAdapter
-        if (foldersState != null) {
+        foldersState?.let {
             layoutManager!!.spanCount = folderColumns
-            recyclerView.layoutManager!!.onRestoreInstanceState(foldersState)
+            recyclerView.layoutManager!!.onRestoreInstanceState(it)
         }
+        commitCallback?.invoke()
     }
 
     /* --------------------------------------------------- */
@@ -197,8 +207,7 @@ class RecyclerViewManager(
     }
 
     val isShowDoneButton: Boolean
-        get() = (!isDisplayingFolderView
-            && (imageAdapter.selectedImages.isNotEmpty() || config.showDoneButtonAlways)
+        get() = ((imageAdapter.selectedImages.isNotEmpty() || config.showDoneButtonAlways)
             && config.returnMode !== ReturnMode.ALL && config.returnMode !== ReturnMode.GALLERY_ONLY)
 
 }

@@ -52,7 +52,7 @@ class FolderPickerAdapter(
     override fun getItemCount() = folders.size
 
     class FolderViewHolder(binding: EfImagepickerItemFolderBinding) : ViewHolder(binding.root) {
-        val image = binding.image
+        val image = binding.imageView
         val name = binding.tvName
         val number = binding.tvNumber
     }
