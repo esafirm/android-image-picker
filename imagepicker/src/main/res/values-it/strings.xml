@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Permetti l\'accesso allo storage locale per poter selezionare le immagini</string>
+
+    <string name="ef_ok">OK</string>
+    <string name="ef_done">FATTO</string>
+    <string name="ef_camera">CAMERA</string>
+
+    <string name="ef_title_folder">Cartella</string>
+    <string name="ef_title_select_image">Premi per selezionare l\'immagine</string>
+    <string name="ef_search_query">Ricerca</string>
+    <string name="ef_nothing_found">Non abbiamo trovato nulla</string>
+
+    <string name="ef_title_sort">Ordinare</string>
+    <string name="ef_title_sort_name">Nome</string>
+    <string name="ef_title_sort_num">Numero</string>
+    <string name="ef_title_sort_type">Tipo</string>
+    <string name="ef_title_sort_date">Data</string>
+    <string name="ef_title_sort_size">Taglia</string>
+
+    <string name="ef_selected">%d selezionate</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d selezionate</string>
+
+    <string name="ef_error_create_image_file">Si è verificato un problema nella creazione dell\'immagine</string>
+    <string name="ef_error_no_camera">Nessuna fotocamera trovata</string>
+    <string name="ef_error_null_cursor">Oops, qualcosa è andato storto!</string>
+
+    <string name="ef_msg_empty_images">Nessuna immagine trovata</string>
+    <string name="ef_msg_no_write_external_permission">Dai il permesso per poter selezionare le immagini</string>
+    <string name="ef_msg_no_camera_permission">Dai il permesso per poter scattare una foto</string>
+    <string name="ef_msg_limit_images">Hai raggiunto il limite massimo di selezione</string>
+    <string name="ef_ltitle_permission_denied">Permesso negato</string>
+
+</resources>
