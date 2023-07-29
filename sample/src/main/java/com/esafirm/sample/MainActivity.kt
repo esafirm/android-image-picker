@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                 ImagePickerMode.MULTIPLE // multi mode (default mode)
             }
 
-            language = "in" // Set image picker language
+            language = "km" // Set image picker language
             theme = R.style.ImagePickerTheme
 
             // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
