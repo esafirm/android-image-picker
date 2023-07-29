@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">អនុញ្ញាតឱ្យចូលប្រើកន្លែងផ្ទុកខាងក្រៅ ដើម្បីជ្រើសរើសរូបភាព</string>
+
+    <string name="ef_ok">យល់ព្រម</string>
+    <string name="ef_done">រួចរាល់</string>
+    <string name="ef_camera">កាមេរ៉ា</string>
+
+    <string name="ef_title_folder">ថតឯកសារ</string>
+    <string name="ef_title_select_image">ប៉ះដើម្បីជ្រើសរើសរូបភាព</string>
+    <string name="ef_ltitle_permission_denied">ការអនុញ្ញាតត្រូវបានបដិសេធ</string>
+
+    <string name="ef_selected">បានជ្រើសរើស %d</string>
+    <string name="ef_selected_with_limit">បានជ្រើសរើស %1$d/%2$d</string>
+
+    <string name="ef_error_create_image_file">បរាជ័យក្នុងការបង្កើតឯកសាររូបភាព</string>
+    <string name="ef_error_no_camera">រកមិនឃើញកាមេរ៉ាទេ</string>
+    <string name="ef_error_null_cursor">អូ៎ មានអ្វីមួយខុសប្រក្រតី!</string>
+
+    <string name="ef_msg_empty_images">រកមិនឃើញរូបភាពទេ</string>
+    <string name="ef_msg_no_write_external_permission">សូមផ្តល់ការអនុញ្ញាតសម្រាប់ទំហំផ្ទុកដើម្បីជ្រើសរើសរូបភាព</string>
+    <string name="ef_msg_limit_images">ដែនកំណត់ជ្រើសរើសរូបភាព</string>
+    <string name="ef_msg_no_camera_permission">អ្នកត្រូវផ្តល់ការអនុញ្ញាតឱ្យកម្មវិធីប្រើកាមេរ៉ាដើម្បីអាចថតរូប</string>
+
+</resources>
