@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ef_permission_write_external_rationale">Zezwól na dostęp do pamięci wybranych obrazów</string>
+    <string name="ef_ok">ОК</string>
+    <string name="ef_done">OK</string>
+    <string name="ef_camera">APARAT</string>
+    <string name="ef_title_folder">Album</string>
+    <string name="ef_title_select_image">Dotknij, aby wybrać obrazy</string>
+    <string name="ef_ltitle_permission_denied">Nie ma dostępu</string>
+    <string name="ef_selected">%d wybrane</string>
+    <string name="ef_selected_with_limit">%1$d/%2$d wybrane</string>
+    <string name="ef_error_create_image_file">Nie udało się utworzyć plik</string>
+    <string name="ef_error_no_camera">Aparat nie jest dostępny</string>
+    <string name="ef_error_null_cursor">Coś nie działa!</string>
+    <string name="ef_msg_empty_images">Brak zdjęć</string>
+    <string name="ef_msg_no_write_external_permission">Zezwól na przechowywanie wybranych obrazów</string>
+    <string name="ef_msg_no_camera_permission">Aby móc robić zdjęcia, musisz zezwolić aplikacji na korzystanie z
+        aparatu
+    </string>
+    <string name="ef_msg_limit_images">Limit wyboru obrazu</string>
+    <string name="ef_all">Wszystkie</string>
+</resources>

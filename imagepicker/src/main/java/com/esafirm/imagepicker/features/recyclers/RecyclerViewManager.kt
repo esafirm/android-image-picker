@@ -21,6 +21,7 @@ import com.esafirm.imagepicker.listeners.OnImageSelectedListener
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import com.esafirm.imagepicker.view.GridSpacingItemDecoration
+import java.lang.Integer.min
 
 class RecyclerViewManager(
     private val recyclerView: RecyclerView,
@@ -196,9 +197,19 @@ class RecyclerViewManager(
         return true
     }
 
+    fun selectAllImages() {
+        if (imageAdapter.selectedImages.size == min(config.limit, imageAdapter.itemCount)) {
+            imageAdapter.removeAllSelectedSingleClick()
+        } else {
+            imageAdapter.selectAll(config.limit)
+        }
+    }
+
     val isShowDoneButton: Boolean
         get() = (!isDisplayingFolderView
             && (imageAdapter.selectedImages.isNotEmpty() || config.showDoneButtonAlways)
             && config.returnMode !== ReturnMode.ALL && config.returnMode !== ReturnMode.GALLERY_ONLY)
 
+    val isShowAllButton: Boolean
+        get() = (!isDisplayingFolderView && config.showAllButton && config.mode == ImagePickerMode.MULTIPLE)
 }

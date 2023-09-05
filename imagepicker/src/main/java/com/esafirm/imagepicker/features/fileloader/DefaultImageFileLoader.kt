@@ -79,7 +79,8 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
             MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.MIME_TYPE,
         )
 
         @SuppressLint("InlinedApi")
@@ -155,9 +156,10 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
 
             val id = cursor.getLong(cursor.getColumnIndex(projection[0]))
             val name = cursor.getString(cursor.getColumnIndex(projection[1]))
+            val mimeType = cursor.getString(cursor.getColumnIndex(projection[4]))
 
             if (name != null) {
-                return Image(id, name, path)
+                return Image(id, name, path, mimeType)
             }
             return null
         }

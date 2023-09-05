@@ -20,5 +20,6 @@
     <string name="ef_msg_no_camera_permission">请给予获取相机权限以拍摄照片</string>
     <string name="ef_msg_limit_images">已达到最多选择照片数量</string>
     <string name="ef_ltitle_permission_denied">没有权限</string>
+    <string name="ef_all">全选</string>
 
 </resources>
