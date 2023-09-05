@@ -97,11 +97,14 @@ object ImagePickerUtils {
     }
 
     fun isVideoFormat(image: Image): Boolean {
-        val extension = getExtension(image.path)
-        val mimeType =
-            if (TextUtils.isEmpty(extension)) URLConnection.guessContentTypeFromName(image.path) else MimeTypeMap.getSingleton()
-                .getMimeTypeFromExtension(extension)
+        val mimeType = getMimeType(image.path)
         return mimeType != null && mimeType.startsWith("video")
+    }
+
+    fun getMimeType(path: String): String? {
+        val extension = getExtension(path)
+        return if (TextUtils.isEmpty(extension)) URLConnection.guessContentTypeFromName(path) else MimeTypeMap.getSingleton()
+            .getMimeTypeFromExtension(extension)
     }
 
     fun getVideoDurationLabel(context: Context?, uri: Uri): String {
