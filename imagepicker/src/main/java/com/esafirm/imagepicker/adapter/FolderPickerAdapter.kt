@@ -10,6 +10,7 @@ import com.esafirm.imagepicker.features.imageloader.ImageLoader
 import com.esafirm.imagepicker.features.imageloader.ImageType
 import com.esafirm.imagepicker.listeners.OnFolderClickListener
 import com.esafirm.imagepicker.model.Folder
+import com.esafirm.imagepicker.model.FolderType
 
 class FolderPickerAdapter(
     context: Context,
@@ -31,11 +32,15 @@ class FolderPickerAdapter(
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
         val folder = folders.getOrNull(position) ?: return
 
-        imageLoader.loadImage(folder.images.first(), holder.image, ImageType.FOLDER)
-
         holder.apply {
             name.text = folder.folderName
-            number.text = folder.images.size.toString()
+
+            if (folder.type == FolderType.Local) {
+                imageLoader.loadImage(folder.images.first(), holder.image, ImageType.FOLDER)
+                number.text = folder.images.size.toString()
+            } else {
+                number.text = "Pick from Google Photos, Dropbox and other storages"
+            }
             itemView.setOnClickListener { folderClickListener(folder) }
         }
     }

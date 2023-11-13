@@ -6,4 +6,6 @@ object IpCons {
     @Deprecated("You should use the new API to start image picker")
     const val RC_IMAGE_PICKER = 0x229
     const val EXTRA_SELECTED_IMAGES = "selectedImages"
+    const val DOCUMENT_PICKED_OK = 2001
+    const val EXTRA_SELECTED_DOCUMENTS = "selectedDocuments"
 }

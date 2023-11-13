@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.ImagePickerFragment
 import com.esafirm.imagepicker.features.ImagePickerInteractionListener
+import com.esafirm.imagepicker.features.IpCons
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
 import com.esafirm.imagepicker.helper.ConfigUtils
 import com.esafirm.imagepicker.helper.IpLogger
@@ -163,6 +164,11 @@ class CustomUIActivity : AppCompatActivity() {
 
         override fun finishPickImages(result: Intent?) {
             setResult(RESULT_OK, result)
+            finish()
+        }
+
+        override fun finishPickDocuments(result: Intent?) {
+            setResult(IpCons.DOCUMENT_PICKED_OK, result)
             finish()
         }
 
