@@ -111,8 +111,10 @@ class ImagePickerAdapter(
 
     private fun addSelected(image: Image, position: Int) {
         mutateSelection {
-            selectedImages.add(image)
-            notifyItemChanged(position)
+            selectedImages.find { it == image } ?: run {
+                selectedImages.add(image)
+                notifyItemChanged(position)
+            }
         }
     }
 

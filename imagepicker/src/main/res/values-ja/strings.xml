@@ -20,5 +20,7 @@
     <string name="ef_msg_no_camera_permission">端末のカメラへのアクセスを許可してください</string>
     <string name="ef_msg_limit_images">選択できる画像の上限です</string>
     <string name="ef_ltitle_permission_denied">権限がありません</string>
+    <string name="ef_media_status_piece">現在の権限設定に基づいて、一部のメディアファイルのみアクセスできます。</string>
+    <string name="ef_manage">管理する</string>
 
 </resources>

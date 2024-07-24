@@ -1,7 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:background="@drawable/ef_round_bg"
+        android:id="@+id/rlHeader"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvHeader"
+            android:paddingEnd="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btnManage"
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:text="@string/ef_media_status_piece"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btnManage"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:text="@string/ef_manage"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_empty_images"
@@ -11,17 +39,21 @@
         android:padding="@dimen/ef_spacing_double"
         android:text="@string/ef_msg_empty_images"
         android:textSize="@dimen/ef_font_medium"
+        tools:visibility="visible"
         android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        tools:visibility="visible"
+
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:layout_below="@+id/rlHeader"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
