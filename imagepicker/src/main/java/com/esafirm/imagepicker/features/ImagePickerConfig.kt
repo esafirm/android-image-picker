@@ -1,5 +1,6 @@
 package com.esafirm.imagepicker.features
 
+import android.graphics.Color
 import android.os.Parcelable
 import androidx.annotation.StyleRes
 import com.esafirm.imagepicker.features.common.BaseConfig
@@ -28,7 +29,12 @@ class ImagePickerConfig(
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.NONE,
     override var isSaveImage: Boolean = true,
-    var showDoneButtonAlways: Boolean = false
+    var showDoneButtonAlways: Boolean = false,
+    // System bar colors
+    var statusBarColor: Int = Color.parseColor("#33cccc"),
+    var navigationBarColor: Int =Color.parseColor("#33cccc"),
+    var lightStatusBar: Boolean = false,
+    var lightNavigationBar: Boolean = false
 ) : BaseConfig(), Parcelable {
 
     @IgnoredOnParcel

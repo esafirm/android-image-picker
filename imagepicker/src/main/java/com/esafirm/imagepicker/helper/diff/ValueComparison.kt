@@ -4,13 +4,13 @@ import androidx.recyclerview.widget.DiffUtil
 
 typealias ValueComparison<T> = (T, T) -> Boolean
 
-class DefaultValueComparison<T> : ValueComparison<T> {
+class DefaultValueComparison<T : Any> : ValueComparison<T> {
     override fun invoke(p1: T, p2: T): Boolean {
         return p1 == p2
     }
 }
 
-class SimpleDiffUtilCallBack<T>(
+class SimpleDiffUtilCallBack<T : Any>(
     private val areItemTheSame: ValueComparison<T> = DefaultValueComparison(),
     private val areContentTheSame: ValueComparison<T> = DefaultValueComparison()
 ) : DiffUtil.ItemCallback<T>() {

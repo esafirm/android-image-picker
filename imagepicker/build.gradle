@@ -2,16 +2,16 @@ plugins {
     id "com.android.library"
     id "kotlin-android"
     id "kotlin-parcelize"
+    id "maven-publish"
 }
 
 android {
-    final sdk = rootProject.ext.sdk
 
-    compileSdkVersion sdk.compileSdk
+    compileSdk 35
 
     defaultConfig {
-        minSdkVersion sdk.minSdk
-        targetSdkVersion sdk.targetSdk
+        minSdk 21
+        targetSdk 35
     }
 
     buildFeatures {
@@ -26,8 +26,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     lint {
@@ -44,22 +44,47 @@ android {
     namespace 'com.esafirm.imagepicker'
 }
 
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+// Create sourcesJar task
 tasks.register("sourcesJar", Jar) {
     from android.sourceSets.main.java.srcDirs
     archiveClassifier.set('sources')
 }
 
-artifacts {
-    archives sourcesJar
+// Publishing configuration
+afterEvaluate {
+    publishing {
+        publications {
+            imagepicker(MavenPublication) {
+                groupId = 'com.github.turvoiz'
+                artifactId = 'android-image-picker'
+                version = 'v1.0.8'
+
+                // Add artifacts manually instead of using components.release
+                artifact bundleReleaseAar
+                artifact sourcesJar
+
+                // Add POM configuration
+                pom {
+                    packaging = 'aar'
+                    name = 'Android Image Picker'
+                    description = 'A simple library to select images from gallery and camera'
+                }
+            }
+        }
+    }
 }
 
 dependencies {
     implementation "com.github.bumptech.glide:glide:4.14.2"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-
     implementation 'androidx.appcompat:appcompat:1.5.1'
-
-    implementation "androidx.core:core-ktx:$core_ktx_version"
+    implementation "androidx.core:core-ktx:1.10.1"
 
     testImplementation platform("org.junit:junit-bom:5.9.1")
     testImplementation "org.junit.jupiter:junit-jupiter"

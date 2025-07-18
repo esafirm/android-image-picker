@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.esafirm.imagepicker.features.*
 import com.esafirm.sample.databinding.FragmentMainBinding
+import com.esafirm.sample.databinding.FragmentMainBinding.*
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -21,7 +22,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentMainBinding.bind(view)
+        binding = bind(view)
 
         binding.buttonPickFragment.setOnClickListener {
             imagePickerLauncher.launch(
