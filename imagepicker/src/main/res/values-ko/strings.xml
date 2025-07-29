@@ -21,5 +21,6 @@
     <string name="ef_msg_no_write_external_permission">이미지를 불러오기 위해 저장공간 권한을 허용해주세요</string>
     <string name="ef_msg_no_camera_permission">사진을 찍기위해 카메라 권한을 허용해주세요</string>
     <string name="ef_msg_limit_images">이미지 선택 제한 초과</string>
+    <string name="ef_all">모두</string>
 
 </resources>

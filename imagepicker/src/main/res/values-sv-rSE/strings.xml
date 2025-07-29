@@ -20,4 +20,5 @@
     <string name="ef_msg_empty_images">Inga bilder hittades</string>
     <string name="ef_msg_no_write_external_permission">Vänligen bevilja lagringsbehörighet för att välja bilder</string>
     <string name="ef_msg_limit_images">Bildvalsgräns</string>
+    <string name="ef_all">Allt</string>
 </resources>

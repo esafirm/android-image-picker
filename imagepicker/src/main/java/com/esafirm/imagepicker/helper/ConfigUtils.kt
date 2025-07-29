@@ -40,4 +40,9 @@ object ConfigUtils {
         val doneButtonText = config.doneButtonText
         return if (doneButtonText.isNullOrBlank()) context.getString(R.string.ef_done) else doneButtonText
     }
+
+    fun getAllButtonText(context: Context, config: ImagePickerConfig): String {
+        val allButtonText = config.allButtonText
+        return if (allButtonText.isNullOrBlank()) context.getString(R.string.ef_all) else allButtonText
+    }
 }

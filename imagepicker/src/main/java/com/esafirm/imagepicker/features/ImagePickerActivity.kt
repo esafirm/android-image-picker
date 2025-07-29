@@ -4,9 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowInsets
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
@@ -19,6 +22,8 @@ import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpCrasher
 import com.esafirm.imagepicker.helper.LocaleManager
 import com.esafirm.imagepicker.helper.ViewUtils
+import com.esafirm.imagepicker.helper.getColorPrimary
+import com.esafirm.imagepicker.helper.isActionBarEnabled
 import com.esafirm.imagepicker.model.Image
 
 class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener {
@@ -91,6 +96,28 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
             ft.replace(R.id.ef_imagepicker_fragment_placeholder, imagePickerFragment)
             ft.commit()
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 15+
+            window.decorView.setOnApplyWindowInsetsListener { view, insets ->
+                view.setBackgroundColor(this.getColorPrimary())
+                // Adjust padding to avoid overlap
+                if (!isActionBarEnabled()) {
+                    val systemBarsInsets = insets.getInsets(WindowInsets.Type.systemBars())
+                    view.setPadding(0, systemBarsInsets.top, 0, systemBarsInsets.bottom)
+                }
+                insets
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this) {
+            if (this@ImagePickerActivity::imagePickerFragment.isInitialized) {
+                if (!imagePickerFragment.handleBack()) {
+                    finish()
+                }
+            } else {
+                finish()
+            }
+        }
     }
 
     /**
@@ -108,6 +135,10 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
                 title = ConfigUtils.getDoneButtonText(this@ImagePickerActivity, config!!)
                 isVisible = imagePickerFragment.isShowDoneButton
             }
+            menu.findItem(R.id.menu_select_all).apply {
+                title = ConfigUtils.getAllButtonText(this@ImagePickerActivity, config!!)
+                isVisible = imagePickerFragment.isShowAllButton
+            }
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -118,11 +149,15 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         if (id == R.id.menu_done) {
             imagePickerFragment.onDone()
+            return true
+        }
+        if (id == R.id.menu_select_all) {
+            imagePickerFragment.onSelectAll()
             return true
         }
         if (id == R.id.menu_camera) {
@@ -130,16 +165,6 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerInteractionListener 
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        if (this::imagePickerFragment.isInitialized) {
-            if (!imagePickerFragment.handleBack()) {
-                super.onBackPressed()
-            }
-        } else {
-            super.onBackPressed()
-        }
     }
 
     private fun setupView(config: ImagePickerConfig) {

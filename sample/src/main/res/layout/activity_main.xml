@@ -54,6 +54,11 @@
                 style="@style/SampleSwitch"
                 android:text="Exclude" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_select_all"
+                style="@style/SampleSwitch"
+                android:text="Select All Visible" />
+
             <TextView
                 android:id="@+id/text_view"
                 android:layout_width="wrap_content"

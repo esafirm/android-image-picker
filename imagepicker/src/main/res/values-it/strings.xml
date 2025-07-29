@@ -21,5 +21,6 @@
     <string name="ef_msg_no_camera_permission">Dai il permesso per poter scattare una foto</string>
     <string name="ef_msg_limit_images">Hai raggiunto il limite massimo di selezione</string>
     <string name="ef_ltitle_permission_denied">Permesso negato</string>
+    <string name="ef_all">Tutto</string>
 
 </resources>

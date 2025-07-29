@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         val includeVideo = binding.switchIncludeVideo.isChecked
         val onlyVideo = binding.switchOnlyVideo.isChecked
         val isExclude = binding.switchIncludeExclude.isChecked
+        val allButtonVisible = binding.switchSelectAll.isChecked
 
         ImagePickerComponentsHolder.setInternalComponent(
             CustomImagePickerComponents(this, useCustomImageLoader)
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 ImagePickerMode.MULTIPLE // multi mode (default mode)
             }
 
-            language = "in" // Set image picker language
+//            language = "in" // Set image picker language
             theme = R.style.ImagePickerTheme
 
             // set whether pick action or camera action should return immediate result or not. Only works in single mode for image picker
@@ -93,6 +94,8 @@ class MainActivity : AppCompatActivity() {
             } else {
                 selectedImages = images  // original selected images, used in multi mode
             }
+
+            showAllButton = allButtonVisible
         }
     }
 

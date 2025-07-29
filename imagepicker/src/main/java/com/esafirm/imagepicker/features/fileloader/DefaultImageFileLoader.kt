@@ -79,13 +79,14 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
             MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.MIME_TYPE,
         )
 
         @SuppressLint("InlinedApi")
         private fun queryData(limit: Int? = null): Cursor? {
             val useNewApi = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-            val sourceUri = if (limit != null && useNewApi) {
+            val sourceUri = if (limit != null && !useNewApi) {
                 getSourceUri().buildUpon()
                     .appendQueryParameter(QUERY_LIMIT, limit.toString())
                     .build()
@@ -127,9 +128,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                 return context.contentResolver.query(sourceUri, projection, args, null)
             }
 
-            val sortOrder = "${MediaStore.Images.Media.DATE_MODIFIED} DESC".let {
-                if (limit != null) "$it LIMIT $limit" else it
-            }
+            val sortOrder = "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
 
             return context.contentResolver.query(
                 sourceUri, projection,
@@ -155,9 +154,10 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
 
             val id = cursor.getLong(cursor.getColumnIndex(projection[0]))
             val name = cursor.getString(cursor.getColumnIndex(projection[1]))
+            val mimeType = cursor.getString(cursor.getColumnIndex(projection[4]))
 
             if (name != null) {
-                return Image(id, name, path)
+                return Image(id, name, path, mimeType)
             }
             return null
         }
@@ -201,7 +201,7 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
             cursor.close()
 
             val folders = folderMap.values.toList()
-            listener.onImageLoaded(result, folders)
+            listener.onImageLoaded(result, folders.sortedBy { it.folderName })
         }
 
         override fun run() {

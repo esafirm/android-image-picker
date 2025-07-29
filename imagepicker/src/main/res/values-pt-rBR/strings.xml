@@ -21,5 +21,6 @@
     <string name="ef_msg_no_write_external_permission">Por favor dê permissão ao armazenamento para selecionar as imagens</string>
     <string name="ef_msg_no_camera_permission">Por favor dê permissão à câmera para tirar fotos</string>
     <string name="ef_msg_limit_images">Limite de imagens atingido</string>
+    <string name="ef_all">Tudo</string>
 
 </resources>

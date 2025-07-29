@@ -16,4 +16,5 @@
     <string name="ef_msg_no_write_external_permission">Пожалуйста, разрешите доступ к хранилищу, чтобы выбрать изображения</string>
     <string name="ef_msg_no_camera_permission">Пожалуйста, разрешите доступ к камере, чтобы сделать снимок</string>
     <string name="ef_msg_limit_images">Лимит выбора изображений</string>
+    <string name="ef_all">Все</string>
 </resources>

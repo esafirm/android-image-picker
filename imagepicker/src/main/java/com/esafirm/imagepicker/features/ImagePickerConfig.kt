@@ -15,6 +15,7 @@ class ImagePickerConfig(
     var folderTitle: String? = null,
     var imageTitle: String? = null,
     var doneButtonText: String? = null,
+    var allButtonText: String? = null,
     var arrowColor: Int = NO_COLOR,
     var limit: Int = IpCons.MAX_LIMIT,
     @StyleRes var theme: Int = 0,
@@ -28,7 +29,8 @@ class ImagePickerConfig(
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.NONE,
     override var isSaveImage: Boolean = true,
-    var showDoneButtonAlways: Boolean = false
+    var showDoneButtonAlways: Boolean = false,
+    var showAllButton: Boolean = false,
 ) : BaseConfig(), Parcelable {
 
     @IgnoredOnParcel

@@ -25,5 +25,6 @@
     <string name="ef_gif" translatable="false">GIF</string>
     <string name="ef_content_desc_folder" translatable="false">Folder</string>
     <string name="ef_content_desc_image" translatable="false">Image</string>
+    <string name="ef_all">Tot</string>
 
 </resources>

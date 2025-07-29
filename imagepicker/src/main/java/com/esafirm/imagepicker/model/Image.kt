@@ -13,6 +13,7 @@ class Image(
     val id: Long,
     val name: String,
     val path: String,
+    val mimeType: String?,
 ) : Parcelable {
 
     @IgnoredOnParcel
@@ -49,6 +50,7 @@ class Image(
         result = 31 * result + name.hashCode()
         result = 31 * result + path.hashCode()
         result = 31 * result + (uriHolder?.hashCode() ?: 0)
+        result = 31 * result + (mimeType?.hashCode() ?: 0)
         return result
     }
 }

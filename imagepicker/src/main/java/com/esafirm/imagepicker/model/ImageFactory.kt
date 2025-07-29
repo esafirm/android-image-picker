@@ -10,7 +10,8 @@ object ImageFactory {
         return listOf(Image(
             id = ContentUris.parseId(uri),
             name = ImagePickerUtils.getNameFromFilePath(path),
-            path = path
+            path = path,
+            mimeType = ImagePickerUtils.getMimeType(path),
         ))
     }
 }

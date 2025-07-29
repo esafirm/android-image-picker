@@ -20,6 +20,7 @@ import com.esafirm.imagepicker.helper.diff.SimpleDiffUtilCallBack
 import com.esafirm.imagepicker.listeners.OnImageClickListener
 import com.esafirm.imagepicker.listeners.OnImageSelectedListener
 import com.esafirm.imagepicker.model.Image
+import kotlin.math.min
 
 class ImagePickerAdapter(
     context: Context,
@@ -126,6 +127,20 @@ class ImagePickerAdapter(
     fun removeAllSelectedSingleClick() {
         mutateSelection {
             selectedImages.clear()
+            notifyDataSetChanged()
+        }
+    }
+
+    fun selectAll(limit: Int) {
+        mutateSelection {
+            selectedImages.clear()
+            val itemCount = min(limit, this.itemCount)
+            for (i in 0 until itemCount) {
+                val image = this.getItem(i)
+                if (image != null) {
+                    selectedImages.add(image)
+                }
+            }
             notifyDataSetChanged()
         }
     }

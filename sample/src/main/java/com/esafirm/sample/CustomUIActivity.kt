@@ -107,7 +107,7 @@ class CustomUIActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == android.R.id.home) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
             return true
         }
         if (id == com.esafirm.imagepicker.R.id.menu_done) {
@@ -119,18 +119,6 @@ class CustomUIActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    /**
-     * If you're content for the back button to take you back, without consulting the state of the
-     * fragment, you don't need to override this. On the other hand, the ImagePickerFragment might
-     * want to handle the back button. For example, if it's in folder mode and a folder has been
-     * selected, the fragment will go back to the folder list if you call its handleBack().
-     */
-    override fun onBackPressed() {
-        if (!imagePickerFragment.handleBack()) {
-            super.onBackPressed()
-        }
     }
 
     private fun setupView() {
