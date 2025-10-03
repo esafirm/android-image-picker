@@ -1,15 +1,11 @@
 package com.esafirm.imagepicker.features
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Parcelable
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -18,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.esafirm.imagepicker.R
@@ -30,6 +25,7 @@ import com.esafirm.imagepicker.helper.ConfigUtils
 import com.esafirm.imagepicker.helper.ImagePickerPreferences
 import com.esafirm.imagepicker.helper.ImagePickerUtils
 import com.esafirm.imagepicker.helper.IpLogger
+import com.esafirm.imagepicker.helper.MediaPermissionHelper
 import com.esafirm.imagepicker.helper.state.fetch
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
@@ -47,28 +43,17 @@ class ImagePickerFragment : Fragment() {
         requireArguments().getParcelable(ImagePickerConfig::class.java.simpleName)!!
     }
 
+    private val mediaPermissionHelper: MediaPermissionHelper by lazy {
+        MediaPermissionHelper(requireContext())
+    }
+
     private val permissions: Array<String> by lazy {
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
-                arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
-
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
-                || Environment.isExternalStorageLegacy() -> arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-            else -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
+        mediaPermissionHelper.getPermissionsToRequest()
     }
 
     private val requestPermissionLauncher =
         registerForActivityResult(RequestMultiplePermissions()) { resultMap ->
-            val isGranted = resultMap.values.all { it }
-            if (isGranted) {
-                IpLogger.d("Write External permission granted")
-                loadData()
-            } else {
-                IpLogger.e("Permission not granted")
-                interactionListener.cancel()
-            }
+            handlePermissionResult(resultMap)
         }
 
     private lateinit var presenter: ImagePickerPresenter
@@ -261,13 +246,52 @@ class ImagePickerFragment : Fragment() {
      * Check permission
      */
     private fun loadDataWithPermission() {
-        val allGranted = permissions.all {
-            ActivityCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+        val permissionState = mediaPermissionHelper.getMediaPermissionState()
+
+        when (permissionState) {
+            MediaPermissionHelper.MediaPermissionState.FULL_ACCESS,
+            MediaPermissionHelper.MediaPermissionState.LEGACY_ACCESS -> {
+                IpLogger.d("Full media access granted")
+                loadData()
+            }
+
+            MediaPermissionHelper.MediaPermissionState.PARTIAL_ACCESS -> {
+                IpLogger.d("Partial media access granted")
+                loadDataWithPartialAccess()
+            }
+
+            MediaPermissionHelper.MediaPermissionState.NO_ACCESS -> {
+                IpLogger.w("No media access permissions granted")
+                requestMediaPermissions()
+            }
         }
-        if (allGranted) {
-            loadData()
+    }
+
+    private fun requestMediaPermissions() {
+        // Check if we should request full access first (based on configuration)
+        val permissionsToRequest = if (config.granularPermissionConfig.requestFullAccessFirst) {
+            mediaPermissionHelper.getPermissionsToRequest()
         } else {
-            requestWriteExternalOrReadImagesPermission()
+            // Let Android 14+ show the granular permission dialog
+            mediaPermissionHelper.getPermissionsToRequest()
+        }
+
+        IpLogger.w("Media permissions not granted. Requesting permissions")
+
+        val shouldProvideRationale = permissionsToRequest.any { permission ->
+            shouldShowRequestPermissionRationale(permission)
+        }
+
+        if (shouldProvideRationale) {
+            requestPermissionLauncher.launch(permissionsToRequest)
+            return
+        }
+
+        if (!preferences.isPermissionRequested()) {
+            preferences.setPermissionIsRequested()
+            requestPermissionLauncher.launch(permissionsToRequest)
+        } else {
+            showPermissionDeniedMessage()
         }
     }
 
@@ -278,22 +302,67 @@ class ImagePickerFragment : Fragment() {
      * If permission denied or app is first launched, request for permission
      * If permission denied and user choose 'Never Ask Again', show snackbar with an action that navigate to app settings
      */
-    private fun requestWriteExternalOrReadImagesPermission() {
-        IpLogger.w("Write External permission or Read Media Images is not granted. Requesting permission")
 
-        val shouldProvideRationale = permissions.any { permission -> shouldShowRequestPermissionRationale(permission) }
-        if (shouldProvideRationale) {
-            requestPermissionLauncher.launch(permissions)
+    private fun handlePermissionResult(resultMap: Map<String, Boolean>) {
+        val permissionState = mediaPermissionHelper.getMediaPermissionState()
+
+        when (permissionState) {
+            MediaPermissionHelper.MediaPermissionState.FULL_ACCESS,
+            MediaPermissionHelper.MediaPermissionState.LEGACY_ACCESS -> {
+                IpLogger.d("Full media access granted after permission request")
+                loadData()
+            }
+
+            MediaPermissionHelper.MediaPermissionState.PARTIAL_ACCESS -> {
+                IpLogger.d("Partial media access granted after permission request")
+                loadDataWithPartialAccess()
+            }
+
+            MediaPermissionHelper.MediaPermissionState.NO_ACCESS -> {
+                IpLogger.e("Media permissions denied")
+                showPermissionDeniedMessage()
+            }
+        }
+    }
+
+    private fun loadDataWithPartialAccess() {
+        // Check if partial access is allowed by configuration
+        if (!config.granularPermissionConfig.allowPartialAccess) {
+            // Force request full access
+            requestPermissionUpgrade()
             return
         }
 
-        if (!preferences.isPermissionRequested()) {
-            preferences.setPermissionIsRequested()
-            requestPermissionLauncher.launch(permissions)
-        } else {
-            binding?.efSnackbar?.show(R.string.ef_msg_no_write_external_permission) {
-                openAppSettings()
-            }
+        // Load data with partial access - this will be handled by the file loader
+        loadData()
+
+        // Show upgrade option if configured and supported
+        if (config.granularPermissionConfig.showUpgradePrompt &&
+            mediaPermissionHelper.canRequestPermissionUpgrade()
+        ) {
+            showPermissionUpgradeOption()
+        }
+    }
+
+    private fun showPermissionUpgradeOption() {
+        val message = config.granularPermissionConfig.partialAccessMessage
+            ?: getString(R.string.ef_msg_partial_media_access)
+
+        binding?.efSnackbar?.show(message) {
+            requestPermissionUpgrade()
+        }
+    }
+
+    private fun requestPermissionUpgrade() {
+        if (mediaPermissionHelper.canRequestPermissionUpgrade()) {
+            val upgradePermissions = mediaPermissionHelper.getUpgradePermissions()
+            requestPermissionLauncher.launch(upgradePermissions)
+        }
+    }
+
+    private fun showPermissionDeniedMessage() {
+        binding?.efSnackbar?.show(getString(R.string.ef_msg_no_media_permission)) {
+            openAppSettings()
         }
     }
 

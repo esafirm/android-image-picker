@@ -6,8 +6,18 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
-import com.esafirm.imagepicker.features.*
+import com.esafirm.imagepicker.features.ImagePicker
+import com.esafirm.imagepicker.features.ImagePickerComponentsHolder
+import com.esafirm.imagepicker.features.ImagePickerConfig
+import com.esafirm.imagepicker.features.ImagePickerMode
+import com.esafirm.imagepicker.features.ImagePickerSavePath
+import com.esafirm.imagepicker.features.IpCons
+import com.esafirm.imagepicker.features.ReturnMode
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig
+import com.esafirm.imagepicker.features.createImagePickerIntent
+import com.esafirm.imagepicker.features.enableGranularPermissions
+import com.esafirm.imagepicker.features.registerImagePicker
+import com.esafirm.imagepicker.features.toFiles
 import com.esafirm.imagepicker.model.Image
 import com.esafirm.sample.databinding.ActivityMainBinding
 
@@ -94,6 +104,18 @@ class MainActivity : AppCompatActivity() {
                 selectedImages = images  // original selected images, used in multi mode
             }
         }
+            // Configure granular permissions for Android 14+ (API 34+)
+            .enableGranularPermissions() // Use default behavior: allow partial access with upgrade prompts
+
+        // Alternative configurations:
+        // .requireFullMediaAccess() // Always require full access (legacy behavior)
+        // .minimalPermissionUI() // No upgrade prompts, minimal UI
+        // .granularPermissions {
+        //     showUpgradePrompt = true
+        //     requestFullAccessFirst = false
+        //     allowPartialAccess = true
+        //     partialAccessMessage = "Custom message for partial access"
+        // }
     }
 
     private fun startWithIntent() {

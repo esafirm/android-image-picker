@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.animation.Interpolator
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.annotation.StringRes
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import com.esafirm.imagepicker.R
 
@@ -26,8 +25,8 @@ class SnackBarView @JvmOverloads constructor(
         }
     }
 
-    fun show(@StringRes textResId: Int, onClickListener: OnClickListener) {
-        txtCaption.text = context.getString(textResId)
+    fun show(text: String, onClickListener: OnClickListener) {
+        txtCaption.text = text
         btnAction.setOnClickListener(onClickListener)
 
         animate().translationY(0f)
