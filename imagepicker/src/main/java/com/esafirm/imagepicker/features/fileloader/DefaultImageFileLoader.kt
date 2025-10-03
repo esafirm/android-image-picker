@@ -11,10 +11,10 @@ import android.provider.MediaStore
 import com.esafirm.imagepicker.features.ImagePickerConfig
 import com.esafirm.imagepicker.features.common.ImageLoaderListener
 import com.esafirm.imagepicker.helper.ImagePickerUtils
+import com.esafirm.imagepicker.helper.MediaPermissionHelper
 import com.esafirm.imagepicker.model.Folder
 import com.esafirm.imagepicker.model.Image
 import java.io.File
-import java.util.ArrayList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -22,6 +22,7 @@ import java.util.concurrent.Executors
 class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
 
     private var executor: ExecutorService? = null
+    private val mediaPermissionHelper = MediaPermissionHelper(context)
 
     override fun loadDeviceImages(
         config: ImagePickerConfig,
@@ -41,7 +42,8 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                 includeVideo,
                 includeAnimation,
                 excludedImages,
-                listener
+                listener,
+                mediaPermissionHelper
             )
         )
     }
@@ -65,7 +67,8 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
         private val includeVideo: Boolean,
         private val includeAnimation: Boolean,
         private val excludedImages: List<File>?,
-        private val listener: ImageLoaderListener
+        private val listener: ImageLoaderListener,
+        private val mediaPermissionHelper: MediaPermissionHelper
     ) : Runnable {
 
         companion object {
@@ -84,6 +87,13 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
 
         @SuppressLint("InlinedApi")
         private fun queryData(limit: Int? = null): Cursor? {
+            val permissionState = mediaPermissionHelper.getMediaPermissionState()
+
+            // Handle partial access scenario for Android 14+
+            if (permissionState == MediaPermissionHelper.MediaPermissionState.PARTIAL_ACCESS) {
+                return queryPartialAccessData(limit)
+            }
+
             val useNewApi = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
             val sourceUri = if (limit != null && useNewApi) {
                 getSourceUri().buildUpon()
@@ -135,6 +145,61 @@ class DefaultImageFileLoader(private val context: Context) : ImageFileLoader {
                 sourceUri, projection,
                 selection, null, sortOrder
             )
+        }
+
+        /**
+         * Query data when we have partial access (Android 14+ with READ_MEDIA_VISUAL_USER_SELECTED)
+         * This will only return user-selected media
+         */
+        @SuppressLint("InlinedApi")
+        private fun queryPartialAccessData(limit: Int? = null): Cursor? {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                return null
+            }
+
+            val sourceUri = if (limit != null) {
+                getSourceUri().buildUpon()
+                    .appendQueryParameter(QUERY_LIMIT, limit.toString())
+                    .build()
+            } else {
+                getSourceUri()
+            }
+
+            val type = MediaStore.Files.FileColumns.MEDIA_TYPE
+            val selection = when {
+                onlyVideo -> "${type}=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}"
+                includeVideo -> "$type=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE} OR $type=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}"
+                else -> ""
+            }
+
+            val args = Bundle().apply {
+                // Sort function
+                putStringArray(
+                    ContentResolver.QUERY_ARG_SORT_COLUMNS,
+                    arrayOf(MediaStore.Files.FileColumns.DATE_MODIFIED)
+                )
+                putInt(
+                    ContentResolver.QUERY_ARG_SORT_DIRECTION,
+                    ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
+                )
+                // Selection
+                putString(
+                    ContentResolver.QUERY_ARG_SQL_SELECTION,
+                    selection
+                )
+                // Limit
+                if (limit != null) {
+                    putInt(ContentResolver.QUERY_ARG_LIMIT, limit)
+                }
+            }
+
+            return try {
+                context.contentResolver.query(sourceUri, projection, args, null)
+            } catch (e: SecurityException) {
+                // Handle case where partial access doesn't allow querying
+                // Return empty cursor instead of crashing
+                null
+            }
         }
 
         private fun getSourceUri(): Uri {

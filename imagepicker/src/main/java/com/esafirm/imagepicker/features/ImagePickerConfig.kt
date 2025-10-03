@@ -28,7 +28,12 @@ class ImagePickerConfig(
     override var savePath: ImagePickerSavePath = ImagePickerSavePath.DEFAULT,
     override var returnMode: ReturnMode = ReturnMode.NONE,
     override var isSaveImage: Boolean = true,
-    var showDoneButtonAlways: Boolean = false
+    var showDoneButtonAlways: Boolean = false,
+
+    /**
+     * Configuration for granular media permissions (Android 14+)
+     */
+    var granularPermissionConfig: GranularPermissionConfig = GranularPermissionConfig.default()
 ) : BaseConfig(), Parcelable {
 
     @IgnoredOnParcel
@@ -53,3 +58,39 @@ fun ImagePickerConfig.enableLog(isEnable: Boolean) {
 }
 
 fun List<Image>.toFiles() = this.map { File(it.path) }
+
+/* --------------------------------------------------- */
+/* > Granular Permission Extensions */
+/* --------------------------------------------------- */
+
+/**
+ * Configure granular media permissions for Android 14+
+ */
+fun ImagePickerConfig.granularPermissions(config: GranularPermissionConfig.() -> Unit): ImagePickerConfig {
+    this.granularPermissionConfig = GranularPermissionConfig().apply(config)
+    return this
+}
+
+/**
+ * Enable the best user experience with granular permissions (default behavior)
+ */
+fun ImagePickerConfig.enableGranularPermissions(): ImagePickerConfig {
+    this.granularPermissionConfig = GranularPermissionConfig.default()
+    return this
+}
+
+/**
+ * Require full access to all media (legacy behavior)
+ */
+fun ImagePickerConfig.requireFullMediaAccess(): ImagePickerConfig {
+    this.granularPermissionConfig = GranularPermissionConfig.requireFullAccess()
+    return this
+}
+
+/**
+ * Use minimal UI for granular permissions (no upgrade prompts)
+ */
+fun ImagePickerConfig.minimalPermissionUI(): ImagePickerConfig {
+    this.granularPermissionConfig = GranularPermissionConfig.minimal()
+    return this
+}

@@ -1,5 +1,43 @@
 ## Changelog
 
+**[Unreleased] - Android 14 (API 34) Support**
+
+✨ **Major Update: Full Android 14 Granular Media Permissions Support**
+
+- **New Features:**
+  - Full support for `READ_MEDIA_VISUAL_USER_SELECTED` permission
+  - Automatic detection of partial vs full media access
+  - Permission upgrade flow for better user experience
+  - New `GranularPermissionConfig` for customizing permission behavior
+  - Extension functions: `enableGranularPermissions()`, `requireFullMediaAccess()`,
+    `minimalPermissionUI()`
+
+- **Enhanced Permission Handling:**
+  - `MediaPermissionHelper` class for centralized permission logic
+  - Smart permission state detection across Android versions
+  - Graceful degradation when only partial access is granted
+  - Enhanced file loader to handle limited media access scenarios
+
+- **Improved User Experience:**
+  - Non-intrusive upgrade prompts for partial access users
+  - Customizable messages for permission states
+  - Backward compatible - no breaking changes
+  - Works seamlessly on Android 13 and below
+
+- **Documentation:**
+  - Complete Android 14 migration guide
+  - Updated sample app with granular permission examples
+  - Enhanced README with Android 14 information
+
+- **Technical Details:**
+  - Added `READ_MEDIA_VISUAL_USER_SELECTED` permission to manifest
+  - Enhanced `ImagePickerFragment` with granular permission logic
+  - Updated `DefaultImageFileLoader` for partial access scenarios
+  - New configuration options in `ImagePickerConfig`
+  - Comprehensive permission state management
+
+✅ **Fully backward compatible - no breaking changes**
+
 **2.4.0**
 - Add `getUri()` for convenient [#285](https://github.com/esafirm/android-image-picker/pull/285)
 - Fixes for Android Q [#290](https://github.com/esafirm/android-image-picker/pull/290) [#293](https://github.com/esafirm/android-image-picker/pull/293)

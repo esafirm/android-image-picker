@@ -45,6 +45,26 @@ dependencies {
 
 change `x.y.z` to version in the [release page](https://github.com/esafirm/android-image-picker/releases)
 
+## Android 14 (API 34) Support
+
+✅ **Fully supports Android 14's granular media permissions**
+
+The library automatically handles Android 14's new permission model where users can choose between:
+
+- **"Select photos and videos"** - Partial access to user-selected media
+- **"Allow access to all media"** - Full access to all media
+
+```kotlin
+val config = ImagePickerConfig()
+    .enableGranularPermissions() // Best user experience for Android 14+
+
+// Or use legacy behavior
+val config = ImagePickerConfig()
+    .requireFullMediaAccess() // Always require full access
+```
+
+📖 **[Complete Android 14 Migration Guide](docs/android_14_migration.md)**
+
 # Usage
 
 For full example, please refer to the `sample` app.
@@ -129,6 +149,8 @@ You also still can use the `DefaultCameraModule` but discouraged to do it.
 
 # Wiki
 
+- [Android 14 Migration Guide](docs/android_14_migration.md) - **New!** Complete guide for Android
+  14 support
 - [Custom components](https://github.com/esafirm/android-image-picker/blob/main/docs/custom_components.md)
 - [Using another image library](https://github.com/esafirm/android-image-picker/blob/main/docs/another_image_library.md)
 - [Return mode](https://github.com/esafirm/android-image-picker/blob/main/docs/return_mode.md)
